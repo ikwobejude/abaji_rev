@@ -144,8 +144,12 @@ class Ticketing extends Wallet {
     async findByBatch(id) {
         return await this.tickets.findAll({
             attributes: [
-                'location', 'created_on', 'batch', 'agent_name', 'ticket_type', 'batch',
-                 [Sequelize.fn('COUNT', Sequelize.col('*')), 'count'],
+                [Sequelize.fn('MAX', Sequelize.col('location')), 'location'],
+                [Sequelize.fn('MAX', Sequelize.col('batch')), 'batch'],
+                [Sequelize.fn('MAX', Sequelize.col('agent_name')), 'agent_name'],
+                [Sequelize.fn('MAX', Sequelize.col('ticket_type')), 'ticket_type'],
+                [Sequelize.fn('MAX', Sequelize.col('batch')), 'batch'],
+                [Sequelize.fn('COUNT', Sequelize.col('*')), 'count'],
               ],
             where: {
                 agent_id: id

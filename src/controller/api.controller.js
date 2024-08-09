@@ -1,7 +1,8 @@
 const Ticketing = require("../classes/ticket.service")
+const Wallet = require("../classes/wallet.service")
 const { validateTickets } = require("../lib/input_validation")
 const Ticket = new Ticketing()
-
+const wallet = new Wallet()
 module.exports = {
     apiResetPassword: async function(req, res) {
         
@@ -74,6 +75,21 @@ module.exports = {
             })
         } catch(error) {
     
+            res.status(500).json({
+                status: false,
+                message: error.message
+            })
+        }
+        
+    },
+
+    walletBalance: async function(req, res) {
+        try{
+            const balance = await wallet.walletBalance(req.user.id)
+           
+            res.status(200).json(balance)
+            
+        } catch(error) {
             res.status(500).json({
                 status: false,
                 message: error.message

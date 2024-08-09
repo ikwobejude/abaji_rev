@@ -23,7 +23,7 @@ router.route('/ticket/view_ticket/:id')
 .get(middleware.mobileMiddleware, apiController.getTicket)
 
 // router.post('/make/wallet_payment', middleware.mobileMiddleware, apiController.makeBulkPayment)
-// router.get('/wallet_balance', middleware.mobileMiddleware, apiController.walletBalance )
+router.get('/wallet_balance', middleware.mobileMiddleware, apiController.walletBalance )
 
 router.get('/ticket_types', middleware.mobileMiddleware, apiController.TicketType )
 

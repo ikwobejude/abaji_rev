@@ -50,6 +50,13 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.route("*")
+  .get(function (req, res, next) {
+    res.locals.link = req.originalUrl.split('?')[0];
+    res.locals.copyright = new Date().getFullYear();;
+    next();
+  })
+  
 
 
 const middleware = require("./middleware/middleware");
@@ -57,6 +64,7 @@ const appRouter = require("./router/app.routes");
 const authRouter = require("./router/auth.routes");
 const apiRouter = require("./router/api.routes");
 const adminRouter = require("./router/admin.routes");
+const setupRouter = require("./router/setup.routes");
 
 
 app.set("views", path.join(__dirname, "../views"));
@@ -66,6 +74,7 @@ app.set("view engine", "ejs");
 app.use('/', appRouter)
 app.use(authRouter)
 app.use('/api', apiRouter)
-app.use('/admin', adminRouter)
+app.use('/admin', middleware.requireAuth, adminRouter)
+app.use('/setup', middleware.requireAuth, setupRouter)
 
 module.exports = app;

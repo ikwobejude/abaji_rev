@@ -278,6 +278,28 @@ class Wallet {
         }
         
     }
+
+
+    async walletBalance(userId) {
+        const result = await this.wallet.findOne({
+            where: {
+                userId: userId
+            },
+            raw: true
+        })
+
+        // console.log(result.balance)
+        if(result) {
+            return {
+                status: true,
+                balance: parseFloat(result.balance).toFixed(2),
+                walletId: result.idwallent,
+            }
+        } else {
+            throw Error("No wallet found, contact the system admin for help")
+        }
+        
+    }
     
 }
 

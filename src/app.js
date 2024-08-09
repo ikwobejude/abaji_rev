@@ -56,6 +56,7 @@ const middleware = require("./middleware/middleware");
 const appRouter = require("./router/app.routes");
 const authRouter = require("./router/auth.routes");
 const apiRouter = require("./router/api.routes");
+const adminRouter = require("./router/admin.routes");
 
 
 app.set("views", path.join(__dirname, "../views"));
@@ -65,5 +66,6 @@ app.set("view engine", "ejs");
 app.use('/', appRouter)
 app.use(authRouter)
 app.use('/api', apiRouter)
+app.use('/admin', adminRouter)
 
 module.exports = app;

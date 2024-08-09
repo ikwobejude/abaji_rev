@@ -4,5 +4,10 @@ module.exports = {
             status: true,
             message: "success"
         })
+    },
+
+    // success login 
+    loginSuccess: async function(req, res) {
+        if(req.user.group_id == 111111) res.redirect('/admin/dashboard')
     }
 }

@@ -4,5 +4,6 @@ const Router = express.Router();
 
 Router.route('/ticket_item')
 .get(setup.getTicketItem)
+.post(setup.postTicketItem)
 
 module.exports = Router

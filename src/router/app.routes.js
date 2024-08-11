@@ -6,7 +6,7 @@ const Router = express.Router();
 
 Router.route('/')
 .get(app.homePage)
-Router.get('/blank',  function(req, res) {
+Router.get('/blank', function(req, res) {
     res.status(200).render('./blank')
 })
 

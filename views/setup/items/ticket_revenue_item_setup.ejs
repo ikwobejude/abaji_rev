@@ -29,21 +29,41 @@
             <div class="container-xxl flex-grow-1 container-p-y">
                 <!-- DataTable with Buttons -->
                 <div class="card">
-                  <div class="card-datatable table-responsive pt-0">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col-6" style="text-align: end;">
+                                <button class="create-new btn btn-primary waves-effect waves-light">
+                                    <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  <div class="card-datatable  table-responsive pt-0">
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
+                          <!-- <th></th> -->
                           <th></th>
-                          <th></th>
-                          <th>id</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Date</th>
-                          <th>Salary</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>Revenue</th>
+                          <th>Time line</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
                         </tr>
                       </thead>
+                      <tbody>
+                        <% rows.forEach(item => { %>
+                            <tr>
+                                <td></td>
+                                <td><%= item.code == 11111111 ? "TICKET": "TAX REVENUE" %></td>
+                                <td><%= item.item_code == 1 ? "Daily" : "Every 4 Days" %></td>
+                                <td><%= item.revenue_item %></td>
+                                <td><%= item.amount %></td>
+
+                            </tr>
+                        <% }) %>
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -56,43 +76,56 @@
                   <div class="offcanvas-body flex-grow-1">
                     <form class="add-new-record pt-0 row g-2" id="form-add-new-record" onsubmit="return false">
                       <div class="col-sm-12">
-                        <label class="form-label" for="basicFullname">Full Name</label>
+                        <label class="form-label" for="basicFullname">Revenue Line</label>
                         <div class="input-group input-group-merge">
-                          <span id="basicFullname2" class="input-group-text"><i class="ti ti-user"></i></span>
-                          <input type="text" id="basicFullname" class="form-control dt-full-name" name="basicFullname" placeholder="John Doe" aria-label="John Doe" aria-describedby="basicFullname2" />
+                          <span id="basicFullname2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
+                          <select name="revenue_line" id="revenue_line" class="form-control dt-full-name">
+                            <option value="">Select Revenue line</option>
+                            <option value="Ticket">Ticket</option>
+                            <option value="Tax Item">Tax Item</option>
+                          </select>
+                          <!-- <input type="text" id="" class="form-control dt-full-name" name="" placeholder="John Doe" aria-label="John Doe" aria-describedby="basicFullname2" /> -->
                         </div>
                       </div>
                       <div class="col-sm-12">
-                        <label class="form-label" for="basicPost">Post</label>
+                        <label class="form-label" for="basicPost">Timeline</label>
                         <div class="input-group input-group-merge">
-                          <span id="basicPost2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
-                          <input type="text" id="basicPost" name="basicPost" class="form-control dt-post" placeholder="Web Developer" aria-label="Web Developer" aria-describedby="basicPost2" />
+                          <span id="basicPost2" class="input-group-text"><i class="fa fa-time"></i></span>
+                          <select name="timeline" id="timeline" class="form-control dt-full-name">
+                            <option value="">Select Revenue line</option>
+                            <option value="1">Daily</option>
+                            <option value="4">Every 4 Days</option>
+                          </select>
+                          <!-- <input type="text" id="timeline" name="timeline" class="form-control dt-post" placeholder="Time line" aria-label="Web Developer" /> -->
                         </div>
                       </div>
                       <div class="col-sm-12">
-                        <label class="form-label" for="basicEmail">Email</label>
+                        <label class="form-label" for="basicEmail">Revenue</label>
                         <div class="input-group input-group-merge">
-                          <span class="input-group-text"><i class="ti ti-mail"></i></span>
-                          <input type="text" id="basicEmail" name="basicEmail" class="form-control dt-email" placeholder="john.doe@example.com" aria-label="john.doe@example.com" />
+                          <!-- <span class="input-group-text"><i class="ti ti-mail"></i></span> -->
+                          <input type="text" id="name" name="name" class="form-control dt-name" placeholder="Loading" aria-label="" />
                         </div>
-                        <div class="form-text">You can use letters, numbers & periods</div>
+                        <div class="form-text">Item name</div>
                       </div>
-                      <div class="col-sm-12">
+                      <!-- <div class="col-sm-12">
                         <label class="form-label" for="basicDate">Joining Date</label>
                         <div class="input-group input-group-merge">
                           <span id="basicDate2" class="input-group-text"><i class="ti ti-calendar"></i></span>
                           <input type="text" class="form-control dt-date" id="basicDate" name="basicDate" aria-describedby="basicDate2" placeholder="MM/DD/YYYY" aria-label="MM/DD/YYYY" />
                         </div>
-                      </div>
+                      </div> -->
                       <div class="col-sm-12">
-                        <label class="form-label" for="basicSalary">Salary</label>
+                        <label class="form-label" for="basicSalary">Amount</label>
                         <div class="input-group input-group-merge">
-                          <span id="basicSalary2" class="input-group-text"><i class="ti ti-currency-dollar"></i></span>
-                          <input type="number" id="basicSalary" name="basicSalary" class="form-control dt-salary" placeholder="12000" aria-label="12000" aria-describedby="basicSalary2" />
+                          <span id="basicSalary2" class="input-group-text">₦</span>
+                          <input type="number" id="Amount" name="Amount" class="form-control dt-salary" placeholder="12000" aria-label="12000" aria-describedby="basicSalary2" />
                         </div>
                       </div>
                       <div class="col-sm-12">
-                        <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">Submit</button>
+                        <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                            <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                            Submit
+                        </button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
                       </div>
                     </form>
@@ -110,5 +143,49 @@
         <%- include('../../layout/footer') %>
          <!-- Page JS -->
     <script src="/assets/js/tables-datatables-basic.js"></script>
+    <script>
+        if(document.getElementById("form-add-new-record")) {
+            $(".spinner-border").hide()
+            const dt = document.getElementById("form-add-new-record");
+            dt.addEventListener("submit", async function(e) {
+                e.preventDefault();
+                $(".spinner-border").show()
+                const data = new FormData(dt);
+                const payload = {
+                    revenue_line: data.get("revenue_line"),
+                    timeline: data.get("timeline"),
+                    name: data.get("name"),
+                    Amount: data.get("Amount")
+                }
+
+                console.log(payload)
+
+                try {
+                    const request = await fetch('/setup/ticket_item', {
+                        method: "post",
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    const response = await request.json()
+                    $(".spinner-border").hide()
+                    if(response.status == true) {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                          location.reload()
+                        }, "3000");
+                    } else {
+                        // for errors - red box
+                        toastr.error(response.message);
+                    }
+                } catch (error) {
+                    $(".spinner-border").hide()
+                    // for errors - red box
+                    toastr.error(error.message);
+                }
+            })
+        }
+    </script>
   </body>
 </html>

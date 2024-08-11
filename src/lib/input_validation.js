@@ -24,9 +24,9 @@ module.exports = {
             "string.empty": `Password cannot be empty`,
         }),
         confirm_password: Joi.ref('password'),
-      }),
+    }),
 
-      validateTickets: Joi.object({
+    validateTickets: Joi.object({
         ticket_type: Joi.string().required().messages({
           "any.required": `Ticket is required`,
           "string.empty": `Ticket cannot be empty`,
@@ -36,5 +36,24 @@ module.exports = {
           "any.required": `Number of ticket is required`,
           "string.empty": `Number of ticket cannot be empty`,
         }),
-      })
+    }),
+
+    validateItem: Joi.object({
+      revenue_line: Joi.string().required().messages({
+        "any.required": `Revenue line is required`,
+        "string.empty": `Revenue line cannot be empty`,
+      }),
+      timeline: Joi.string().required().messages({
+        "any.required": `Timeline is required`,
+        "string.empty": `Timeline cannot be empty`,
+      }),
+      name: Joi.string().required().messages({
+        "any.required": `Revenue item name is required`,
+        "string.empty": `Revenue item name cannot be empty`,
+      }),
+      Amount: Joi.number().required().messages({
+        "any.required": `Amount is required`,
+        "string.empty": `Amount cannot be empty`,
+      }),
+    })
 }

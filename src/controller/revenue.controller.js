@@ -46,7 +46,7 @@ module.exports = {
     // users 
     getUserRoles: async function(req, res) {
         const request = await user.userGroup()
-        res.status(200).render('./users/user_role', {request})
+        res.status(200).render('./users/user_role', {...request})
     },
     
     postUserRoles: async function(req, res) {

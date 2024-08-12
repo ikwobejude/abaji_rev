@@ -10,7 +10,8 @@ class User {
     }
 
     async userGroup() {
-        return await this.user_group.findAll({ new: true })
+        const user_role = await this.user_group.findAll({ new: true })
+        return { user_role }
     }
 
     async createUserGroup(data) {

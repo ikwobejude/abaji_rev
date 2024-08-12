@@ -31,14 +31,20 @@
                 <!-- Invoice -->
                 <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-0" id="invoice">
                   <div class="card invoice-preview-card p-sm-12 p-6">
-                    <table class="table">
+                    <table class="table" id="example">
                         <thead>
                             <th></th>
                             <th>Role Code</th>
                             <th>Role Name </th>
                         </thead>
                         <tbody>
-                           
+                           <% user_role.forEach((res, i) => { %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= res.group_id %></td>
+                                <td><%= res.group_name %></td>
+                            </tr>
+                           <% }) %>
                         </tbody>
                     </table>
                   </div>
@@ -49,14 +55,12 @@
                 <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                   <div class="card">
                     <div class="card-body">
-                      <!-- <button
-                        class="btn btn-primary d-grid w-100 mb-4"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#sendInvoiceOffcanvas">
+                      <a href="javascript:;"
+                        class="btn btn-primary d-grid w-100 mb-4">
                         <span class="d-flex align-items-center justify-content-center text-nowrap"
-                          ><i class="ti ti-send ti-xs me-2"></i>Send Invoice</span
+                          ><i class="ti ti-send ti-xs me-2"></i>View User</span
                         >
-                      </button> -->
+                    </a>
                       <!-- <button class="btn btn-label-secondary d-grid w-100 mb-4">Download</button>
                       <div class="d-flex mb-4">
                         <a
@@ -208,6 +212,7 @@ Dear Queen Consolidated,
          <!-- Page JS -->
     <!-- <script src="/assets/js/tables-datatables-basic.js"></script> -->
     <script>
+        new DataTable('#example');
        function printDiv(invoice) {
             var printContents = document.getElementById("invoice").innerHTML;
             var originalContents = document.body.innerHTML;

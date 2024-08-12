@@ -8,4 +8,8 @@ Router.route('/login')
     .get(auth.signInPage)
     .post(auth.signIn)
 
+Router.route('/logout')
+    .get(auth.logout)
+
+
 module.exports = Router

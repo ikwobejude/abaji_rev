@@ -12,4 +12,7 @@ Router.route("/revenue_upload")
 
 Router.get('/revenue_upload/view/:year', revenue.viewAssessmentInvoice)
 
+Router.get('/demand_notice/:year/:invoice', revenue.demandNotice)
+Router.get('/wallet_balance', revenue.getWalletBalance)
+
 module.exports = Router

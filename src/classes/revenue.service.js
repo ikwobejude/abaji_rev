@@ -52,6 +52,33 @@ class Revenue {
         }
     }
 
+    async demandNotice(query) {
+        let sql = `
+            SELECT 
+                r.service_id,
+                r.assessment_no,
+                r.revenue_code,
+                r.bill_ref_no,
+                r.name_of_business,
+                r.address_of_property,            
+                r.type_of_property,
+                r.revenue_type,
+                r.grand_total,
+                r.rate_year,
+                c.city,
+                s.street
+            FROM revenue_upload AS r
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street
+            WHERE r.rate_year = ${query.year} AND r.bill_ref_no='${query.invoice}'
+        `;
+        const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
+        console.log(revenue)
+        return {
+            revenue: revenue[0]
+        }
+    }
+
 
     async base64ToExcel(string) {
         // console.log({string})

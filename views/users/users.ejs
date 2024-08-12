@@ -43,6 +43,8 @@
                     <div class="col-6" style="text-align: end">
                       <button
                         class="create-new btn btn-primary waves-effect waves-light"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#add-new-record"
                       >
                         <i class="ti ti-plus me-sm-1"></i>
                         <span class="d-none d-sm-inline-block"
@@ -54,41 +56,57 @@
                 </div>
 
                 <div class="card-datatable table-responsive pt-0">
-                <table class="datatables-basic table">
-                <thead>
-                    <tr>
-                    <th>#</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                    const roleLookup = {};
-                    user_role.forEach(role => {
-                        roleLookup[role.group_id] = role.group_name;
-                    });
-                    %>
-                    <% users.forEach((usr, index) => { %>
-                    <tr>
-                    <td><%= index + 1 %></td> 
-                    <td><%= usr.name %></td> 
-                    <td><%= usr.email %></td> 
-                    <td><%= roleLookup[usr.group_id] || 'Unknown' %></td>
-                    </tr>
-                    <% }) %>
-                </tbody>
-                </table>
-
+                  <table class="datatables-basic table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% const roleLookup = {}; user_role.forEach(role => {
+                      roleLookup[role.group_id] = role.group_name; }); %> <%
+                      users.forEach((usr, index) => { %>
+                      <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= usr.name %></td>
+                        <td><%= usr.email %></td>
+                        <td><%= roleLookup[usr.group_id] || 'Unknown' %></td>
+                        <td>
+                          <button
+                            class="btn btn-warning btn-sm edit-btn"
+                            data-id="<%= usr.id %>"
+                            data-name="<%= usr.name %>"
+                            data-user-phone="<%= usr.user_phone %>"
+                            data-email="<%= usr.email %>"
+                            data-group-id="<%= usr.group_id %>"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#edit-user-record"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            class="btn btn-danger btn-sm delete-btn"
+                            data-id="<%= usr.id %>"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
                 </div>
+              </div>
 
-
-              <!-- Modal to add new record -->
+              <!-- Offcanvas to add/edit record -->
               <div class="offcanvas offcanvas-end" id="add-new-record">
                 <div class="offcanvas-header border-bottom">
-                  <h5 class="offcanvas-title" id="exampleModalLabel">
-                    Add new user
+                  <h5 class="offcanvas-title" id="offcanvasLabel">
+                    Add New User
                   </h5>
                   <button
                     type="button"
@@ -103,34 +121,22 @@
                     id="form-upload-new-record"
                     onsubmit="return false"
                   >
+                    <input type="hidden" id="user-id" name="user-id" value="" />
+
                     <div class="col-12">
-                      <label class="form-label" for="firstname"
-                        >First Name</label
-                      >
+                      <label class="form-label" for="name">First Name</label>
                       <input
                         type="text"
                         id="firstname"
                         name="firstname"
                         class="form-control"
-                        placeholder="John"
+                        placeholder="First Name"
+                        required
                       />
                     </div>
 
                     <div class="col-12">
-                      <label class="form-label" for="surname">Last Name</label>
-                      <input
-                        type="text"
-                        id="surname"
-                        name="surname"
-                        class="form-control"
-                        placeholder="Doe"
-                      />
-                    </div>
-
-                    <div class="col-12">
-                      <label class="form-label" for="middlename"
-                        >Middle Name</label
-                      >
+                      <label class="form-label" for="name">Middle Name</label>
                       <input
                         type="text"
                         id="middlename"
@@ -139,7 +145,17 @@
                         placeholder="Middle Name"
                       />
                     </div>
-
+                    <div class="col-12">
+                      <label class="form-label" for="name">Last Name</label>
+                      <input
+                        type="text"
+                        id="surname"
+                        name="surname"
+                        class="form-control"
+                        placeholder="Surname"
+                        required
+                      />
+                    </div>
                     <div class="col-12">
                       <label class="form-label" for="user_phone">Phone</label>
                       <input
@@ -218,6 +234,157 @@
                 </div>
               </div>
 
+              <!-- Offcanvas to edit record -->
+              <div class="offcanvas offcanvas-end" id="edit-user-record">
+                <div class="offcanvas-header border-bottom">
+                  <h5 class="offcanvas-title" id="offcanvasLabel">Edit User</h5>
+                  <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="offcanvas-body flex-grow-1">
+                  <form
+                    class="edit-user-record pt-0 row g-2"
+                    id="edit-user-form"
+                    onsubmit="return false"
+                  >
+                    <input
+                      type="hidden"
+                      id="edit-user-id"
+                      name="user-id"
+                      value=""
+                    />
+
+                    <div class="col-12">
+                      <label class="form-label" for="edit-name"
+                        >Full Name</label
+                      >
+                      <input
+                        type="text"
+                        id="edit-name"
+                        name="name"
+                        class="form-control"
+                        placeholder="John Doe"
+                      />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="edit-user_phone"
+                        >Phone</label
+                      >
+                      <input
+                        type="number"
+                        id="edit-user_phone"
+                        name="user_phone"
+                        class="form-control"
+                        placeholder="Phone Number"
+                      />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="edit-email"
+                        >Email Address</label
+                      >
+                      <input
+                        type="email"
+                        id="edit-email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Email Address"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <label class="form-label" for="edit-group_id"
+                        >User Role</label
+                      >
+                      <select
+                        id="edit-group_id"
+                        name="group_id"
+                        class="select2 form-select"
+                        data-allow-clear="true"
+                      >
+                        <option value="">Select</option>
+                        <% user_role.forEach((role) => { %>
+                        <option value="<%= role.group_id %>">
+                          <%= role.group_name %>
+                        </option>
+                        <% }) %>
+                      </select>
+                    </div>
+
+                    <div class="col-sm-12">
+                      <button
+                        type="submit"
+                        id="edit-submit-btn"
+                        class="btn btn-primary me-sm-4 me-1"
+                      >
+                        <span
+                          class="spinner-border d-none"
+                          id="edit-loading-spinner"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        &nbsp;Save Changes
+                      </button>
+                      <button
+                        type="reset"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="offcanvas"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- Confirmation Modal -->
+              <div
+                class="modal fade"
+                id="confirm-delete-modal"
+                tabindex="-1"
+                aria-labelledby="confirmDeleteLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="confirmDeleteLabel">
+                        Confirm Deletion
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to delete this user?
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="confirm-delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Toast Container -->
               <div class="toast-container position-fixed top-0 end-0 p-3">
                 <div
@@ -236,12 +403,11 @@
                       aria-label="Close"
                     ></button>
                   </div>
-                  <div class="toast-body" id="toast-message">
-                  </div>
+                  <div class="toast-body" id="toast-message"></div>
                 </div>
               </div>
             </div>
-            <!-- / Content -->
+
             <%- include('../layout/footer') %>
           </div>
         </div>
@@ -251,60 +417,186 @@
     <!-- Include Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/tables-datatables-basic.js"></script>
-   <script>
-  document
-    .getElementById("form-upload-new-record")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      // Get form data
-      const formData = {
-        firstname: document.getElementById("firstname").value,
-        surname: document.getElementById("surname").value,
-        middlename: document.getElementById("middlename").value,
-        user_phone: document.getElementById("user_phone").value,
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value,
-        group_id: document.getElementById("group_id").value,
-      };
-
-      const submitBtn = document.getElementById("submit-btn");
-      const loadingSpinner = document.getElementById("loading-spinner");
-
-      submitBtn.disabled = true;
-      loadingSpinner.classList.remove("d-none");
-
-      try {
-        const response = await fetch("/admin/user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          toastr.success("User added successfully!");
-          document.getElementById("form-upload-new-record").reset();
-        } else {
-          toastr.error(result.message || "Failed to add user.");
-        }
-      } catch (error) {
-        toastr.error("An error occurred while processing your request.");
-      } finally {
-        loadingSpinner.classList.add("d-none");
-        submitBtn.disabled = false;
-      }
-    });
-</script>
-
     <script src="../../assets/vendor/libs/toastr/toastr.js"></script>
+    <script src="../../assets/js/ui-toasts.js"></script>
 
     <!-- Main JS -->
     <script src="../../assets/js/main.js"></script>
 
     <!-- Page JS -->
-    <script src="../../assets/js/ui-toasts.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".edit-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            const userId = this.dataset.id;
+            const name = this.dataset.name;
+            const userPhone = this.dataset.userPhone;
+            const email = this.dataset.email;
+            const groupId = this.dataset.groupId;
+
+            document.getElementById("edit-user-id").value = userId;
+            document.getElementById("edit-name").value = name;
+            document.getElementById("edit-user_phone").value = userPhone;
+            document.getElementById("edit-email").value = email;
+            document.getElementById("edit-group_id").value = groupId;
+
+            const editOffcanvas = new bootstrap.Offcanvas(
+              document.getElementById("edit-user-record")
+            );
+            editOffcanvas.show();
+          });
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            deleteUserId = this.dataset.id;
+            const deleteModal = new bootstrap.Modal(
+              document.getElementById("confirm-delete-modal")
+            );
+            deleteModal.show();
+          });
+        });
+
+        // Confirm Delete Button Click
+        document
+          .getElementById("confirm-delete-btn")
+          .addEventListener("click", async () => {
+            if (deleteUserId) {
+              try {
+                const response = await fetch(`/admin/user/${deleteUserId}`, {
+                  method: "DELETE",
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                  toastr.success("User deleted successfully!");
+                  document
+                    .querySelector(`.delete-btn[data-id="${deleteUserId}"]`)
+                    .closest("tr")
+                    .remove();
+                  window.location.reload();
+                } else {
+                  toastr.error(result.message || "Failed to delete user.");
+                }
+              } catch (error) {
+                toastr.error(
+                  "An error occurred while processing your request."
+                );
+              } finally {
+                // Hide the modal
+                const deleteModal = bootstrap.Modal.getInstance(
+                  document.getElementById("confirm-delete-modal")
+                );
+                deleteModal.hide();
+              }
+            }
+          });
+
+        // Handle form submission for adding new user
+        document
+          .getElementById("form-upload-new-record")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = {
+              id: document.getElementById("user-id").value,
+              firstname: document.getElementById("firstname").value,
+              middlename: document.getElementById("middlename").value,
+              surname: document.getElementById("surname").value,
+              user_phone: document.getElementById("user_phone").value,
+              email: document.getElementById("email").value,
+              password: document.getElementById("password").value,
+              group_id: document.getElementById("group_id").value,
+            };
+
+            const submitBtn = document.getElementById("submit-btn");
+            const loadingSpinner = document.getElementById("loading-spinner");
+
+            submitBtn.disabled = true;
+            loadingSpinner.classList.remove("d-none");
+
+            try {
+              const method = "POST";
+              const url = "/admin/user";
+
+              const response = await fetch(url, {
+                method,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              });
+
+              const result = await response.json();
+              if (response.ok) {
+                toastr.success("User saved successfully!");
+                document.getElementById("form-upload-new-record").reset();
+                window.location.reload();
+                const addOffcanvas = new bootstrap.Offcanvas(
+                  document.getElementById("add-new-record")
+                );
+                addOffcanvas.hide();
+              } else {
+                toastr.error(result.message || "Failed to save user.");
+              }
+            } catch (error) {
+              toastr.error("An error occurred while processing your request.");
+            } finally {
+              loadingSpinner.classList.add("d-none");
+              submitBtn.disabled = false;
+            }
+          });
+
+        // Handle form submission for editing user
+        document
+          .getElementById("edit-user-form")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = {
+              id: document.getElementById("edit-user-id").value,
+              name: document.getElementById("edit-name").value,
+              user_phone: document.getElementById("edit-user_phone").value,
+              email: document.getElementById("edit-email").value,
+              group_id: document.getElementById("edit-group_id").value,
+            };
+
+            const submitBtn = document.getElementById("edit-submit-btn");
+            const loadingSpinner = document.getElementById(
+              "edit-loading-spinner"
+            );
+
+            submitBtn.disabled = true;
+            loadingSpinner.classList.remove("d-none");
+
+            try {
+              const response = await fetch(`/admin/user/${formData.id}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              });
+
+              const result = await response.json();
+              if (response.ok) {
+                toastr.success("User updated successfully!");
+                window.location.reload();
+                const editOffcanvas = bootstrap.Offcanvas.getInstance(
+                  document.getElementById("edit-user-record")
+                );
+                editOffcanvas.hide();
+              } else {
+                toastr.error(result.message || "Failed to update user.");
+              }
+            } catch (error) {
+              toastr.error("An error occurred while processing your request.");
+            } finally {
+              loadingSpinner.classList.add("d-none");
+              submitBtn.disabled = false;
+            }
+          });
+      });
+    </script>
   </body>
 </html>

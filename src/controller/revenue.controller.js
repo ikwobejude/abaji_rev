@@ -77,4 +77,32 @@ module.exports = {
     console.log({ users });
     res.status(200).render("./users/users", { ...usergroup, ...users });
   },
+  deleteUser: async function (req, res) {
+    const { userId } = req.params; 
+
+    try {
+      const response = await user.deleteUser(userId);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  },
+
+  updateUser: async function (req, res) {
+    const { userId } = req.params; 
+    const data = req.body;
+
+    try {
+      const response = await user.updateUser(userId, data);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  },
 };

@@ -10,6 +10,7 @@ const Ward = require("../model/Ward");
 const db = require("../db/connection");
 const Revenue_upload = require("../model/Revenue_upload");
 const Revenue_item = require("../model/Revenue_item");
+const Invoice_number_count = require("../model/Invoice_count");
 
 const Op = Sequelize.Op;
 
@@ -31,7 +32,7 @@ const run = async () => {
     (Date.now() + Math.random().toString()).split(".").join("_");
 
   for (const row of rows) {
-    let invNum = await invoice_number_count.findOne({ raw: true });
+    let invNum = await Invoice_number_count.findOne({ raw: true });
     let InvoiceNumber = "N-ABJ" + invNum.invoice_number;
 
     const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
@@ -58,6 +59,9 @@ const run = async () => {
       street: street.idstreet,
       batch: batchNumber,
       invoice_number: InvoiceNumber,
+      phone_number: "0910009900",
+      generated_phone: "0910009900",
+      tax_office_id: 8477
     };
 
     let item = {
@@ -66,26 +70,32 @@ const run = async () => {
       amount: row[6],
       business_tag: payerId,
       taxyear: new Date().getFullYear(),
-      revenue_code: revenueCodes[i],
+      revenue_code: row[1] == "Business Premises" ? 10010 : 10011,
       invoice_number: InvoiceNumber,
-      type: row[1] == "Business Premises" ? 10010 : 10011, // Revenue Name,
-      service_id: req.user.service_id,
+      type: row[1], // Revenue Name,
+      service_id: 2147483647,
       batch: batchNumber,
     };
 
     uploads.push(payload);
     assessmentItems.push(item);
+
+    // uploads.push(upload);
+    await Invoice_number_count.update(
+      { invoice_number: invNum.invoice_number + 1 },
+      { where: { invoice_number: invNum.invoice_number } },
+      { new: true }
+    );
   }
 
-  console.log({uploads,
-    assessmentItems})
+  // console.log({ uploads, assessmentItems })
 
-  return
+  // return
 
   const t = await db.transaction();
   try {
-    await Revenue_upload.bulkCreate(uploads, { t: transaction });
-    await Revenue_item.bulkCreate(assessmentItems, { t: transaction });
+    await Revenue_upload.bulkCreate(uploads, { transaction: t });
+    await Revenue_item.bulkCreate(assessmentItems, { transaction: t });
     await t.commit();
     parentPort.postMessage({
       status: true,

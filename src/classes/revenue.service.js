@@ -3,10 +3,12 @@ const path = require("path")
 const fs = require("fs")
 const Revenue_upload = require("../model/Revenue_upload")
 const Sequelize  = require("sequelize")
+const db = require('../db/connection')
 
 class Revenue {
     constructor(){
         this.revenueUpload = Revenue_upload
+        this.db = db
     }
 
 
@@ -16,9 +18,35 @@ class Revenue {
                 ['rate_year', 'year'],
                 [ Sequelize.fn('COUNT', Sequelize.col('*')),"total"]
             ],
-            group: ['rate_year']
+            group: ['rate_year'],
+            raw: true
         })
-        console.log(revenue)
+        // console.log(revenue)
+        return {
+            revenue  
+        }
+    }
+
+    async revenuesInvoices(query) {
+        let sql = `
+            SELECT 
+                r.assessment_no,
+                r.revenue_code,
+                r.bill_ref_no,
+                r.name_of_business,
+                r.address_of_property,            
+                r.type_of_property,
+                r.revenue_type,
+                r.grand_total,
+                r.rate_year,
+                c.city,
+                s.street
+            FROM revenue_upload AS r
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street
+            WHERE r.rate_year = ${query.year}
+        `;
+        const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
         return {
             revenue  
         }

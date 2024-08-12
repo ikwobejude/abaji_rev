@@ -45,26 +45,43 @@
                       <thead>
                         <tr>
                           <!-- <th></th> -->
-                          <th></th>
+                          <th>Invoice</th>
                           <th>Year</th>
-                          <th>Total Assessments</th>
-                          <th>Action</th>
+                          <th>Revenue Name</th>
+                          <th>Business Operation</th>
+                          <th>Name Of Rate Payers</th>
+                          <th>Address Of Business</th>
+                          <th>Ward</th>
+                          <th>Street</th>
+                          <th>Amount Yearly</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <% revenue.forEach(item => { %>
                             <tr>
-                                <td></td>
-                                <td><%= item.year %></td>
-                                <td><%= item.total %></td>
+                                <td><%= item.bill_ref_no %></td>
+                                <td><%= item.rate_year %></td>
+                                <td><%= item.revenue_type %></td>
+                                <td><%= item.type_of_property %></td>
+                                <td><%= item.name_of_business %></td>
+                                <td><%= item.address_of_property %></td>
+                                <td><%= item.city %></td>
+                                <td><%= item.street %></td>
+                                
+                                <td><%= item.grand_total %></td>
                                 <td>
                                   <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                       <i class="ti ti-dots-vertical"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>"><i class="ti ti-eye me-1"></i>View more </a>
-                                      <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i> Delete</a>
+                                      <a class="dropdown-item" href="javascript:void(0);"
+                                        ><i class="ti ti-eye me-1"></i>View more </a
+                                      >
+                                      <a class="dropdown-item" href="javascript:void(0);"
+                                        ><i class="ti ti-trash me-1"></i> Delete</a
+                                      >
                                     </div>
                                   </div>
                                 </td>

@@ -10,4 +10,6 @@ Router.route("/revenue_upload")
 .get(revenue.getRevenueItemByYear)
 .post(revenue.createAssessments);
 
+Router.get('/revenue_upload/view/:year', revenue.viewAssessmentInvoice)
+
 module.exports = Router

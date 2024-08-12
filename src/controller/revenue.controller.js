@@ -14,5 +14,12 @@ module.exports = {
         } catch (error) {
             
         }
+    },
+
+    viewAssessmentInvoice: async function(req, res) {
+        
+        const response = await revenue.revenuesInvoices({year: req.params.year});
+        res.status(200).render('./revenue/cooperative/revenue_invoice', {...response})
     }
+
 }

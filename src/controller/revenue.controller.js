@@ -1,9 +1,12 @@
 
 const Wallet = require("../classes/wallet.service")
 const wallet = new Wallet()
-const Revenue = require("../classes/revenue.service")
+const Revenue = require("../classes/revenue.service");
+const User = require("../classes/user.service");
 
 const revenue = new Revenue();
+const user = new User();
+
 module.exports = {
     getRevenueItemByYear: async function(req, res) {
         const response = await revenue.revenueByYear(req.query);
@@ -37,7 +40,25 @@ module.exports = {
     },
 
     walletPayment: async function(req, res) {
-        
+       
+    },
+
+    // users 
+    getUserRoles: async function(req, res) {
+        const request = await user.userGroup()
+        res.status(200).render('./users/user_role', {request})
+    },
+    
+    postUserRoles: async function(req, res) {
+        try {
+            const response = await user.createUserGroup(req.body);
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(400).json({
+                status: false,
+                message: error.message
+            })
+        }
     }
 
 }

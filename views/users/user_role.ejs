@@ -1,0 +1,269 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('../layout/head') %>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+       <%- include('../layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <%- include('../layout/side') %>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row invoice-preview">
+                <!-- Invoice -->
+                <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-0" id="invoice">
+                  <div class="card invoice-preview-card p-sm-12 p-6">
+                 
+                  </div>
+                </div>
+                <!-- /Invoice -->
+
+                <!-- Invoice Actions -->
+                <div class="col-xl-3 col-md-4 col-12 invoice-actions">
+                  <div class="card">
+                    <div class="card-body">
+                      <!-- <button
+                        class="btn btn-primary d-grid w-100 mb-4"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sendInvoiceOffcanvas">
+                        <span class="d-flex align-items-center justify-content-center text-nowrap"
+                          ><i class="ti ti-send ti-xs me-2"></i>Send Invoice</span
+                        >
+                      </button> -->
+                      <!-- <button class="btn btn-label-secondary d-grid w-100 mb-4">Download</button>
+                      <div class="d-flex mb-4">
+                        <a
+                          class="btn btn-label-secondary d-grid w-100 me-4"
+                          href="javascript:;" onclick="printDiv('invoice')">
+                          Print
+                        </a>
+                        <a href="./app-invoice-edit.html" class="btn btn-label-secondary d-grid w-100"> Edit </a>
+                      </div> -->
+                      <button
+                        class="btn btn-success d-grid w-100"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#addPaymentOffcanvas">
+                        <span class="d-flex align-items-center justify-content-center text-nowrap"
+                          >Add new user role</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- /Invoice Actions -->
+              </div>
+
+              <!-- Offcanvas -->
+              <!-- Send Invoice Sidebar -->
+              <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
+                <div class="offcanvas-header mb-6 border-bottom">
+                  <h5 class="offcanvas-title">Send Invoice</h5>
+                  <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body pt-0 flex-grow-1">
+                  <form>
+                    <div class="mb-6">
+                      <label for="invoice-from" class="form-label">From</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="invoice-from"
+                        value="shelbyComapny@email.com"
+                        placeholder="company@email.com" />
+                    </div>
+                    <div class="mb-6">
+                      <label for="invoice-to" class="form-label">To</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="invoice-to"
+                        value="qConsolidated@email.com"
+                        placeholder="company@email.com" />
+                    </div>
+                    <div class="mb-6">
+                      <label for="invoice-subject" class="form-label">Subject</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="invoice-subject"
+                        value="Invoice of purchased Admin Templates"
+                        placeholder="Invoice regarding goods" />
+                    </div>
+                    <div class="mb-6">
+                      <label for="invoice-message" class="form-label">Message</label>
+                      <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">
+Dear Queen Consolidated,
+          Thank you for your business, always a pleasure to work with you!
+          We have generated a new invoice in the amount of $95.59
+          We would appreciate payment of this invoice by 05/11/2021</textarea
+                      >
+                    </div>
+                    <div class="mb-6">
+                      <span class="badge bg-label-primary">
+                        <i class="ti ti-link ti-xs"></i>
+                        <span class="align-middle">Invoice Attached</span>
+                      </span>
+                    </div>
+                    <div class="mb-6 d-flex flex-wrap">
+                      <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
+                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /Send Invoice Sidebar -->
+
+              <!-- Add Payment Sidebar -->
+              <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
+                <div class="offcanvas-header border-bottom">
+                  <h5 class="offcanvas-title">Add Payment</h5>
+                  <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body flex-grow-1">
+                  <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
+                    <p class="mb-0">Wallet Balance:</p>
+                    <p class="fw-medium mb-0" id="wal"></p>
+                  </div>
+                  <form id="make_payment" onsubmit="return false">
+                    <div class="mb-6">
+                      <label class="form-label" for="invoiceAmount">Payment Amount</label>
+                      <div class="input-group">
+                        <span class="input-group-text">₦</span>
+                        <input
+                          type="text"
+                          id="invoiceAmount"
+                          value=""
+                          name="invoiceAmount"
+                          class="form-control invoice-amount"
+                          placeholder="100" />
+                      </div>
+                    </div>
+                    <div class="mb-6">
+                      <label class="form-label" for="payment-date">Payment Date</label>
+                      <input id="payment-date" name="payment_date" class="form-control invoice-date" type="date" />
+                    </div>
+                    <div class="mb-6">
+                      <label class="form-label" for="payment-method">Payment Method</label>
+                      <select class="form-select" id="payment-method" name="payment_method">
+                        <option value="" selected disabled>Select payment method</option>
+                        <option value="Wallet" selected>Wallet</option>
+                        <!-- <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Paypal">Paypal</option> -->
+                      </select>
+                    </div>
+                    <div class="mb-6">
+                      <label class="form-label" for="payment-note">Payment Note</label>
+                      <textarea class="form-control" id="payment-note" name="payment_note"  rows="2"></textarea>
+                    </div>
+                    <div class="mb-6 d-flex flex-wrap">
+                      <button type="submit" class="btn btn-primary me-4" id="wallet_payment" >Send</button>
+                      <button type="button" class="btn btn-label-secondary"  data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /Add Payment Sidebar -->
+              </div>
+              <!-- / Content -->
+
+        <%- include('../layout/footer') %>
+        <script src="/assets/js/offcanvas-send-invoice.js"></script>
+         <!-- Page JS -->
+    <!-- <script src="/assets/js/tables-datatables-basic.js"></script> -->
+    <script>
+       function printDiv(invoice) {
+            var printContents = document.getElementById("invoice").innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+      }
+
+      addEventListener("DOMContentLoaded", async (event) => {
+        const wal = document.getElementById("wal")
+        const request = await fetch('/admin/wallet_balance')
+        const balance = await request.json();
+        // wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
+
+       
+        
+      });
+
+      if(document.getElementById("make_payment")) {
+        const make_payment = document.getElementById("make_payment");
+        make_payment.addEventListener("submit", async function(e) {
+          e.preventDefault();
+          $(".spinner-border").show()
+          const data = new FormData(make_payment);
+          const payload = {
+            invoiceAmount: data.get("invoiceAmount"),
+            payment_date: data.get("payment_date"),
+            payment_method: data.get("payment_method"),
+            payment_note: data.get("payment_note")
+          }
+
+          // console.log(payload)
+          try {
+            const req = await fetch(`/admin/demand_notice`, {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+
+            const res = await req.json();
+            $(".spinner-border").hide()
+            if(response.status == true) {
+                toastr.success(response.message);
+                setTimeout(() => {
+                  location.reload()
+                }, "3000");
+            } else {
+                // for errors - red box
+                toastr.error(response.message);
+            }
+          } catch (error) {
+            $(".spinner-border").hide()
+            // for errors - red box
+            toastr.error(error.message);
+          }
+        }) 
+      }
+
+
+
+    </script>
+  </body>
+</html>

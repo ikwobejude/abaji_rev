@@ -17,4 +17,13 @@ Router.route('/wallet_balance')
 .get(revenue.getWalletBalance)
 .post(revenue.getWalletBalance)
 
+
+Router.route('/user')
+.get()
+.post();
+
+Router.route('/user_group')
+.get(revenue.getUserRoles)
+.post(revenue.postUserRoles)
+
 module.exports = Router

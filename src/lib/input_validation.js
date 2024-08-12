@@ -55,5 +55,17 @@ module.exports = {
         "any.required": `Amount is required`,
         "string.empty": `Amount cannot be empty`,
       }),
+    }),
+
+    validateUserGrpp: Joi.object({
+      group_id: Joi.string().required().messages({
+        "any.required": `Group Code is required`,
+        "string.empty": `Group Code is cannot be empty`,
+      }),
+      group_name: Joi.string().required().messages({
+        "any.required": `Group name required`,
+        "string.empty": `Group name cannot be empty`,
+      })
+      
     })
 }

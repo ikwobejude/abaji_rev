@@ -188,26 +188,13 @@ class Wallet {
     
             const history = await this.walletHistory(payload, t);
             const transactions = await this.walletTransaction({payload, revHead: ticketD[0]}, t);
-            const clr = await this.clearTicket({
-                number_of_ticket: data.number_of_ticket, 
-                batch: data.batch, 
-                amount:ticket.amount}, t);
+            // const clr = await this.clearTicket({
+            //     number_of_ticket: data.number_of_ticket, 
+            //     batch: data.batch, 
+            //     amount:ticket.amount}, t);
            
             await t.commit()
-            // const payLoad = {
-            //     InvoiceNumber: ticket.invoice_number,
-            //     PaymentRef: ticket.batch,
-            //     PaymentDate:  new Date().toISOString().slice(0, 10)+" 00:00:00", //"30/03/2018 17:45:04"
-            //     BankCode: "00000",
-            //     BankName: "Wallet",
-            //     BankBranch: ticket.location,
-            //     AmountPaid: parseFloat(ticket.amount) * parseFloat(data.number_of_ticket) ,
-            //     TransactionDate: new Date().toISOString().slice(0, 10)+" 00:00:00" ,
-            //     Channel: 3,
-            //     PaymentMethod: 1, //"Inter-transfer"
-            // }
-            // await new Email(payLoad, process.env.PAYMENTNOTIFIEMAIL)
-            // .sendEmail('payment_notification', "Payment Notification", "message")
+      
             return {
                 status: true,
                 message: "payment successful",

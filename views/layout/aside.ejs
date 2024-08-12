@@ -86,20 +86,21 @@
 
       <li class="menu-item <%= link == "/admin/revenue_upload" ? "active open" : "" %>">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons ti ti-file"></i>
           <div data-i18n="Assessment Revenue">Assessment Revenue</div>
         </a>
         <ul class="menu-sub">
-          <li class="menu-item <%= link == "/admin/revenue_upload" ? 'active' : '' %>"></li>
+          <li class="menu-item <%= link == "/admin/revenue_upload" ? 'active' : '' %>">
             <a href="/admin/revenue_upload" class="menu-link">
               <div data-i18n="Revenue">Revenue</div>
             </a>
           </li>
-          <!-- <li class="menu-item">
-            <a href="app-ecommerce-customer-details-security.html" class="menu-link">
+          <li class="menu-item">
+            <a href="/admin/revenue_upload" class="menu-link">
               <div data-i18n="Security">Security</div>
             </a>
           </li>
-          <li class="menu-item">
+          <!--<li class="menu-item">
             <a href="app-ecommerce-customer-details-billing.html" class="menu-link">
               <div data-i18n="Address & Billing">Address & Billing</div>
             </a>
@@ -109,6 +110,44 @@
               <div data-i18n="Notifications">Notifications</div>
             </a>
           </li> -->
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons ti ti-chart-pie"></i>
+          <div data-i18n="Report">Report</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="javacript:;" class="menu-link">
+              <div data-i18n="Payment Report">Payment Report</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="javascript:;" class="menu-link">
+              <div data-i18n="Assessment report">Assessment report</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons ti ti-users"></i>
+          <div data-i18n="Report">Users</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="javacript:;" class="menu-link">
+              <div data-i18n="Payment Report">Payment Report</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="javascript:;" class="menu-link">
+              <div data-i18n="Assessment report">Assessment report</div>
+            </a>
+          </li>
         </ul>
       </li>
  

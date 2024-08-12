@@ -249,7 +249,7 @@ Dear Queen Consolidated,
                     <p class="mb-0">Wallet Balance:</p>
                     <p class="fw-medium mb-0" id="wal"></p>
                   </div>
-                  <form id="make_payment">
+                  <form id="make_payment" onsubmit="return false">
                     <div class="mb-6">
                       <label class="form-label" for="invoiceAmount">Payment Amount</label>
                       <div class="input-group">
@@ -265,11 +265,11 @@ Dear Queen Consolidated,
                     </div>
                     <div class="mb-6">
                       <label class="form-label" for="payment-date">Payment Date</label>
-                      <input id="payment-date" class="form-control invoice-date" type="date" />
+                      <input id="payment-date" name="payment_date" class="form-control invoice-date" type="date" />
                     </div>
                     <div class="mb-6">
                       <label class="form-label" for="payment-method">Payment Method</label>
-                      <select class="form-select" id="payment-method">
+                      <select class="form-select" id="payment-method" name="payment_method">
                         <option value="" selected disabled>Select payment method</option>
                         <option value="Wallet" selected>Wallet</option>
                         <!-- <option value="Bank Transfer">Bank Transfer</option>
@@ -279,11 +279,11 @@ Dear Queen Consolidated,
                       </select>
                     </div>
                     <div class="mb-6">
-                      <label class="form-label" for="payment-note">Internal Payment Note</label>
-                      <textarea class="form-control" id="payment-note" rows="2"></textarea>
+                      <label class="form-label" for="payment-note">Payment Note</label>
+                      <textarea class="form-control" id="payment-note" name="payment_note"  rows="2"></textarea>
                     </div>
                     <div class="mb-6 d-flex flex-wrap">
-                      <button type="button" class="btn btn-primary me-4" id="wallet_payment" data-bs-dismiss="offcanvas">Send</button>
+                      <button type="submit" class="btn btn-primary me-4" id="wallet_payment" >Send</button>
                       <button type="button" class="btn btn-label-secondary"  data-bs-dismiss="offcanvas">Cancel</button>
                     </div>
                   </form>
@@ -325,6 +325,41 @@ Dear Queen Consolidated,
         const make_payment = document.getElementById("make_payment");
         make_payment.addEventListener("submit", async function(e) {
           e.preventDefault();
+          $(".spinner-border").show()
+          const data = new FormData(make_payment);
+          const payload = {
+            invoiceAmount: data.get("invoiceAmount"),
+            payment_date: data.get("payment_date"),
+            payment_method: data.get("payment_method"),
+            payment_note: data.get("payment_note")
+          }
+
+          // console.log(payload)
+          try {
+            const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+
+            const res = await req.json();
+            $(".spinner-border").hide()
+            if(response.status == true) {
+                toastr.success(response.message);
+                setTimeout(() => {
+                  location.reload()
+                }, "3000");
+            } else {
+                // for errors - red box
+                toastr.error(response.message);
+            }
+          } catch (error) {
+            $(".spinner-border").hide()
+            // for errors - red box
+            toastr.error(error.message);
+          }
         }) 
       }
 

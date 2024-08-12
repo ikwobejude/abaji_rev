@@ -34,6 +34,9 @@ module.exports = {
     getWalletBalance: async function(req, res) {
         const balance = await wallet.walletBalance(req.user.id)
         res.status(200).json(balance)
+    },
+
+    walletPayment: async function(req, res) {
         
     }
 

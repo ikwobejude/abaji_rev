@@ -1,8 +1,13 @@
 const express = require('express');
 const admin = require('../controller/admin.controller');
+const revenue = require('../controller/revenue.controller');
 const Router = express.Router()
 
 
 Router.get('/dashboard', admin.adminDashboard)
+
+Router.route("/revenue_upload")
+.get(revenue.getRevenueItemByYear)
+.post(revenue.createAssessments);
 
 module.exports = Router

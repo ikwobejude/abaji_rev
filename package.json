@@ -28,6 +28,7 @@
     "mailtrap": "^3.4.0",
     "mysql2": "^3.11.0",
     "pm2": "^5.4.2",
+    "read-excel-file": "^5.8.4",
     "sequelize": "^6.37.3"
   }
 }

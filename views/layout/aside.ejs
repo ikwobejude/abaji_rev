@@ -51,6 +51,34 @@
               </li>
             </ul>
           </li>
+
+          <li class="menu-item <%= setupItem %>">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <div data-i18n="Location Setup">Location Setup</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item <%= link == "/setup/state" ? "active" : "" %>">
+                <a href="/setup/state" class="menu-link">
+                  <div data-i18n="State">State</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/setup/lga" class="menu-link">
+                  <div data-i18n="Lga">Lga</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/setup/ward" class="menu-link">
+                  <div data-i18n="Ward">Ward</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/setup/street" class="menu-link">
+                  <div data-i18n="Street">Street</div>
+                </a>
+              </li>
+            </ul>
+          </li>
           
         </ul>
       </li>

@@ -18,7 +18,7 @@ module.exports =  {
             if (token) {
                 try {
                     const decodedToken = await  jwt.verify(token, process.env.JWT_SECRET);
-                    console.log({userId: decodedToken.userId})
+                    // console.log({userId: decodedToken.userId})
                     if(decodedToken.userId) {
                         let user = await db.query(`
                             SELECT 
@@ -38,7 +38,7 @@ module.exports =  {
                             WHERE users.id = ${decodedToken.userId} LIMIT 1
                         `, {type: QueryTypes.SELECT})
                         
-                        console.log("user active status: ", user[0].group_id)
+                        // console.log("user active status: ", user[0].group_id)
                         // console.log(user)
                         
                         if (!user || user.length === 0) {

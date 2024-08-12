@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
 app.route("*")
   .get(function (req, res, next) {
     res.locals.link = req.originalUrl.split('?')[0];
-    res.locals.copyright = new Date().getFullYear();;
+    res.locals.copyright = new Date().getFullYear();
     next();
   })
   

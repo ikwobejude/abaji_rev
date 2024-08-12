@@ -1,3 +1,4 @@
+const { randomNum } = require("../helper/helper")
 const validation = require("../lib/input_validation")
 const User_groups = require("../model/User_group")
 const Users = require("../model/Users")
@@ -15,13 +16,14 @@ class User {
     }
 
     async createUserGroup(data) {
-        const { value, error }  = this.inputValidate.validateUserGrpp(data)
+        // console.log(data)
+        const { value, error }  = this.inputValidate.validateUserGrpp.validate(data)
         if(error) {
             throw Error(error.message)
         } else {
             await this.user_group.create({
-                group_id: value.group_id,
-                group_name: value.group_name,
+                group_id: randomNum(6),
+                group_name: value.user_role,
             })
 
             return {

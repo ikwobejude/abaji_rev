@@ -36,6 +36,7 @@
                             <th></th>
                             <th>Role Code</th>
                             <th>Role Name </th>
+                            <th>Action</th>
                         </thead>
                         <tbody>
                            <% user_role.forEach((res, i) => { %>
@@ -43,6 +44,21 @@
                                 <td><%= i + 1 %></td>
                                 <td><%= res.group_id %></td>
                                 <td><%= res.group_name %></td>
+                                <td>
+                                    <div class="dropdown">
+                                      <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="ti ti-dots-vertical"></i>
+                                      </button>
+                                      <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/admin/demand_notice"
+                                          ><i class="ti ti-pencil me-1"></i>Edit</a
+                                        >
+                                        <a class="dropdown-item" href="javascript:void(0);"
+                                          ><i class="ti ti-trash me-1"></i> Delete</a
+                                        >
+                                      </div>
+                                    </div>
+                                  </td>
                             </tr>
                            <% }) %>
                         </tbody>
@@ -84,74 +100,12 @@
                 <!-- /Invoice Actions -->
               </div>
 
-              <!-- Offcanvas -->
-              <!-- Send Invoice Sidebar -->
-              <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
-                <div class="offcanvas-header mb-6 border-bottom">
-                  <h5 class="offcanvas-title">Send Invoice</h5>
-                  <button
-                    type="button"
-                    class="btn-close text-reset"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body pt-0 flex-grow-1">
-                  <form>
-                    <div class="mb-6">
-                      <label for="invoice-from" class="form-label">From</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-from"
-                        value="shelbyComapny@email.com"
-                        placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-to" class="form-label">To</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-to"
-                        value="qConsolidated@email.com"
-                        placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-subject" class="form-label">Subject</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-subject"
-                        value="Invoice of purchased Admin Templates"
-                        placeholder="Invoice regarding goods" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-message" class="form-label">Message</label>
-                      <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">
-Dear Queen Consolidated,
-          Thank you for your business, always a pleasure to work with you!
-          We have generated a new invoice in the amount of $95.59
-          We would appreciate payment of this invoice by 05/11/2021</textarea
-                      >
-                    </div>
-                    <div class="mb-6">
-                      <span class="badge bg-label-primary">
-                        <i class="ti ti-link ti-xs"></i>
-                        <span class="align-middle">Invoice Attached</span>
-                      </span>
-                    </div>
-                    <div class="mb-6 d-flex flex-wrap">
-                      <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
-                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <!-- /Send Invoice Sidebar -->
+              
 
               <!-- Add Payment Sidebar -->
               <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
                 <div class="offcanvas-header border-bottom">
-                  <h5 class="offcanvas-title">Add Payment</h5>
+                  <h5 class="offcanvas-title">New Role</h5>
                   <button
                     type="button"
                     class="btn-close text-reset"
@@ -159,45 +113,27 @@ Dear Queen Consolidated,
                     aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body flex-grow-1">
-                  <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
-                    <p class="mb-0">Wallet Balance:</p>
-                    <p class="fw-medium mb-0" id="wal"></p>
-                  </div>
-                  <form id="make_payment" onsubmit="return false">
+                  
+                  <form id="add_role" onsubmit="return false">
                     <div class="mb-6">
-                      <label class="form-label" for="invoiceAmount">Payment Amount</label>
+                      <label class="form-label" for="invoiceAmount">User Role</label>
                       <div class="input-group">
-                        <span class="input-group-text">₦</span>
+                        <span class="input-group-text"><i class="menu-icon tf-icons ti ti-users"></i></span>
                         <input
                           type="text"
-                          id="invoiceAmount"
+                          id="user_role"
                           value=""
-                          name="invoiceAmount"
-                          class="form-control invoice-amount"
-                          placeholder="100" />
+                          name="user_role"
+                          class="form-control invoice-amount"/>
                       </div>
                     </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-date">Payment Date</label>
-                      <input id="payment-date" name="payment_date" class="form-control invoice-date" type="date" />
-                    </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-method">Payment Method</label>
-                      <select class="form-select" id="payment-method" name="payment_method">
-                        <option value="" selected disabled>Select payment method</option>
-                        <option value="Wallet" selected>Wallet</option>
-                        <!-- <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Debit Card">Debit Card</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Paypal">Paypal</option> -->
-                      </select>
-                    </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-note">Payment Note</label>
-                      <textarea class="form-control" id="payment-note" name="payment_note"  rows="2"></textarea>
-                    </div>
+                    
+                    
                     <div class="mb-6 d-flex flex-wrap">
-                      <button type="submit" class="btn btn-primary me-4" id="wallet_payment" >Send</button>
+                      <button type="submit" class="btn btn-primary me-4" id="wallet_payment" >
+                        <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit
+                    </button>
                       <button type="button" class="btn btn-label-secondary"  data-bs-dismiss="offcanvas">Cancel</button>
                     </div>
                   </form>
@@ -212,44 +148,22 @@ Dear Queen Consolidated,
          <!-- Page JS -->
     <!-- <script src="/assets/js/tables-datatables-basic.js"></script> -->
     <script>
-        new DataTable('#example');
-       function printDiv(invoice) {
-            var printContents = document.getElementById("invoice").innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-      }
-
-      addEventListener("DOMContentLoaded", async (event) => {
-        const wal = document.getElementById("wal")
-        const request = await fetch('/admin/wallet_balance')
-        const balance = await request.json();
-        // wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
-
-       
         
-      });
-
-      if(document.getElementById("make_payment")) {
-        const make_payment = document.getElementById("make_payment");
-        make_payment.addEventListener("submit", async function(e) {
+      
+      if(document.getElementById("add_role")) {
+        $(".spinner-border").hide()
+        const add_role = document.getElementById("add_role");
+        add_role.addEventListener("submit", async function(e) {
           e.preventDefault();
           $(".spinner-border").show()
-          const data = new FormData(make_payment);
+          const data = new FormData(add_role);
           const payload = {
-            invoiceAmount: data.get("invoiceAmount"),
-            payment_date: data.get("payment_date"),
-            payment_method: data.get("payment_method"),
-            payment_note: data.get("payment_note")
+            user_role: data.get("user_role")
           }
 
           // console.log(payload)
           try {
-            const req = await fetch(`/admin/demand_notice`, {
+            const req = await fetch(`/admin/user_group`, {
               method: "POST",
               body: JSON.stringify(payload),
               headers: {
@@ -257,7 +171,7 @@ Dear Queen Consolidated,
               }
             })
 
-            const res = await req.json();
+            const response = await req.json();
             $(".spinner-border").hide()
             if(response.status == true) {
                 toastr.success(response.message);

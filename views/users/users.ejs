@@ -286,7 +286,11 @@
         const result = await response.json();
         if (response.ok) {
           toastr.success("User added successfully!");
-          document.getElementById("form-upload-new-record").reset();
+          setTimeout(() => {
+            document.getElementById("form-upload-new-record").reset();
+            location.reload()
+          }, "3000");
+          
         } else {
           toastr.error(result.message || "Failed to add user.");
         }

@@ -417,6 +417,58 @@
     <!-- Include Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/tables-datatables-basic.js"></script>
+   <script>
+  document
+    .getElementById("form-upload-new-record")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      // Get form data
+      const formData = {
+        firstname: document.getElementById("firstname").value,
+        surname: document.getElementById("surname").value,
+        middlename: document.getElementById("middlename").value,
+        user_phone: document.getElementById("user_phone").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        group_id: document.getElementById("group_id").value,
+      };
+
+      const submitBtn = document.getElementById("submit-btn");
+      const loadingSpinner = document.getElementById("loading-spinner");
+
+      submitBtn.disabled = true;
+      loadingSpinner.classList.remove("d-none");
+
+      try {
+        const response = await fetch("/admin/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          toastr.success("User added successfully!");
+          setTimeout(() => {
+            document.getElementById("form-upload-new-record").reset();
+            location.reload()
+          }, "3000");
+          
+        } else {
+          toastr.error(result.message || "Failed to add user.");
+        }
+      } catch (error) {
+        toastr.error("An error occurred while processing your request.");
+      } finally {
+        loadingSpinner.classList.add("d-none");
+        submitBtn.disabled = false;
+      }
+    });
+</script>
+
     <script src="../../assets/vendor/libs/toastr/toastr.js"></script>
     <script src="../../assets/js/ui-toasts.js"></script>
 

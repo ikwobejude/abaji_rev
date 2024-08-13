@@ -65,6 +65,7 @@ const authRouter = require("./router/auth.routes");
 const apiRouter = require("./router/api.routes");
 const adminRouter = require("./router/admin.routes");
 const setupRouter = require("./router/setup.routes");
+const walletRouter = require("./router/wallet.routes");
 
 
 app.set("views", path.join(__dirname, "../views"));
@@ -76,5 +77,6 @@ app.use(authRouter)
 app.use('/api', apiRouter)
 app.use('/admin', middleware.requireAuth, adminRouter)
 app.use('/setup', middleware.requireAuth, setupRouter)
+app.use('/wallet', middleware.requireAuth, walletRouter)
 
 module.exports = app;

@@ -4,10 +4,12 @@ const fs = require("fs")
 const Revenue_upload = require("../model/Revenue_upload")
 const Sequelize  = require("sequelize")
 const db = require('../db/connection')
+const Tax_items = require("../model/Tax_items")
 
 class Revenue {
     constructor(){
         this.revenueUpload = Revenue_upload
+        this.tax_item = Tax_items
         this.db = db
     }
 
@@ -42,8 +44,8 @@ class Revenue {
                 c.city,
                 s.street
             FROM revenue_upload AS r
-            INNER JOIN _cities AS c ON c.city_id = r.rate_district
-            INNER JOIN _streets AS s ON s.idstreet = r.street
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
             WHERE r.rate_year = ${query.year}
         `;
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
@@ -65,17 +67,20 @@ class Revenue {
                 r.revenue_type,
                 r.grand_total,
                 r.rate_year,
+                r.date_uploaded,
                 c.city,
                 s.street
             FROM revenue_upload AS r
-            INNER JOIN _cities AS c ON c.city_id = r.rate_district
-            INNER JOIN _streets AS s ON s.idstreet = r.street
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
             WHERE r.rate_year = ${query.year} AND r.bill_ref_no='${query.invoice}'
         `;
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
-        console.log(revenue)
+        const tax_items = await this.tax_item.findAll({ where: {invoice_number: query.invoice }, raw: true})
+        // console.log(revenue)
         return {
-            revenue: revenue[0]
+            revenue: revenue[0],
+            items: tax_items
         }
     }
 

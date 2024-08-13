@@ -34,14 +34,14 @@ const run = async () => {
 
   for (const row of rows) {
     let invNum = await Invoice_number_count.findOne({ raw: true });
-    let InvoiceNumber = "N-ABJ" + invNum.invoice_number;
+    let InvoiceNumber = "ABJ" + invNum.invoice_number;
 
     const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
     const street = await Streets.findOne({
       where: { street: row[7] },
       raw: true,
     });
-    const payerId = randomNum(10);
+    const payerId = randomNum(10) + parseInt(invNum.invoice_number);
     
     // let revenueCodes = typeof row[2] === "string" ? row[2].split("/") : [row[2]];
     const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
@@ -109,8 +109,15 @@ const run = async () => {
 
   const t = await db.transaction();
   try {
-    await Revenue_upload.bulkCreate(uploads, { transaction: t });
-    await Tax_items.bulkCreate(assessmentItems, { transaction: t });
+    await Revenue_upload.bulkCreate(uploads,{
+      updateOnDuplicate: [
+        "revenue_code", "bill_ref_no", "name_of_business", "revenue_type", "address_of_property", "type_of_property", "annaul_value", "rate_payable", "grand_total", "rate_year", "rate_district", "street", "batch", "invoice_number"
+      ] // Fields to update if duplicate
+    }, { transaction: t });
+    await Tax_items.bulkCreate(assessmentItems, {
+          updateOnDuplicate: ["taxitem", "amount", "business_tag", "taxyear", "revenue_code", "invoice_number", "type"] // Fields to update if duplicate
+        },
+       { transaction: t });
     await t.commit();
     parentPort.postMessage({
       status: true,

@@ -74,7 +74,7 @@ module.exports = {
     const usergroup = await user.userGroup();
     const users = await user.getUser();
 
-    console.log({ users });
+    // console.log({ users });
     res.status(200).render("./users/users", { ...usergroup, ...users });
   },
   deleteUser: async function (req, res) {

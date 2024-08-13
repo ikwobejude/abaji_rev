@@ -5,7 +5,9 @@ const Router = express.Router();
 
 
 Router.route('/')
-.get(app.homePage)
+.get(function(req, res) {
+    res.redirect("/login")
+})
 Router.get('/blank', function(req, res) {
     res.status(200).render('./blank')
 })

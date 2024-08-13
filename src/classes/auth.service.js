@@ -9,17 +9,17 @@ const valid = require("../lib/input_validation");
 class Auth {
   constructor() {
     this.Op = Sequelize.Op;
-    this.users = Users
-    this.logiValidation = valid
+    this.users = Users;
+    this.logiValidation = valid;
   }
 
   validation(body) {
-      const {value, error} = this.logiValidation.login.validate(body);
-      if(error) {
-        throw Error(error.message)
-      } else {
-        return value
-      }
+    const { value, error } = this.logiValidation.login.validate(body);
+    if (error) {
+      throw Error(error.message);
+    } else {
+      return value;
+    }
   }
 
   maxAge() {
@@ -33,8 +33,8 @@ class Auth {
   }
 
   async loginUser(body) {
-    const data = this.validation(body)
-    if(data) {
+    const data = this.validation(body);
+    if (data) {
       const user = await this.findUser(data.username, data.password);
       const token = this.jwtToken(user.user.id);
       return {
@@ -60,9 +60,9 @@ class Auth {
     });
 
     if (user) {
-    //   console.log({ user });
+      //   console.log({ user });
       const auth = await this.comparePassword(password, user.password);
-    //   console.log({ auth });
+      //   console.log({ auth });
       if (auth) {
         return {
           status: true,
@@ -84,20 +84,24 @@ class Auth {
     }
   }
 
-
   async resetPassword(data) {
-    const {value, error} = this.logiValidation.login.validate(body);
-    if(error) {
-      throw Error(error.message)
+    const { value, error } = this.logiValidation.login.validate(data);
+    if (error) {
+      throw Error(error.message);
     } else {
-      const user = await this.findUser(data.username, data.old_passoerd)
-      user.update({password: await bcrypt.hash(value.password, saltRounds), inactive:1}, {new:true});
+      const user = await this.findUser(data.username, data.old_passoerd);
+      user.update(
+        {
+          password: await bcrypt.hash(value.password, saltRounds),
+          inactive: 1,
+        },
+        { new: true }
+      );
       return {
-          status: "success",
-          data: "You password has been changed!!"
-      }
+        status: "success",
+        data: "You password has been changed!!",
+      };
     }
-    
   }
 }
 

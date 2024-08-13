@@ -21,5 +21,7 @@ Router.route("/user").get(revenue.getUser).post(revenue.postUser);
 Router.route("/user_group")
   .get(revenue.getUserRoles)
   .post(revenue.postUserRoles);
+Router.delete("/user/:userId", revenue.deleteUser);
+Router.put("/user/:userId", revenue.updateUser);
 
 module.exports = Router;

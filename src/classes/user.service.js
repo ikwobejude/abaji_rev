@@ -40,6 +40,8 @@ class User {
       password,
       user_phone,
       email,
+      service_id,
+      service_code
     } = data;
     const hashedPassword = await bcrypt.hash(password, 10);
     const existingUser = await this.users.findOne({ where: { email } });
@@ -53,6 +55,8 @@ class User {
       user_phone,
       email,
       username: email,
+      service_id: service_id,
+      service_code: service_code
     });
 
     return { status: true, message: "User created successfully." };

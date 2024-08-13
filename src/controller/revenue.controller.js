@@ -61,7 +61,7 @@ module.exports = {
   },
   postUser: async function (req, res) {
     try {
-      const response = await user.createUser(req.body);
+      const response = await user.createUser({...req.body, service_id: req.user.service_id, service_code: req.user.service_code});
       res.status(200).json(response);
     } catch (error) {
       res.status(400).json({

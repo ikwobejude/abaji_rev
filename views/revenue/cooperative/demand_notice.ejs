@@ -133,7 +133,7 @@
                                                           </tr>
                                                           <% }) %>
                                                           <% 
-                                                          let gtotal = total + parseFloat(revenue.arrears); %>
+                                                          let gtotal = total + parseFloat(revenue.arrears==0 || revenue.arrears == null ? 0 :revenue.arrears); %>
                                                           
 
                                                                   <tr>
@@ -179,7 +179,7 @@
                                                                       </td>
                                                                       <td class="td sess"
                                                                           style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important ">
-                                                                          &#8358;<%=gtotal ? parseFloat(gtotal- revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00"%>
+                                                                          &#8358;<%= gtotal.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                                       </td>
                                                                   </tr>
 

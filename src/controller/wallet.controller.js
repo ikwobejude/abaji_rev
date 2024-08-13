@@ -3,7 +3,7 @@ const Wallet = require("../classes/wallet.service");
 
 
 const response = new Wallet();
-const User = new User();
+const user = new User();
 
 module.exports = {
     fundWallet: async function(req, res) {
@@ -28,18 +28,16 @@ module.exports = {
 
 
     walletTransactions: async function(req, res) {
-        // console.log(req.query, req.user)
-        // const response = new Wallet();
-        const data = await response.walletRecords(req.query, req.user);
+        // const data = await response.walletRecords(req.query, req.user);
         // res.status(200).json(data)
         res.status(200).render('./wallet/wallet', {
-            ...data
+            // ...data
         })
     },
 
     validateUser: async function(req, res) {
         // const response = new systemUser();
-        const data = await User.getUser(req.query.email);
+        const data = await user.getUser(req.query.email);
         // res.status(200).json()
         if(data){
             res.status(200).json({

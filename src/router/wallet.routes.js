@@ -1,12 +1,12 @@
 const express = require("express");
-const WalletController = require("../controllers/Users/WalletController");
+const wallet = require("../controller/wallet.controller");
 const Router = express.Router();
 
 Router.route('/')
-.get(WalletController.walletTransactions)
-.post(WalletController.fundWallet)
+.get(wallet.walletTransactions)
+.post(wallet.fundWallet)
 
-Router.get('/validate_email', WalletController.validateUser)
+// Router.get('/validate_email', WalletController.validateUser)
 
 // Router
 

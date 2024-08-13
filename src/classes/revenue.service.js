@@ -42,8 +42,8 @@ class Revenue {
                 c.city,
                 s.street
             FROM revenue_upload AS r
-            INNER JOIN _cities AS c ON c.city_id = r.rate_district
-            INNER JOIN _streets AS s ON s.idstreet = r.street
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
             WHERE r.rate_year = ${query.year}
         `;
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
@@ -68,12 +68,12 @@ class Revenue {
                 c.city,
                 s.street
             FROM revenue_upload AS r
-            INNER JOIN _cities AS c ON c.city_id = r.rate_district
-            INNER JOIN _streets AS s ON s.idstreet = r.street
+            INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
+            INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
             WHERE r.rate_year = ${query.year} AND r.bill_ref_no='${query.invoice}'
         `;
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
-        console.log(revenue)
+        // console.log(revenue)
         return {
             revenue: revenue[0]
         }

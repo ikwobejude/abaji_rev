@@ -1,10 +1,12 @@
+const Admin = require("../classes/dashboard.service");
 const User = require("../classes/user.service")
 
 const user = new User();
-
+const admin = new Admin()
 module.exports = {
     adminDashboard: async function(req, res) {
-        res.status(200).render('./dashboard')
+        const data = await admin.adminDashboard(req.user)
+        res.status(200).render('./dashboard', {...data})
     },
 
     getAllUsers: async function(req, res) {
@@ -15,5 +17,13 @@ module.exports = {
     getUserGroup: async function(req, res) {
         const response = await user.userGroup()
         res.status(200).render('', {response})
+    },
+
+     // User group
+     getRevenueUGraph: async function(req, res) {
+        const response = await admin.revenueGraph(req.user)
+        res.status(200).json(response)
     }
+
+
 }

@@ -4,7 +4,7 @@
 
 'use strict';
 
-(function () {
+(async function  () {
   let cardColor, labelColor, headingColor, borderColor, legendColor;
 
   if (isDarkStyle) {
@@ -299,6 +299,17 @@
 
   // Generated Leads Chart
   // --------------------------------------------------------------------
+  const req1 = await fetch('/admin/revenue_uploads');
+  const res1 = await req1.json();
+  console.log(res1)
+  let label1 = [];
+  let series1 = [];
+  res1.forEach(rf => {
+    label1.push(rf.revenue_name)
+    series1.push(rf.invoice_count)
+  })
+
+  console.log(res1)
   const generatedLeadsChartEl = document.querySelector('#generatedLeadsChart'),
     generatedLeadsChartConfig = {
       chart: {
@@ -307,8 +318,8 @@
         parentHeightOffset: 0,
         type: 'donut'
       },
-      labels: ['Electronic', 'Sports', 'Decor', 'Fashion'],
-      series: [45, 58, 30, 50],
+      labels: label1,
+      series: series1,
       colors: [
         chartColors.donut.series1,
         chartColors.donut.series2,

@@ -40,11 +40,11 @@
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row invoice-preview">
                 <!-- Invoice -->
-                <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-0" id="invoice">
+                <div class="col-xl-9 col-md-8 col-12 mb-md-0 mt-0" id="invoice">
                   
-                  <div class="card p-sm-12 ">
-                    <div class="row" style="top: -50%;">
-                      <div class="col-md-12 text-center" >
+                  <div class="card ">
+                    <div class="row" >
+                      <div class="col-md-12 text-center" style="top: -50%;">
                         <img src="/logo.jpeg" alt="logo"  style="text-align: center;"> <br>
                         <span style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;" class="mt-2">ABAJI AREA COUNCIL</span><br>
                         <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
@@ -286,10 +286,8 @@
                                       `${revenue.address_of_property} ${revenue.market}` :
                                       revenue.address_of_property %>
                               </b>
-
                               <br>
-                              <br>
-                              <table width="100%" style="padding: 20px;" class="tbl">
+                              <table width="100%" style="padding: 20px;" class="tbl pb-2">
                                   <thead style="background-color: green; color: #fff;">
                                       <tr>
                                           <th>S/N</th>
@@ -391,9 +389,7 @@
 
                 </div>
                 </div>
-                <!-- /Invoice -->
-
-                <!-- Invoice Actions -->
+              
                 <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                   <div class="card">
                     <div class="card-body">
@@ -428,8 +424,6 @@
                 <!-- /Invoice Actions -->
               </div>
 
-              <!-- Offcanvas -->
-              <!-- Send Invoice Sidebar -->
               <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
                 <div class="offcanvas-header mb-6 border-bottom">
                   <h5 class="offcanvas-title">Send Invoice</h5>
@@ -490,9 +484,7 @@ Dear Queen Consolidated,
                   </form>
                 </div>
               </div>
-              <!-- /Send Invoice Sidebar -->
-
-              <!-- Add Payment Sidebar -->
+            
               <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
                 <div class="offcanvas-header border-bottom">
                   <h5 class="offcanvas-title">Add Payment</h5>

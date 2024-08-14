@@ -24,6 +24,7 @@ module.exports =  {
                             SELECT 
                                 users.id,
                                 users.group_id,
+                                g.group_name,
                                 users.username,
                                 users.email,
                                 users.surname,
@@ -35,6 +36,7 @@ module.exports =  {
                                 users.name,
                                 users.user_code
                             from users 
+                            INNER JOIN user_groups AS g ON g.group_id = users.group_id
                             WHERE users.id = ${decodedToken.userId} LIMIT 1
                         `, {type: QueryTypes.SELECT})
                         

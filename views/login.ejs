@@ -49,7 +49,10 @@
                   </div>
                 </div>
                 <div class="mb-4">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+                  <button class="btn btn-primary  w-100" id="submit" type="submit">
+                    <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                    Login
+                  </button>
                 </div>
               </form>
 
@@ -96,17 +99,21 @@
     <%- include('./layout/landing/footer') %>
     <script>
         if(document.getElementById("login_form")) {
-            console.log("Hi")
+            // console.log("Hi")
+            $(".spinner-border").hide()
+            
             const form = document.getElementById("login_form");
             form.addEventListener("submit", async function(e) {
                 e.preventDefault();
+                $(".spinner-border").show()
+                document.getElementById("submit").disabled = true;
                 const data = new FormData(form)
                 const payload = {
                     username: data.get("username"),
                     password: data.get("password")
                 }
 
-                console.log(payload);
+                // console.log(payload);
                 try {
                     const res = await fetch('/login', {
                         method: "post",
@@ -118,6 +125,8 @@
 
                     const response = await res.json()
                     // console.log(response)
+                    $(".spinner-border").hide()
+                    document.getElementById("submit").disabled = false;
                     if(response.status == "success") {
                       
                         Swal.fire({
@@ -141,6 +150,8 @@
                         });
                     }
                 } catch (error) {
+                  $(".spinner-border").hide()
+                  document.getElementById("submit").disabled = false;
                   Swal.fire({
                     icon: "error",
                     title: "Oops...",

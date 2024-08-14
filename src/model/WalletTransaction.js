@@ -15,7 +15,7 @@ const WalletTransaction = db.define('wallettransaction',{
     amount: {type: Sequelize.STRING}, 
     walletid: {type: Sequelize.STRING}, 
     transactionid: {type: Sequelize.STRING}, 
-    created_on: {type: Sequelize.STRING}, 
+    created_on: {type: Sequelize.DATE}, 
     status: {type: Sequelize.STRING}, 
 
    

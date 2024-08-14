@@ -4,6 +4,16 @@
   <head>
     <%- include('../../layout/head') %>
     <link rel="stylesheet" href="/assets/vendor/css/pages/app-invoice.css" />
+    <style>
+      .lkbLoggo{
+        width: 9.182cm !important;
+        height: 2.721cm !important;
+        margin-top: 0.199cm !important;
+        background-image: url("/logo.png") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+      }
+    </style>
   </head>
 
   <body>
@@ -31,7 +41,15 @@
               <div class="row invoice-preview">
                 <!-- Invoice -->
                 <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-0" id="invoice">
-                  <div class="card invoice-preview-card p-sm-12 p-6">
+                  
+                  <div class="card p-sm-12 ">
+                    <div class="row" style="top: -50%;">
+                      <div class="col-md-12 text-center" >
+                        <img src="/logo.jpeg" alt="logo"  style="text-align: center;"> <br>
+                        <span style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;" class="mt-2">ABAJI AREA COUNCIL</span><br>
+                        <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
+                      </div>
+                    </div>
                       <table width="100%" class="tbl">
                           <tr>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"  width="20%">Tax ID </td>
@@ -47,7 +65,7 @@
                                       </span></b></td>
                           </tr>
                           <tr>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Rate Payer’s Name </td>
+                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Payer’s Name </td>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                   <%= revenue.name_of_business %>
                               </td>
@@ -81,16 +99,15 @@
 
                       </table>
                       <div class="row">
-                          <div class="col-md-12 mt-2">
-                              <h5>Dear sir/Ma</h5>
+                          <div class="col-md-12 mt-0">
+                              <h5>Dear Sir/Ma</h5>
                               <p>
-                              <h4 style="text-align: center;"> <span class="invo_no"><b>DEMAND
-                                          NOTICE</b></span></h4>
-                              <span style="text-align: center;">
-                                  This is to inform you of your indebtedness to ABAJI Local
-                                  Government as noted hereunder, prompt payment would however be
-                                  appreciated
-                              </span>
+                                <h4 style="text-align: center;"> <span class="invo_no"><b>DEMAND NOTICE</b></span></h4>
+                                <span style="text-align: center;">
+                                    This is to inform you of your indebtedness to ABAJI Local
+                                    Government as noted hereunder, prompt payment would however be
+                                    appreciated
+                                </span>
                               </p>
                           </div>
                       </div>
@@ -142,7 +159,7 @@
                                                                       <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
                                                                       <td class="td sess"
                                                                           style="font-weight: bold !important; text-align: right !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                                          <strong>Arrear</strong>
+                                                                          <strong>Arrears</strong>
                                                                       </td>
                                                                       <td class="td sess"
                                                                           style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
@@ -201,7 +218,7 @@
                                     </tr>
                                     <tr>
                                         <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                            08083598783
+                                          08032126276
                                         </td>
                                     </tr>
                                 </table>
@@ -242,7 +259,7 @@
 
                               <td>
                                   <div style="text-align: right;">
-                                      <img src="/signature.png"
+                                      <img src="/abaji_signature.png"
                                       style="height: 50px; width: 130px;" alt=""> <br>
                                         Council Treasurer
                                   </div>
@@ -252,7 +269,6 @@
                  
 
 
-                  <div style="height: 8vh !important; width: 100% !important;"></div>
                   <table width="100%">
                       <tr>
                           <td>
@@ -313,7 +329,7 @@
                                                   <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
                                                   <td class="td sess"
                                                       style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                      <strong>Arrear</strong></td>
+                                                      <strong>Arrears</strong></td>
                                                   <td class="td sess"
                                                       style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
                                                       &#8358;<%= revenue.arrears==0 || revenue.arrears == null ? "0.00" : parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

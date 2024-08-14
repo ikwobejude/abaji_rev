@@ -63,5 +63,26 @@ module.exports = {
         "string.empty": `User role cannot be empty`,
       })
       
-    })
+    }),
+
+    walletToitValidation: Joi.object({
+      email: Joi.string().email().required().messages({
+        "any.required": `Email is required`,
+        "string.empty": `Email cannot be empty`,
+        "string.email": `Email must be a valid email`,
+      }),
+      owner_name: Joi.string().required().messages({
+        "any.required": `Name is required.`,
+        "string.empty": `Name  cannot be empty.`,
+      }),
+      userId: Joi.string().required().messages({
+        "any.required": `UserId is required.`,
+        "string.empty": `UserId cannot be empty.`,
+      }),
+      owner_mobile_no: Joi.number().allow("").optional(),
+      amount : Joi.number().required().messages({
+        "any.required": `Amount is required.`,
+        "string.empty": `Amount cannot be empty.`,
+      }),
+    }).unknown()
 }

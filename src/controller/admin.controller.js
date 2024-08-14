@@ -9,9 +9,12 @@ module.exports = {
         res.status(200).render('./dashboard', {...data})
     },
 
-    getAllUsers: async function(req, res) {
+  getAllUsers: async function (req, res) {},
 
-    },
+  // User group
+  getprofile: async function (req, res) {
+    res.status(200).render("profile");
+  },
 
     // User group
     getUserGroup: async function(req, res) {
@@ -23,7 +26,8 @@ module.exports = {
      getRevenueUGraph: async function(req, res) {
         const response = await admin.revenueGraph(req.user)
         res.status(200).json(response)
-    }
-
-
-}
+    },
+    security: async function (req, res) {
+        res.status(200).render("security");
+    },
+};

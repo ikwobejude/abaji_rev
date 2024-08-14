@@ -1,4 +1,6 @@
 
+const Sequelize = require('sequelize')
+const { v4: uuidv4 } = require('uuid');
 const db = require('../db/connection');
 const Revenue_upload = require('../model/Revenue_upload');
 const RevenuesInvoices = require('../model/RevenueInvoice');
@@ -16,9 +18,11 @@ class FundWallet {
         this.revenue_upload = Revenue_upload
         this.users = Users
         this.db = db
+        this.Op = Sequelize.Op
     }
 
     async creditWallet(value, user) {
+        console.log(value)
         const transactionExist = await this.transaction.findOne({
           where: { transactionId: value.transactionId },
         });
@@ -32,32 +36,32 @@ class FundWallet {
           attributes: ["id"],
           where: {
             [this.Op.or]: [
-              { username: value.agentemail },
-              { email: value.agentemail },
+              { username: value.email },
+              { email: value.email },
             ],
           },
           raw: true,
         });
     
         // check if user have a wallet, else create wallet
-        await this.validateUserWallet(walletUser.id);
+        const wallet = await this.validateUserWallet(walletUser.id);
     
         // console.log(wallet)
     
         const t = await this.db.transaction();
         try {
-          await this.createWalletTransaction(walletUser.id,"successful","NGN",value.top_amount,t);
+          await this.createWalletTransaction(walletUser.id,"successful","NGN",value.amount, "TOPIT", wallet.idwallent, value.transactionid, t);
           // create transaction
           let customer = {
-            name: value.agentname,
-            email: value.agentemail,
+            name: value.owner_name,
+            email: value.email,
             phone_number: value.agant_phone_number,
             topitby: user.id,
           };
     
-          await this.createTransaction(walletUser.id, value.transactionId, "successful", "transaction", value.top_amount, customer, "TOPIT", "successful", t);
+          await this.createTransaction(walletUser.id, value.transactionId, "successful", "transaction", value.amount, customer, "TOPIT", "successful", t);
     
-          await this.updateWallet(walletUser.id, value.top_amount, t);
+          await this.updateWallet(walletUser.id, value.amount, t);
           await t.commit();
     
           return {
@@ -88,15 +92,18 @@ class FundWallet {
         }
       }
     
-      async createWalletTransaction(userId, status, currency, amount, t) {
+      async createWalletTransaction(userId, status, currency, amount, method, walletid, transactionid, t) {
         // create wallet transaction
-        const walletTransaction = await this.wallet_transactions.create(
+        const walletTransaction = await this.wallet_transaction.create(
           {
             userId: userId,
             isInflow: 1,
             currency: currency,
             amount: amount,
             status: status,
+            paymentMethod: method,
+            walletid: walletid,
+            transactionid: transactionid
           },
           { transaction: t }
         );
@@ -107,6 +114,7 @@ class FundWallet {
       // Create Transaction
       async createTransaction(userId, id, status, currency, amount, customer, gatway, statuss, t) {
         // create transaction
+        console.log(customer)
         const transaction = await this.transaction.create(
           {
             userId: userId,
@@ -172,6 +180,7 @@ class FundWallet {
             if (query.gateway) {
               sql += ` AND transaction.paymentGateway = '${query.gateway}'`;
             }
+            
         
             if (query.from && query.to) {
               sql += ` AND Date(transaction.created_on) >= '${query.from}'`;
@@ -418,4 +427,81 @@ class FundWallet {
           application_number: trackNumber,
         }}, {new: true}, {transaction: t})
       }
+
+      async wallets() {
+        return await this.db.query(`
+            SELECT 
+                w.*,
+                u.name
+            FROM wallet AS w
+            INNER JOIN users AS u ON u.id = w.userId
+            `, {type: Sequelize.QueryTypes.SELECT})
+
+        // return {
+        //     wallets
+        // }
+      }
+
+      async userWalletTransaction(query) {
+        // console
+        const perPage = 20; // number of records per page
+        const page = query.page || 1;
+        let offset = perPage * page - perPage;
+      
+          let sql = `
+          SELECT 
+          transaction.*, 
+          topit.name as tname, 
+          U.name AS uname 
+           FROM transaction 
+           LEFT JOIN users AS topit ON transaction.topitby =  topit.id
+           INNER JOIN users AS U  ON transaction.userid =  U.id
+           WHERE isInflow IS NOT NULL
+           `;
+      
+        if (query.id) {
+            sql += ` AND transaction.userId = '${query.id}'`;
+          }
+          if (query.type) {
+            sql += ` AND transaction.isInflow = '${query.type}'`;
+          }
+      
+          if (query.customerId) {
+            sql += ` AND transaction.transactionId = '${query.customerId}'`;
+          }
+      
+          if (query.gateway) {
+            sql += ` AND transaction.paymentGateway = '${query.gateway}'`;
+          }
+          
+      
+          if (query.from && query.to) {
+            sql += ` AND Date(transaction.created_on) >= '${query.from}'`;
+            sql += ` AND Date(transaction.created_on) <= '${query.to}'`;
+          } 
+          if(query.from && !query.to ){
+            sql += ` AND Date(transaction.created_on) = '${query.from}'`;
+          }
+      
+          const cnt = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT});
+          sql += ` ORDER BY transaction.id DESC LIMIT ${perPage} OFFSET ${offset}`;
+          const transaction = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT});
+          const count = cnt.length;
+
+          console.log(transaction)
+          return {
+            current: page,
+            pages: Math.ceil(count / perPage),
+            page_title: "Wallet",
+            transaction: transaction,
+            type: query.type,
+            customerId: query.customerId,
+            gateway: query.gateway,
+            from: query.from,
+            to: query.to,
+          }
+    }
 }
+
+
+module.exports = FundWallet

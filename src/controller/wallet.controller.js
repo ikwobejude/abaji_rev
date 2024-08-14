@@ -1,20 +1,21 @@
+const FundWallet = require("../classes/fund_wallet.service");
 const User = require("../classes/user.service");
-const Wallet = require("../classes/wallet.service");
+const { walletToitValidation } = require("../lib/input_validation");
 
-
-const response = new Wallet();
 const user = new User();
+const fund_wallet = new FundWallet()
 
 module.exports = {
-    fundWallet: async function(req, res) {
+    creditWallet: async function(req, res) {
         // console.log(req.body)
+        // return
         try {
-            const {value, error} = Validation.walletToitValidation.validate(req.body)
+            const {value, error} = walletToitValidation.validate(req.body)
             if(error) {
                 throw Error(error.message)
             } else {
                 
-                const data = await response.creditWallet(value, req.user);
+                const data = await fund_wallet.creditWallet(value, req.user);
                 res.status(200).json(data)
             }
         } catch (error) {
@@ -28,27 +29,25 @@ module.exports = {
 
 
     walletTransactions: async function(req, res) {
-        // const data = await response.walletRecords(req.query, req.user);
-        // res.status(200).json(data)
-        res.status(200).render('./wallet/wallet', {
-            // ...data
-        })
+        const data = await fund_wallet.wallets();
+        res.status(200).render('./wallet/wallet', {data})
     },
 
     validateUser: async function(req, res) {
-        // const response = new systemUser();
-        const data = await user.getUser(req.query.email);
-        // res.status(200).json()
-        if(data){
-            res.status(200).json({
-              status: "success",
-              data: data
-            })
-          } else {
-            res.status(401).json({
-              status: "error",
-              error: "User with the email address does not exist"
-            })
-          }
+        const data = await user.validateUserEmail(req.query.email);
+        // console.log(data)
+        res.status(200).json(data)
+    },
+
+    viewWallets: async function(req, res) {
+        const data = await fund_wallet.wallets();
+        // console.log(data)
+        res.status(200).json(data)
+    },
+
+    viewWalletTransactions: async function(req, res) {
+        const data = await fund_wallet.userWalletTransaction({...req.query, id: req.params.id});
+        // console.log(data)
+        res.status(200).render('./wallet/user_wallet_transactions', {...data})
     }
 }

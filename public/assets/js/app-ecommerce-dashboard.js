@@ -811,210 +811,176 @@
   // Invoice datatable
   // --------------------------------------------------------------------
   if (dt_invoice_table.length) {
+    // console.log( window.location.origin + '/wallet/records')
     var dt_invoice = dt_invoice_table.DataTable({
-      ajax: assetsPath + 'json/invoice-list.json', // JSON file to add data
-      columns: [
-        // columns according to JSON
-        { data: 'invoice_id' },
-        { data: 'invoice_id' },
-        { data: 'invoice_id' },
-        { data: 'invoice_status' },
-        { data: 'total' },
-        { data: 'issued_date' },
-        { data: 'invoice_status' },
-        { data: 'action' }
-      ],
-      columnDefs: [
-        {
-          // For Responsive
-          className: 'control',
-          responsivePriority: 2,
-          searchable: false,
-          targets: 0,
-          render: function (data, type, full, meta) {
-            return '';
-          }
-        },
-        {
-          // For Checkboxes
-          targets: 1,
-          orderable: false,
-          checkboxes: {
-            selectAllRender: '<input type="checkbox" class="form-check-input">'
-          },
-          render: function () {
-            return '<input type="checkbox" class="dt-checkboxes form-check-input" >';
-          },
-          searchable: false
-        },
-        {
-          // Invoice ID
-          targets: 2,
-          render: function (data, type, full, meta) {
-            var $invoice_id = full['invoice_id'];
-            // Creates full output for row
-            var $row_output = '<a href="app-invoice-preview.html">#' + $invoice_id + '</a>';
-            return $row_output;
-          }
-        },
-        {
-          // Invoice status
-          targets: 3,
-          render: function (data, type, full, meta) {
-            var $invoice_status = full['invoice_status'],
-              $due_date = full['due_date'],
-              $balance = full['balance'];
-            var roleBadgeObj = {
-              Sent: '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-secondary w-px-30 h-px-30"><i class="ti ti-circle-check ti-xs"></i></span>',
-              Draft:
-                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-primary w-px-30 h-px-30"><i class="ti ti-device-floppy ti-xs"></i></span>',
-              'Past Due':
-                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-danger w-px-30 h-px-30"><i class="ti ti-info-circle ti-xs"></i></span>',
-              'Partial Payment':
-                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-success w-px-30 h-px-30"><i class="ti ti-circle-half-2 ti-xs"></i></span>',
-              Paid: '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-warning w-px-30 h-px-30"><i class="ti ti-chart-pie ti-xs"></i></span>',
-              Downloaded:
-                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-info w-px-30 h-px-30"><i class="ti ti-arrow-down-circle ti-xs"></i></span>'
-            };
-            return (
-              "<span class='d-inline-block' data-bs-toggle='tooltip' data-bs-html='true' title='<span>" +
-              $invoice_status +
-              '<br> <span class="fw-medium">Balance:</span> ' +
-              $balance +
-              '<br> <span class="fw-medium">Due Date:</span> ' +
-              $due_date +
-              "</span>'>" +
-              roleBadgeObj[$invoice_status] +
-              '</span>'
-            );
-          }
-        },
-        {
-          // Total Invoice Amount
-          targets: 4,
-          render: function (data, type, full, meta) {
-            var $total = full['total'];
-            return '$' + $total;
-          }
-        },
-        {
-          // Actions
-          targets: -1,
-          title: 'Actions',
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center">' +
-              '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record" data-bs-toggle="tooltip" title="Delete record"><i class="ti ti-trash ti-md"></i></a>' +
-              '<a href="app-invoice-preview.html" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="tooltip" title="Preview"><i class="ti ti-eye ti-md"></i></a>' +
-              '<div class="d-inline-block">' +
-              '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></a>' +
-              '<ul class="dropdown-menu dropdown-menu-end m-0">' +
-              '<li><a href="javascript:;" class="dropdown-item">Details</a></li>' +
-              '<li><a href="javascript:;" class="dropdown-item">Archive</a></li>' +
-              '<div class="dropdown-divider"></div>' +
-              '<li><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></li>' +
-              '</ul>' +
-              '</div>' +
-              '</div>'
-            );
-          }
-        },
-        {
-          // Invoice Status
-          targets: -2,
-          visible: false
-        }
-      ],
-      order: [[1, 'desc']],
-      dom:
-        '<"row"' +
-        '<"col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2"l<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start"B>>' +
-        '<"col-12 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-5 gap-md-4 mt-n5 mt-md-0"f<"invoice_status mb-6 mb-md-0">>' +
-        '>t' +
-        '<"row"' +
-        '<"col-sm-12 col-md-6"i>' +
-        '<"col-sm-12 col-md-6"p>' +
-        '>',
-      displayLength: 6,
-      lengthMenu: [6, 10, 25, 50, 75, 100],
-      language: {
-        sLengthMenu: 'Show _MENU_',
-        search: '',
-        searchPlaceholder: 'Search Invoice',
-        paginate: {
-          next: '<i class="ti ti-chevron-right ti-sm"></i>',
-          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
-        }
-      },
-      // Buttons with Dropdown
-      buttons: [
-        {
-          text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Create Invoice</span>',
-          className: 'btn btn-primary waves-effect waves-light',
-          action: function (e, dt, button, config) {
-            window.location = 'app-invoice-add.html';
-          }
-        }
-      ],
-      // For responsive popup
-      responsive: {
-        details: {
-          display: $.fn.dataTable.Responsive.display.modal({
-            header: function (row) {
-              var data = row.data();
-              return 'Details of ' + data['full_name'];
-            }
-          }),
-          type: 'column',
-          renderer: function (api, rowIdx, columns) {
-            var data = $.map(columns, function (col, i) {
-              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
-                : '';
-            }).join('');
+      // ajax: window.location.origin + '/wallet/records', // JSON file to add data
+      // columns: [
+      //   // columns according to JSON
+      //   { data: 'name' },
+      //   { data: 'balance' },
+      //   { data: 'created_on' },
+      //   { data: 'action' }
+      // ],
+      // columnDefs: [
+      //   {
+      //     // For Responsive
+      //     className: 'control',
+      //     responsivePriority: 2,
+      //     searchable: false,
+      //     targets: 0,
+      //     render: function (data, type, full, meta) {
+      //       console.log({data, type, full, meta})
+      //       return '';
+      //     }
+      //   },
+      //   {
+      //     // For Checkboxes
+      //     targets: 1,
+      //     orderable: false,
+      //     checkboxes: {
+      //       selectAllRender: '<input type="checkbox" class="form-check-input">'
+      //     },
+      //     render: function () {
+      //       return '<input type="checkbox" class="dt-checkboxes form-check-input" >';
+      //     },
+      //     searchable: false
+      //   },
+      //   {
+      //     // Invoice ID
+      //     targets: 2,
+      //     render: function (data, type, full, meta) {
+      //       var $balance = full['balance'];
+      //       // Creates full output for row
+      //       var $row_output = '<a href="app-invoice-preview.html">#' + $balance + '</a>';
+      //       return $row_output;
+      //     }
+      //   },
+      //   {
+      //     // Total Invoice Amount
+      //     targets: 4,
+      //     render: function (data, type, full, meta) {
+      //       var $total = full['total'];
+      //       return '$' + $total;
+      //     }
+      //   },
+      //   {
+      //     // Actions
+      //     targets: -1,
+      //     title: 'Actions',
+      //     searchable: false,
+      //     orderable: false,
+      //     render: function (data, type, full, meta) {
+      //       return (
+      //         '<div class="d-flex align-items-center">' +
+      //         '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record" data-bs-toggle="tooltip" title="Delete record"><i class="ti ti-trash ti-md"></i></a>' +
+      //         '<a href="app-invoice-preview.html" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="tooltip" title="Preview"><i class="ti ti-eye ti-md"></i></a>' +
+      //         '<div class="d-inline-block">' +
+      //         '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></a>' +
+      //         '<ul class="dropdown-menu dropdown-menu-end m-0">' +
+      //         '<li><a href="javascript:;" class="dropdown-item">Details</a></li>' +
+      //         '<li><a href="javascript:;" class="dropdown-item">Archive</a></li>' +
+      //         '<div class="dropdown-divider"></div>' +
+      //         '<li><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+      //         '</ul>' +
+      //         '</div>' +
+      //         '</div>'
+      //       );
+      //     }
+      //   },
+      //   {
+      //     // Invoice Status
+      //     targets: -2,
+      //     visible: false
+      //   }
+      // ],
+      // order: [[1, 'desc']],
+      // dom:
+      //   '<"row"' +
+      //   '<"col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2"l<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start"B>>' +
+      //   '<"col-12 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-5 gap-md-4 mt-n5 mt-md-0"f<"invoice_status mb-6 mb-md-0">>' +
+      //   '>t' +
+      //   '<"row"' +
+      //   '<"col-sm-12 col-md-6"i>' +
+      //   '<"col-sm-12 col-md-6"p>' +
+      //   '>',
+      // displayLength: 6,
+      // lengthMenu: [6, 10, 25, 50, 75, 100],
+      // language: {
+      //   sLengthMenu: 'Show _MENU_',
+      //   search: '',
+      //   searchPlaceholder: 'Search Invoice',
+      //   paginate: {
+      //     next: '<i class="ti ti-chevron-right ti-sm"></i>',
+      //     previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+      //   }
+      // },
+      // // Buttons with Dropdown
+      // buttons: [
+      //   {
+      //     text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Create Invoice</span>',
+      //     className: 'btn btn-primary waves-effect waves-light',
+      //     action: function (e, dt, button, config) {
+      //       window.location = 'app-invoice-add.html';
+      //     }
+      //   }
+      // ],
+      // // For responsive popup
+      // responsive: {
+      //   details: {
+      //     display: $.fn.dataTable.Responsive.display.modal({
+      //       header: function (row) {
+      //         var data = row.data();
+      //         return 'Details of ' + data['full_name'];
+      //       }
+      //     }),
+      //     type: 'column',
+      //     renderer: function (api, rowIdx, columns) {
+      //       var data = $.map(columns, function (col, i) {
+      //         return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+      //           ? '<tr data-dt-row="' +
+      //               col.rowIndex +
+      //               '" data-dt-column="' +
+      //               col.columnIndex +
+      //               '">' +
+      //               '<td>' +
+      //               col.title +
+      //               ':' +
+      //               '</td> ' +
+      //               '<td>' +
+      //               col.data +
+      //               '</td>' +
+      //               '</tr>'
+      //           : '';
+      //       }).join('');
 
-            return data ? $('<table class="table"/><tbody />').append(data) : false;
-          }
-        }
-      },
-      initComplete: function () {
-        // Adding role filter once table initialized
-        this.api()
-          .columns(6)
-          .every(function () {
-            var column = this;
-            var select = $(
-              '<select id="UserRole" class="form-select"><option value=""> Select Status </option></select>'
-            )
-              .appendTo('.invoice_status')
-              .on('change', function () {
-                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                column.search(val ? '^' + val + '$' : '', true, false).draw();
-              });
+      //       return data ? $('<table class="table"/><tbody />').append(data) : false;
+      //     }
+      //   }
+      // },
+      // initComplete: function () {
+      //   // Adding role filter once table initialized
+      //   this.api()
+      //     .columns(6)
+      //     .every(function () {
+      //       var column = this;
+      //       var select = $(
+      //         '<select id="UserRole" class="form-select"><option value=""> Select Status </option></select>'
+      //       )
+      //         .appendTo('.invoice_status')
+      //         .on('change', function () {
+      //           var val = $.fn.dataTable.util.escapeRegex($(this).val());
+      //           column.search(val ? '^' + val + '$' : '', true, false).draw();
+      //         });
 
-            column
-              .data()
-              .unique()
-              .sort()
-              .each(function (d, j) {
-                select.append('<option value="' + d + '" class="text-capitalize">' + d + '</option>');
-              });
-          });
-      }
+      //       column
+      //         .data()
+      //         .unique()
+      //         .sort()
+      //         .each(function (d, j) {
+      //           select.append('<option value="' + d + '" class="text-capitalize">' + d + '</option>');
+      //         });
+      //     });
+      // }
     });
   }
 

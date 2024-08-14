@@ -3,6 +3,8 @@ const validation = require("../lib/input_validation");
 const User_groups = require("../model/User_group");
 const Users = require("../model/Users");
 const bcrypt = require("bcryptjs");
+const Sequelize = require("sequelize")
+const Op = Sequelize.Op;
 
 class User {
   constructor() {
@@ -65,6 +67,27 @@ class User {
     const users = await this.users.findAll();
     return { users };
   }
+
+  async validateUserEmail(email){
+    const user = await Users.findOne({attributes:['name', "user_phone", "id"],
+      where: {
+        [Op.or]: [{ username: email }, { email: email }],
+      },
+      raw: true
+    });
+  
+    if(user){
+      return {
+        status: true,
+        data: user
+      }
+    } else {
+      return {
+        status: false,
+        error: "User with the email address does not exist"
+      }
+    }
+  };
 }
 
 module.exports = User;

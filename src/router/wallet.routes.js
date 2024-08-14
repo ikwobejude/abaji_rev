@@ -4,9 +4,11 @@ const Router = express.Router();
 
 Router.route('/')
 .get(wallet.walletTransactions)
-.post(wallet.fundWallet)
+.post(wallet.creditWallet)
 
-// Router.get('/validate_email', WalletController.validateUser)
+Router.get('/validate_email', wallet.validateUser)
+Router.get('/records', wallet.viewWallets)
+Router.get('/transactions/:id', wallet.viewWalletTransactions)
 
 // Router
 

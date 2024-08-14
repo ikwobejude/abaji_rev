@@ -45,7 +45,7 @@ const run = async () => {
     
     // let revenueCodes = typeof row[2] === "string" ? row[2].split("/") : [row[2]];
     const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
-    const amt = typeof row[6] === "string" ? row[6].split('/') : row[6];
+    const amt = typeof row[6] === "string" ? row[6].split('/') : [row[6]];
     const sum = amt.reduce((accumulator, currentValue) => {
       return accumulator + parseFloat(currentValue);
     }, 0);
@@ -71,7 +71,8 @@ const run = async () => {
       invoice_number: InvoiceNumber,
       phone_number: "0910009900",
       generated_phone: "0910009900",
-      tax_office_id: 8477
+      tax_office_id: 8477,
+      service_id: workerData.service_id
     };
 
 
@@ -86,7 +87,7 @@ const run = async () => {
         revenue_code: itemName, // Revenue Name,
         invoice_number: InvoiceNumber,
         type: itemName, // Revenue Name,
-        service_id: 2147483647,
+        service_id: workerData.service_id,
         batch: batchNumber,
       };
       assessmentItems.push(item);

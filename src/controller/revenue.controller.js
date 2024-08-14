@@ -16,13 +16,13 @@ module.exports = {
 
   createAssessments: async function (req, res) {
     try {
-      const response = await revenue.uploadCooperateBusinessData(req.body);
+      const response = await revenue.uploadCooperateBusinessData({...req.body, service_id: req.user.service_id});
       res.status(200).json(response);
     } catch (error) {}
   },
 
   viewAssessmentInvoice: async function (req, res) {
-    const response = await revenue.revenuesInvoices({ year: req.params.year });
+    const response = await revenue.revenuesInvoices({ year: req.params.year, service_id: req.user.service_id });
     res
       .status(200)
       .render("./revenue/cooperative/revenue_invoice", { ...response });

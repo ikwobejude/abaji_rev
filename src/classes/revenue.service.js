@@ -46,7 +46,7 @@ class Revenue {
             FROM revenue_upload AS r
             INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
             INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
-            WHERE r.rate_year = ${query.year}
+            WHERE r.rate_year = ${query.year} and r.service_id = ${query.service_id}
         `;
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
         return {
@@ -118,7 +118,8 @@ class Revenue {
             console.log(file)
             const worker = new Worker(path.join(__dirname,`../worker/revenue_upload.js`), {
                 workerData: {
-                file
+                file,
+                service_id: data.service_id
                 },
             });
         

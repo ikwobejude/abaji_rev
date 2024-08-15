@@ -61,6 +61,7 @@ class Revenue {
                 r.assessment_no,
                 r.revenue_code,
                 r.bill_ref_no,
+                r.payment_status,
                 r.name_of_business,
                 r.address_of_property,            
                 r.type_of_property,

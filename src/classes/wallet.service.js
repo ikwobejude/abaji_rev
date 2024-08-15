@@ -367,7 +367,7 @@ class Wallet {
                     payment_status: 1,
                     amount_paid: parseFloat(m.amount) - parseFloat(m.discount)
                 }
-                await businessModel.tax_items.update(taxUpdate, 
+                await this.tax_items.update(taxUpdate, 
                     {
                         where: {
                             id: m.id
@@ -423,13 +423,13 @@ class Wallet {
                 raw:true
             });
 
-            console.log(taxItems)
+            // console.log(taxItems)
 
             let deductAble = amountPaid;
             for (const m of taxItems) {
                 const itemOutstanding = parseFloat(m.amount - m.amount_paid);
                 let amt = deductAble > itemOutstanding ? deductAble - itemOutstanding :  deductAble;
-                console.log({amt, itemOutstanding})
+                // console.log({amt, itemOutstanding})
         
                 const paymentStatus = deductAble >= itemOutstanding ? 1 :  2
                 const taxUpdate = {

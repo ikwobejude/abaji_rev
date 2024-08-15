@@ -399,12 +399,15 @@
                         </a>
                         <a href="./app-invoice-edit.html" class="btn btn-label-secondary d-grid w-100"> Edit </a>
                       </div>
-                      <button
-                        class="btn btn-success d-grid w-100"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#addPaymentOffcanvas">
-                        <span class="d-flex align-items-center justify-content-center text-nowrap">Make Payment</span>
-                      </button>
+                      <% if (revenue.payment_status == 0) { %>
+                        <button
+                          class="btn btn-success d-grid w-100"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#addPaymentOffcanvas">
+                          <span class="d-flex align-items-center justify-content-center text-nowrap">Make Payment</span>
+                        </button>
+                      <% } %>
+                     
                     </div>
                   </div>
                 </div>

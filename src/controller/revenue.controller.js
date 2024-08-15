@@ -34,6 +34,7 @@ module.exports = {
       .status(200)
       .render("./revenue/cooperative/demand_notice", { ...response });
   },
+  
 
   getWalletBalance: async function (req, res) {
     const balance = await wallet.walletBalance(req.user.id);

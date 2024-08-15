@@ -2,6 +2,7 @@ const express = require("express");
 const admin = require("../controller/admin.controller");
 const revenue = require("../controller/revenue.controller");
 const adminController = require("../controller/admin.controller");
+const wallet = require("../controller/wallet.controller");
 const Router = express.Router();
 
 Router.get("/dashboard", admin.adminDashboard);
@@ -10,7 +11,9 @@ Router.route("/revenue_upload").get(revenue.getRevenueItemByYear).post(revenue.c
 
 Router.get("/revenue_upload/view/:year", revenue.viewAssessmentInvoice);
 
-Router.get("/demand_notice/:year/:invoice", revenue.demandNotice);
+Router.route("/demand_notice/:year/:invoice")
+.get(revenue.demandNotice)
+.post(wallet.makeAssessmentPayment);
 Router.route("/wallet_balance").get(revenue.getWalletBalance).post(revenue.getWalletBalance);
 
 Router.route("/user").get(revenue.getUser).post(revenue.postUser);

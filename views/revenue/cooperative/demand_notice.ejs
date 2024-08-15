@@ -42,7 +42,7 @@
                 <!-- Invoice -->
                 <div class="col-xl-9 col-md-8 col-12 mb-md-0 mt-0" id="invoice">
                   
-                  <div class="card ">
+                  <div class="card p-3">
                     <div class="row" >
                       <div class="col-md-12 text-center" style="top: -50%;">
                         <img src="/logo.jpeg" alt="logo"  style="text-align: center;"> <br>
@@ -86,9 +86,7 @@
                           <tr>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Address </td>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.rate_district=="MARKET" ?
-                                      `${revenue.address_of_property} ${revenue.market}` :
-                                      revenue.address_of_property %>
+                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` : revenue.address_of_property %>
                               </td>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Year of Billing</td>
                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
@@ -115,7 +113,7 @@
                       <table>
                           <tr>
                               <td width="75%">
-                                  <table width="100%" style="padding: 10px;" class="tbl">
+                                  <table width="100%" class="tbl">
                                       <thead style="background-color: green; color: #fff;">
                                           <tr>
                                               <th>S/N</th>
@@ -131,7 +129,8 @@
                                               items.forEach(k=> {
                                                   count += 1
                                                   let sub=parseFloat(k.amount).toFixed(2); 
-                                                  total +=+sub ; %>
+                                                  total +=+sub ; 
+                                            %>
                                                           <tr>
                                                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                                                   <%= count %>
@@ -143,14 +142,12 @@
                                                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                                                   <%= k.taxitem %>
                                                               </td>
-                                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">&#8358;<%= k.amount?
-                                                                      parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
-                                                                      ) : "0.00" %>
+                                                              <td style="padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                                                &#8358;<%= k.amount? parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" %>
                                                               </td>
                                                           </tr>
                                                           <% }) %>
-                                                          <% 
-                                                          let gtotal = total + parseFloat(revenue.arrears==0 || revenue.arrears == null ? 0 :revenue.arrears); %>
+                                                          <%  let gtotal = total + parseFloat(revenue.arrears==0 || revenue.arrears == null ? 0 :revenue.arrears); %>
                                                           
 
                                                                   <tr>
@@ -178,14 +175,10 @@
                                                                           </td>
                                                                           <td class="td sess"
                                                                               style="font-weight: bold !important;">
-                                                                              &#8358;<%=
-                                                                                  revenue.goodwill
-                                                                                  ?
-                                                                                  parseFloat(revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
-                                                                                  ) : "0.00" %>
+                                                                              &#8358;<%= revenue.goodwill ? parseFloat(revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, "," ) : "0.00" %>
                                                                           </td>
                                                                       </tr>
-                                                                  <%}%>
+                                                                  <% } %>
                                                                   <tr>
                                                                       <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
                                                                       <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
@@ -196,7 +189,7 @@
                                                                       </td>
                                                                       <td class="td sess"
                                                                           style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important ">
-                                                                          &#8358;<%= gtotal.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                                          &#8358; <%= gtotal.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                                       </td>
                                                                   </tr>
 
@@ -278,12 +271,10 @@
                       </tr>
                       <tr>
                           <td width="70%">
-                              Rate Payer’s Name: <b>
-                                  <%= revenue.name_of_business %>
+                              Rate Payer’s Name: <b>%= revenue.name_of_business %>
                               </b>
                               <br>Address: <b>
-                                  <%= revenue.rate_district=="MARKET" ?
-                                      `${revenue.address_of_property} ${revenue.market}` :
+                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
                                       revenue.address_of_property %>
                               </b>
                               <br>
@@ -298,11 +289,9 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                      <% let count1=0; items.forEach(k=> {
-                                          count1 += 1
-                                          %>
-
-
+                                      <% let count1=0; 
+                                      items.forEach(k=> {
+                                          count1 += 1 %>
                                           <tr>
                                               <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                                   <%= count1 %>
@@ -321,31 +310,31 @@
                                           </tr>
                                           <% }) %>
 
-                                              <tr>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td class="td sess"
-                                                      style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                      <strong>Arrears</strong></td>
-                                                  <td class="td sess"
-                                                      style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                      &#8358;<%= revenue.arrears==0 || revenue.arrears == null ? "0.00" : parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                                            
-                                                  </td>
-                                              </tr>
-                                              <tr>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                  <td class="td sess"
-                                                      style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                      <strong>Grand Total</strong></td>
-                                                  <td class="td sess"
-                                                      style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                      &#8358;<%= gtotal ? parseFloat(gtotal).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" %>
-                                                  </td>
-                                              </tr>
+                                          <tr>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td class="td sess"
+                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                                  <strong>Arrears</strong></td>
+                                              <td class="td sess"
+                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                                  &#8358;<%= revenue.arrears==0 || revenue.arrears == null ? "0.00" : parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                        
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td class="td sess"
+                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                                  <strong>Grand Total</strong></td>
+                                              <td class="td sess"
+                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                                  &#8358;<%= gtotal ? parseFloat(gtotal).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" %>
+                                              </td>
+                                          </tr>
 
                                   </tbody>
                               </table>
@@ -414,9 +403,7 @@
                         class="btn btn-success d-grid w-100"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#addPaymentOffcanvas">
-                        <span class="d-flex align-items-center justify-content-center text-nowrap"
-                          >Make Payment</span
-                        >
+                        <span class="d-flex align-items-center justify-content-center text-nowrap">Make Payment</span>
                       </button>
                     </div>
                   </div>
@@ -507,7 +494,7 @@ Dear Queen Consolidated,
                         <input
                           type="text"
                           id="invoiceAmount"
-                          value="<%= parseFloat(revenue.grand_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>"
+                          value="<%= parseFloat(revenue.grand_total).toFixed(2) %>"
                           name="invoiceAmount"
                           class="form-control invoice-amount"
                           placeholder="100" />
@@ -522,10 +509,10 @@ Dear Queen Consolidated,
                       <select class="form-select" id="payment-method" name="payment_method">
                         <option value="" selected disabled>Select payment method</option>
                         <option value="Wallet" selected>Wallet</option>
-                        <!-- <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
                         <option value="Debit Card">Debit Card</option>
                         <option value="Credit Card">Credit Card</option>
-                        <option value="Paypal">Paypal</option> -->
+                        <option value="Paypal">Paypal</option> 
                       </select>
                     </div>
                     <div class="mb-6">
@@ -545,8 +532,6 @@ Dear Queen Consolidated,
 
         <%- include('../../layout/footer') %>
         <script src="/assets/js/offcanvas-send-invoice.js"></script>
-         <!-- Page JS -->
-    <!-- <script src="/assets/js/tables-datatables-basic.js"></script> -->
     <script>
        function printDiv(invoice) {
             var printContents = document.getElementById("invoice").innerHTML;
@@ -578,24 +563,31 @@ Dear Queen Consolidated,
           $(".spinner-border").show()
           const data = new FormData(make_payment);
           const payload = {
-            invoiceAmount: data.get("invoiceAmount"),
+            amount_paid: data.get("invoiceAmount"),
             payment_date: data.get("payment_date"),
             payment_method: data.get("payment_method"),
-            payment_note: data.get("payment_note")
+            payment_note: data.get("payment_note"),
+            assessment_no: '<%= revenue.assessment_no %>',
+            rate_year: '<%= revenue.rate_year %>',
+            grand_total: '<%= revenue.grand_total %>',
+            customerName: '<%= revenue.name_of_business %>',
+            assessment_type: '<%= revenue.type_of_property %>',
           }
 
-          // console.log(payload)
+          console.log(payload)
+          // return
           try {
             const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
-              method: "POST",
+              method: "post",
               body: JSON.stringify(payload),
               headers: {
                 "Content-Type": "application/json"
               }
             })
 
-            const res = await req.json();
+            const response = await req.json();
             $(".spinner-border").hide()
+
             if(response.status == true) {
                 toastr.success(response.message);
                 setTimeout(() => {
@@ -606,6 +598,7 @@ Dear Queen Consolidated,
                 toastr.error(response.message);
             }
           } catch (error) {
+            console.log(error)
             $(".spinner-border").hide()
             // for errors - red box
             toastr.error(error.message);

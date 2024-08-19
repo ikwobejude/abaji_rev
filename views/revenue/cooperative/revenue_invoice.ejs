@@ -1,45 +1,99 @@
 <!doctype html>
 
-<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
-  <head>
-    <%- include('../../layout/head') %>
-  </head>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+  data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
 
-  <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
+<head>
+  <%- include('../../layout/head') %>
+</head>
 
-       <%- include('../../layout/aside') %>
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+
+      <%- include('../../layout/aside') %>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
 
-         <%- include('../../layout/side') %>
+          <%- include('../../layout/side') %>
 
-          <!-- / Navbar -->
+            <!-- / Navbar -->
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+              <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="container-xxl flex-grow-1 container-p-y">
                 <!-- DataTable with Buttons -->
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-6"></div>
-                            <div class="col-6" style="text-align: end;">
-                                <button class="create-new btn btn-primary waves-effect waves-light">
-                                    <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>
-                                </button>
-                            </div>
-                        </div>
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <!-- Implement search by all available params here -->
+                      </div>
+                      <div class="col-6" style="text-align: end;">
+                        <button class="create-new btn btn-primary waves-effect waves-light">
+                          <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New
+                            Record</span>
+                        </button>
+                      </div>
                     </div>
-                    
+                  </div>
+
+                  <div class="row">
+                    <form id="search-form" class="d-flex flex-wrap align-items-center p-5 " method="GET">
+
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1 ">
+                        <input type="text" class="form-control" name="year" placeholder="Year">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <select name="street" id="" class="form-control">
+                          <option value="">Select Street</option>
+                          <% Object.keys(streets).forEach(city=> { %>
+                            <% streets[city].forEach(street=> { %>
+                              <option value="<%= street.idstreet %>">
+                                <%= street.street %>
+                              </option>
+                              <% }) %>
+                                <% }) %>
+                        </select>
+
+
+                      </div>
+                      <!-- <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="assessment_no" placeholder="Assessment No">
+                      </div> -->
+                      <!-- <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="revenue_code" placeholder="Revenue Code">
+                      </div> -->
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="bill_ref_no" placeholder="Invoice">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="name_of_business"
+                          placeholder="Name Of Rate Payer">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="address_of_property"
+                          placeholder="Address Of Business">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="type_of_property" placeholder="Type Of Property">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <input type="text" class="form-control" name="revenue_type" placeholder="Revenue Type">
+                      </div>
+                      <div class="col-6">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </form>
+                  </div>
+
                   <div class="card-datatable  table-responsive pt-0">
                     <table class="datatables-basic table">
                       <thead>
@@ -58,35 +112,53 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% revenue.forEach(item => { %>
-                            <tr>
-                                <td><%= item.bill_ref_no %></td>
-                                <td><%= item.rate_year %></td>
-                                <td><%= item.revenue_type %></td>
-                                <td><%= item.type_of_property %></td>
-                                <td><%= item.name_of_business %></td>
-                                <td><%= item.address_of_property %></td>
-                                <td><%= item.city %></td>
-                                <td><%= item.street %></td>
-                                
-                                <td><%= item.grand_total %></td>
-                                <td>
-                                  <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                      <i class="ti ti-dots-vertical"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"
-                                        ><i class="ti ti-eye me-1"></i>View more </a
-                                      >
-                                      <a class="dropdown-item" href="javascript:void(0);"
-                                        ><i class="ti ti-trash me-1"></i> Delete</a
-                                      >
-                                    </div>
-                                  </div>
-                                </td>
-                            </tr>
-                        <% }) %>
+                        <% revenue.forEach(item=> { %>
+                          <tr>
+                            <td>
+                              <%= item.bill_ref_no %>
+                            </td>
+                            <td>
+                              <%= item.rate_year %>
+                            </td>
+                            <td>
+                              <%= item.revenue_type %>
+                            </td>
+                            <td>
+                              <%= item.type_of_property %>
+                            </td>
+                            <td>
+                              <%= item.name_of_business %>
+                            </td>
+                            <td>
+                              <%= item.address_of_property %>
+                            </td>
+                            <td>
+                              <%= item.city %>
+                            </td>
+                            <td>
+                              <%= item.street %>
+                            </td>
+
+                            <td>
+                              <%= item.grand_total %>
+                            </td>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                  data-bs-toggle="dropdown">
+                                  <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item"
+                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
+                                      class="ti ti-eye me-1"></i>View more </a>
+                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
+                                    Delete</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% }) %>
                       </tbody>
                     </table>
                   </div>
@@ -95,110 +167,121 @@
                 <div class="offcanvas offcanvas-end" id="add-new-record">
                   <div class="offcanvas-header border-bottom">
                     <h5 class="offcanvas-title" id="exampleModalLabel">Upload new assessments</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                      aria-label="Close"></button>
                   </div>
                   <div class="offcanvas-body flex-grow-1">
                     <form class="add-new-record pt-0 row g-2" id="form-upload-new-record" onsubmit="return false">
-                      
-                      
+
+
                       <div class="col-sm-12">
                         <label class="form-label" for="basicEmail">Upload Assessments</label>
                         <div class="input-group input-group-merge">
                           <span class="input-group-text"><i class="ti ti-file"></i></span>
-                          <input type="file" name="upload_excel" id="upload_excel" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                          <input type="file" name="upload_excel" id="upload_excel" class="form-control"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
                           <input type="hidden" id="base64url" name="base64url">
                         </div>
                         <div class="form-text" style="color: red;">Only excel file are allowed</div>
                       </div>
-                      
-                      
+
+
                       <div class="col-sm-12">
                         <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
-                            <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
-                            Submit
+                          <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                          Submit
                         </button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                        <button type="reset" class="btn btn-outline-secondary"
+                          data-bs-dismiss="offcanvas">Cancel</button>
                       </div>
                     </form>
                   </div>
                 </div>
                 <!--/ DataTable with Buttons -->
-  
-               
-  
-  
-                
+
+
+
+
+
               </div>
               <!-- / Content -->
 
-        <%- include('../../layout/footer') %>
-         <!-- Page JS -->
-    <script src="/assets/js/tables-datatables-basic.js"></script>
-    <script>
-        if(document.getElementById("form-upload-new-record")) {
-            $(".spinner-border").hide()
-            const dt = document.getElementById("form-upload-new-record");
-            dt.addEventListener("submit", async function(e) {
-                e.preventDefault();
-                $(".spinner-border").show()
-                const data = new FormData(dt);
-                const payload = {
-                  base64url: data.get("base64url"),
-                }
+              <%- include('../../layout/footer') %>
+                <!-- Page JS -->
+                <script src="/assets/js/tables-datatables-basic.js"></script>
+                <script>
+                  if (document.getElementById("form-upload-new-record")) {
+                    $(".spinner-border").hide()
+                    const dt = document.getElementById("form-upload-new-record");
+                    dt.addEventListener("submit", async function (e) {
+                      e.preventDefault();
+                      $(".spinner-border").show()
+                      const data = new FormData(dt);
+                      const payload = {
+                        base64url: data.get("base64url"),
+                      }
 
-                console.log(payload)
+                      console.log(payload)
 
-                try {
-                    const request = await fetch('/admin/revenue_upload', {
-                        method: "post",
-                        body: JSON.stringify(payload),
-                        headers: {
+                      try {
+                        const request = await fetch('/admin/revenue_upload', {
+                          method: "post",
+                          body: JSON.stringify(payload),
+                          headers: {
                             "Content-Type": "application/json"
+                          }
+                        })
+                        const response = await request.json()
+                        $(".spinner-border").hide()
+                        if (response.status == true) {
+                          toastr.success(response.message);
+                          setTimeout(() => {
+                            location.reload()
+                          }, "3000");
+                        } else {
+                          // for errors - red box
+                          toastr.error(response.message);
                         }
-                    })
-                    const response = await request.json()
-                    $(".spinner-border").hide()
-                    if(response.status == true) {
-                        toastr.success(response.message);
-                        setTimeout(() => {
-                          location.reload()
-                        }, "3000");
-                    } else {
+                      } catch (error) {
+                        $(".spinner-border").hide()
                         // for errors - red box
-                        toastr.error(response.message);
+                        toastr.error(error.message);
+                      }
+                    })
+                  }
+
+
+                  const fileInput = document.getElementById('upload_excel');
+                  //  console.log(fileInput)
+                  fileInput.addEventListener('change', async (e) => {
+                    // console.log("Hi")
+                    try {
+                      $('#cover-spin').show(0)
+                      const file = fileInput.files[0];
+
+                      const reader = new FileReader();
+                      reader.addEventListener('load', async () => {
+                        // console.log(reader.result)
+                        $('#cover-spin').hide(0)
+                        $('#base64url').val(reader.result)
+                      })
+
+                      reader.readAsDataURL(file)
+                    } catch (error) {
+                      $('#cover-spin').hide(0)
+                      toastr.error(error.message)
                     }
-                } catch (error) {
-                    $(".spinner-border").hide()
-                    // for errors - red box
-                    toastr.error(error.message);
-                }
-            })
-        }
-    
-        
-      const fileInput = document.getElementById('upload_excel');
-        //  console.log(fileInput)
-        fileInput.addEventListener('change', async (e) => {
-            // console.log("Hi")
-            try {
-              $('#cover-spin').show(0)
-                const file = fileInput.files[0];
+                  });
 
-                const reader = new FileReader();
-                reader.addEventListener('load', async () => {
-                    // console.log(reader.result)
-                    $('#cover-spin').hide(0)
-                    $('#base64url').val(reader.result)
-                })
 
-                reader.readAsDataURL(file)
-            } catch (error) {
-              $('#cover-spin').hide(0)
-                toastr.error(error.message)
-            }
+                </script>
+                <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentYear = new Date().getFullYear();
+            const searchForm = document.getElementById("search-form");
+            searchForm.action = `revenue_upload/view/${currentYear}`;
         });
+    </script> -->
+</body>
 
-
-    </script>
-  </body>
 </html>

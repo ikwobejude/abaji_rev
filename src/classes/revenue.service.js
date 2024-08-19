@@ -68,13 +68,13 @@ class Revenue {
     }
 
     if (query.type_of_property) {
-      condition.push("r.type_of_property = ?");
-      queryParams.push(query.type_of_property);
+      condition.push("r.type_of_property LIKE ?");
+      queryParams.push(`%${query.type_of_property}%`);
     }
 
     if (query.revenue_type) {
-      condition.push("r.revenue_type = ?");
-      queryParams.push(query.revenue_type);
+      condition.push("r.revenue_type LIKE ?");
+      queryParams.push(`%${query.revenue_type}%`);
     }
 
     condition = condition.filter((cond) => cond !== null);

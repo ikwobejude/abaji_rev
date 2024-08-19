@@ -42,7 +42,7 @@ module.exports = {
       const response = await revenue.revenuesInvoices(query);
       const street = await setup.AllStreets();
       // console.log(street.streets)
-      console.log({response})
+      // console.log({response})
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,

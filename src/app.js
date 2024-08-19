@@ -78,7 +78,7 @@ app.set("view engine", "ejs");
 app.use('/', appRouter)
 app.use(authRouter)
 app.use('/api', apiRouter)
-app.use('/admin', middleware.requireAuth, adminRouter)
+app.use('/admin',adminRouter)
 app.use('/setup', middleware.requireAuth, setupRouter)
 app.use('/wallet', middleware.requireAuth, walletRouter)
 app.use('/report', middleware.requireAuth, reportRouter)

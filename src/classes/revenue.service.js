@@ -230,6 +230,23 @@ class Revenue {
       throw Error(res.message);
     }
   }
+
+  async initiateDiscount(invoice, data) {
+    // console.log(invoice, data)
+    let sum = 0;
+    for (const el of data) {
+        sum += parseFloat(el.amount)
+        await this.tax_item.update({discount: el.amount}, {where: {id: el.id}}, {new: true})
+        // console.log(el)
+    }
+    // await this.revenueUpload.update({goodwill: sum}, { where: {bill_ref_no: invoice} }, {new: true})
+
+    // console.log(sum)
+    return {
+      status: true,
+      message: "Discount applied"
+    }
+  }
 }
 
 module.exports = Revenue;

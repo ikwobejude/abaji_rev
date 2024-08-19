@@ -14,6 +14,8 @@ Router.get("/revenue_upload/view/:year", revenue.viewAssessmentInvoice);
 Router.route("/demand_notice/:year/:invoice")
 .get(revenue.demandNotice)
 .post(wallet.makeAssessmentPayment);
+
+Router.post('/discount/:invoice', revenue.addDiscount)
 Router.route("/wallet_balance").get(revenue.getWalletBalance).post(revenue.getWalletBalance);
 
 Router.route("/user").get(revenue.getUser).post(revenue.postUser);

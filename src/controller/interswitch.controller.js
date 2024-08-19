@@ -6,7 +6,8 @@ const interSwitch = new InterSwitch();
 module.exports = {
     interSwitchControllers:  function(req, res) {
         try {
-            interSwitch.initInterSwitch(req.rawBody);
+
+            interSwitch.initInterSwitch(req.rawBody, req.params.services_id);
 
             // listening to customer validation event emit
             interSwitch.on("customer-validation", detail => {

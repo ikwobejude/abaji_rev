@@ -25,7 +25,7 @@ class InterSwitch extends eventEmitter {
     //     return 
     // }
 
-    initInterSwitch(rawBody) {
+    initInterSwitch(rawBody, service_id) {
         const parser = new xml2js.Parser(/* options */); 
         parser.parseStringPromise(rawBody).then(async (result) => {
             // console.log(result.CustomerInformationRequest)

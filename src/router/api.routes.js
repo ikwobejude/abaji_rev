@@ -1,6 +1,7 @@
 const express = require('express');
 const middleware = require('../middleware/middleware');
 const apiController = require('../controller/api.controller');
+const { interSwitchControllers } = require('../controller/interswitch.controller');
 
 
 const router = express.Router();
@@ -26,6 +27,9 @@ router.route('/ticket/view_ticket/:id')
 router.get('/wallet_balance', middleware.mobileMiddleware, apiController.walletBalance )
 
 router.get('/ticket_types', middleware.mobileMiddleware, apiController.TicketType )
+
+
+router.post('/inter/switch/collection_service/:service_id', interSwitchControllers)
 
 
 module.exports= router

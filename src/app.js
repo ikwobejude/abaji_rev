@@ -5,6 +5,7 @@ const compression = require("compression");
 const cors = require("cors");
 const path = require("path");
 const https = require('https');
+const xmlparser = require('express-xml-bodyparser');
 https.globalAgent.maxSockets = Infinity;
 
 
@@ -24,6 +25,7 @@ app.use(express.static("uploads"));
 
 app.use(express.json({ limit: "50mb" })); //for json body parser
 app.use(cookieParser());
+app.use(xmlparser()); // req.rawBody Read XML 
 
 // app.use(timeout("180s"));
 

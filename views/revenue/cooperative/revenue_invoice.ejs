@@ -29,6 +29,62 @@
               <!-- Content -->
 
               <div class="container-xxl flex-grow-1 container-p-y">
+                <div class="card p-5">
+                  <div class="card-header">Search </div>
+                  <div class="row">
+                    <form id="search-form" class="d-flex flex-wrap align-items-center p-5 " method="GET">
+
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1  ">
+                        <label class="form-label" for="basic-default-fullname">Year</label>
+                        <input type="text" class="form-control" name="year" placeholder="Year" value="<%= new Date().getFullYear() %>">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Street</label>
+                        <select name="street" id="" class="form-control">
+                          <option value="">Select Street</option>
+                          <% Object.keys(streets).forEach(city=> { %>
+                            <% streets[city].forEach(street=> { %>
+                              <option value="<%= street.idstreet %>">
+                                <%= street.street %>
+                              </option>
+                              <% }) %>
+                            <% }) %>
+                        </select>
+
+
+                      </div>
+                      
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Invoice Number</label>
+                        <input type="text" class="form-control" name="bill_ref_no" placeholder="Invoice">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Business name</label>
+                        <input type="text" class="form-control" name="name_of_business"
+                          placeholder="Name Of Rate Payer">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Address</label>
+                        <input type="text" class="form-control" name="address_of_property"
+                          placeholder="Address Of Business">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Type of property</label>
+                        <input type="text" class="form-control" name="type_of_property" placeholder="Business Operation">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Revenue Type</label>
+                        <input type="text" class="form-control" name="revenue_type" placeholder="Revenue Name">
+                      </div>
+                      <div class="col-6 col-md-8" style="text-align: end; padding-top: 30px ;">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <hr class="my-5" />
+
                 <!-- DataTable with Buttons -->
                 <div class="card">
                   <div class="card-header">
@@ -43,55 +99,6 @@
                         </button>
                       </div>
                     </div>
-                  </div>
-
-                  <div class="row">
-                    <form id="search-form" class="d-flex flex-wrap align-items-center p-5 " method="GET">
-
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1 ">
-                        <input type="text" class="form-control" name="year" placeholder="Year">
-                      </div>
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <select name="street" id="" class="form-control">
-                          <option value="">Select Street</option>
-                          <% Object.keys(streets).forEach(city=> { %>
-                            <% streets[city].forEach(street=> { %>
-                              <option value="<%= street.idstreet %>">
-                                <%= street.street %>
-                              </option>
-                              <% }) %>
-                                <% }) %>
-                        </select>
-
-
-                      </div>
-                      <!-- <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="assessment_no" placeholder="Assessment No">
-                      </div> -->
-                      <!-- <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="revenue_code" placeholder="Revenue Code">
-                      </div> -->
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="bill_ref_no" placeholder="Invoice">
-                      </div>
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="name_of_business"
-                          placeholder="Name Of Rate Payer">
-                      </div>
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="address_of_property"
-                          placeholder="Address Of Business">
-                      </div>
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="type_of_property" placeholder="Business Operation">
-                      </div>
-                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
-                        <input type="text" class="form-control" name="revenue_type" placeholder="Revenue Name">
-                      </div>
-                      <div class="col-6">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                      </div>
-                    </form>
                   </div>
 
                   <div class="card-datatable  table-responsive pt-0">

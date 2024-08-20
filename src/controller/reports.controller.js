@@ -7,5 +7,16 @@ module.exports = {
         const response = await reports.paymentReport(req.query)
         // res.status(200).json({...response})
         res.status(200).render('./report/payment_report', {...response})
+    },
+
+
+    assessmentsReports: async function (req, res) {
+        try {
+            const response = await reports.assessmentReports({...req.query, service_id: req.user.service_id})
+            // res.status(200).json(response)
+            res.status(200).render('./report/assessments_report', {...response})
+        } catch (error) {
+            console.error(error)
+        }
     }
 }

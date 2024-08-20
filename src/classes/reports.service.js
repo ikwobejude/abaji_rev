@@ -72,6 +72,8 @@ class Reports {
         let offset = perPage * page - perPage;
         let year = query.current_year ? query.current_year : new Date().getFullYear();
 
+        console.log(year)
+
         let sql = `
             SELECT 
                 r.service_id,
@@ -84,14 +86,16 @@ class Reports {
                 r.type_of_property,
                 r.revenue_type,
                 r.grand_total,
+                r.amount_paid,
                 r.rate_year,
                 r.date_uploaded,
+                r.payment_date,
                 c.city,
                 s.street
             FROM revenue_upload AS r
             INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
             INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
-        WHERE r.rate_year = ${query.year} AND r.service_id = ${query.service_id}`;
+        WHERE r.payment_status = 1 AND r.rate_year = ${year} AND r.service_id = ${query.service_id}`;
         
         if(query.bill_ref) sql += ` AND revenue_upload.bill_ref_no = '%${query.bill_ref}%'`;
     
@@ -114,9 +118,10 @@ class Reports {
         const revenue = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
         return {
             result: revenue,
-            year: rates,
-            current: page, count,
-            pages: Math.ceil(count / perPage)
+            year: year,
+            current: page, 
+            // count,
+            // pages: Math.ceil(count / perPage)
         };
     }
 

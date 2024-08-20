@@ -5,4 +5,6 @@ const Router = express.Router();
 Router.route('/payment_reports')
 .get(reports.paymentsReports)
 
+Router.get('/revenue_assessments_reports', reports.assessmentsReports)
+
 module.exports = Router

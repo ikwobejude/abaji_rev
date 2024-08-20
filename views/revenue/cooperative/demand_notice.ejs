@@ -335,50 +335,44 @@
                         </tr>
                         <tr>
                           <td width="70%">
-                            Rate Payer’s Name: <b>%= revenue.name_of_business %>
-                            </b>
-                            <br>Address: <b>
-                              <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
-                                revenue.address_of_property %>
-                            </b>
-                            <br>
-                            <table width="100%" style="padding: 20px;" class="tbl pb-2">
-                              <thead style="background-color: green; color: #fff;">
-                                <tr>
-                                  <th>S/N</th>
-                                  <th>REVENUE CODE</th>
-                                  <th>TRADE</th>
-                                  <th>DESCRIPTION</th>
-                                  <th>RATE PAYABLE</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <% let count1=0; items.forEach(k=> {
-                                  count1 += 1 %>
-                                  <tr>
-                                    <td
-                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                      <%= count1 %>
-                                    </td>
-                                    <td
-                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                      <%= k.revenue_code %>
-                                    </td>
-                                    <td
-                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                    </td>
-                                    <td
-                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                      <%= k.taxitem %>
-                                    </td>
-                                    <td
-                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                      &#8358;<%= k.amount ?
-                                        parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
-                                        ) : "0.00" %>
-                                    </td>
-                                  </tr>
-                                  <% }) %>
+                              Rate Payer’s Name: <b>%= revenue.name_of_business %>
+                              </b>
+                              <br>Address: <b>
+                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
+                                      revenue.address_of_property %>
+                              </b>
+                              <br>
+                              <table width="100%" style="padding: 20px;" class="tbl pb-2">
+                                  <thead style="background-color: green; color: #fff;">
+                                      <tr>
+                                          <th>S/N</th>
+                                          <th>REVENUE CODE</th>
+                                          <th>TRADE</th>
+                                          <th>DESCRIPTION</th>
+                                          <th>RATE PAYABLE</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <% let count1=0; 
+                                      items.forEach(k=> {
+                                          count1 += 1 %>
+                                          <tr>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                                  <%= count1 %>
+                                              </td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                                  <%= k.revenue_code %>
+                                              </td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                                  <%= k.taxitem %>
+                                              </td>
+                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">&#8358;<%= k.amount ?
+                                                      parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                                      ) : "0.00" %>
+                                              </td>
+                                          </tr>
+                                          <% }) %>
 
                                     <tr>
                                       <td

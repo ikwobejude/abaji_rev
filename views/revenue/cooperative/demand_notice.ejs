@@ -387,10 +387,12 @@
                         data-bs-toggle="offcanvas"
                         data-bs-target="#sendInvoiceOffcanvas">
                         <span class="d-flex align-items-center justify-content-center text-nowrap"
-                          ><i class="ti ti-send ti-xs me-2"></i>Send Invoice</span
-                        >
+                          ><i class="ti ti-send ti-xs me-2"></i>Send Invoice</span>
                       </button>
-                      <button class="btn btn-label-secondary d-grid w-100 mb-4">Download</button>
+                      <button
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#applyDiscount" class="btn btn-label-secondary d-grid w-100 mb-4">Apply discount</button>
+                      
                       <div class="d-flex mb-4">
                         <a
                           class="btn btn-label-secondary d-grid w-100 me-4"
@@ -461,6 +463,43 @@ Dear Queen Consolidated,
           We would appreciate payment of this invoice by 05/11/2021</textarea
                       >
                     </div>
+                    <div class="mb-6">
+                      <span class="badge bg-label-primary">
+                        <i class="ti ti-link ti-xs"></i>
+                        <span class="align-middle">Invoice Attached</span>
+                      </span>
+                    </div>
+                    <div class="mb-6 d-flex flex-wrap">
+                      <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
+                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="offcanvas offcanvas-end" id="applyDiscount" aria-hidden="true">
+                <div class="offcanvas-header mb-6 border-bottom">
+                  <h5 class="offcanvas-title">Apply discount</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body pt-0 flex-grow-1">
+                  <form>
+                    <div class="mb-2">
+                      <label for="invoice-from" class="form-label">Assessment Item</label>
+                      <select name="id" id="id" class="form-control">
+                        <option value="">Select options</option>
+                        <% items.forEach(k=> { %>
+                          <option value="<%= k.id %>"><%= k.taxitem %></option>
+                        <%})%>
+
+                      </select>
+                    </div>
+                    <div class="mb-2">
+                      <label for="invoice-to" class="form-label">Discount Amount</label>
+                      <input type="text" class="form-control" id="amount" name="amount" />
+                    </div>
+                    
+                    
                     <div class="mb-6">
                       <span class="badge bg-label-primary">
                         <i class="ti ti-link ti-xs"></i>

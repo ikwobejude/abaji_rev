@@ -1,11 +1,13 @@
 <!doctype html>
 
-<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
-  <head>
-    <%- include('../../layout/head') %>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+  data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+
+<head>
+  <%- include('../../layout/head') %>
     <link rel="stylesheet" href="/assets/vendor/css/pages/app-invoice.css" />
     <style>
-      .lkbLoggo{
+      .lkbLoggo {
         width: 9.182cm !important;
         height: 2.721cm !important;
         margin-top: 0.199cm !important;
@@ -14,642 +16,747 @@
         background-position: center !important;
       }
     </style>
-  </head>
+</head>
 
-  <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
 
-       <%- include('../../layout/aside') %>
+      <%- include('../../layout/aside') %>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
 
-         <%- include('../../layout/side') %>
+          <%- include('../../layout/side') %>
 
-          <!-- / Navbar -->
+            <!-- / Navbar -->
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+              <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row invoice-preview">
-                <!-- Invoice -->
-                <div class="col-xl-9 col-md-8 col-12 mb-md-0 mt-0" id="invoice">
-                  
-                  <div class="card p-3">
-                    <div class="row" >
-                      <div class="col-md-12 text-center" style="top: -50%;">
-                        <img src="/logo.jpeg" alt="logo"  style="text-align: center;"> <br>
-                        <span style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;" class="mt-2">ABAJI AREA COUNCIL</span><br>
-                        <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
+              <div class="container-xxl flex-grow-1 container-p-y">
+                <div class="row invoice-preview">
+                  <!-- Invoice -->
+                  <div class="col-xl-9 col-md-8 col-12 mb-md-0 mt-0" id="invoice">
+
+                    <div class="card p-3">
+                      <div class="row">
+                        <div class="col-md-12 text-center" style="top: -50%;">
+                          <img src="/logo.jpeg" alt="logo" style="text-align: center;"> <br>
+                          <span
+                            style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
+                            class="mt-2">ABAJI AREA COUNCIL</span><br>
+                          <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
+                        </div>
                       </div>
-                    </div>
                       <table width="100%" class="tbl">
-                          <tr>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"  width="20%">Tax ID </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" style="font-weight: bold !important; "><strong><span
-                                          class="invo_no">
-                                          <%= revenue.biller_accountid %>
-                                      </span></strong></td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Bill No</td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
-                                  style="font-weight: bold !important; font-size: large; ">
-                                  <b><span class="invo_no">
-                                          <%= revenue.bill_ref_no %>
-                                      </span></b></td>
-                          </tr>
-                          <tr>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Payer’s Name </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.name_of_business %>
-                              </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">RRR</td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.rrr %>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Phone Number </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.phone_number %></td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Date of issue</td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Address </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` : revenue.address_of_property %>
-                              </td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;" width="20%">Year of Billing</td>
-                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  <%= revenue.rate_year %>
-                              </td>
-                          </tr>
-                          
+                        <tr>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Tax ID </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            style="font-weight: bold !important; "><strong><span class="invo_no">
+                                <%= revenue.biller_accountid %>
+                              </span></strong></td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Bill No</td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            style="font-weight: bold !important; font-size: large; ">
+                            <b><span class="invo_no">
+                                <%= revenue.bill_ref_no %>
+                              </span></b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Payer’s Name </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.name_of_business %>
+                          </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">RRR</td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.rrr %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Phone Number </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.phone_number %>
+                          </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Date of issue</td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Address </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
+                              revenue.address_of_property %>
+                          </td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
+                            width="20%">Year of Billing</td>
+                          <td
+                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                            <%= revenue.rate_year %>
+                          </td>
+                        </tr>
+
 
                       </table>
                       <div class="row">
-                          <div class="col-md-12 mt-0">
-                              <h5>Dear Sir/Ma</h5>
-                              <p>
-                                <h4 style="text-align: center;"> <span class="invo_no"><b>DEMAND NOTICE</b></span></h4>
-                                <span style="text-align: center;">
-                                    This is to inform you of your indebtedness to ABAJI Local
-                                    Government as noted hereunder, prompt payment would however be
-                                    appreciated
-                                </span>
-                              </p>
-                          </div>
+                        <div class="col-md-12 mt-0">
+                          <h5>Dear Sir/Ma</h5>
+                          <p>
+                          <h4 style="text-align: center;"> <span class="invo_no"><b>DEMAND NOTICE</b></span></h4>
+                          <span style="text-align: center;">
+                            This is to inform you of your indebtedness to ABAJI Local
+                            Government as noted hereunder, prompt payment would however be
+                            appreciated
+                          </span>
+                          </p>
+                        </div>
                       </div>
 
                       <table>
-                          <tr>
-                              <td width="75%">
-                                  <table width="100%" class="tbl">
-                                      <thead style="background-color: green; color: #fff;">
-                                          <tr>
-                                              <th>S/N</th>
-                                              <th>REVENUE CODE</th>
-                                              <th>TRADE</th>
-                                              <th>DESCRIPTION</th>
-                                              <th>RATE PAYABLE</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <% let total=0; 
-                                             let count = 0;
-                                              items.forEach(k=> {
-                                                  count += 1
-                                                  let sub=parseFloat(k.amount).toFixed(2); 
-                                                  total +=+sub ; 
-                                            %>
-                                                          <tr>
-                                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                                  <%= count %>
-                                                              </td>
-                                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                                  <%= k.revenue_code %>
-                                                              </td>
-                                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                                  <%= k.taxitem %>
-                                                              </td>
-                                                              <td style="padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                                &#8358;<%= k.amount? parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" %>
-                                                              </td>
-                                                          </tr>
-                                                          <% }) %>
-                                                          <%  let gtotal = total + parseFloat(revenue.arrears==0 || revenue.arrears == null ? 0 :revenue.arrears); %>
-                                                          
-
-                                                                  <tr>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td class="td sess"
-                                                                          style="font-weight: bold !important; text-align: right !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                                          <strong>Arrears</strong>
-                                                                      </td>
-                                                                      <td class="td sess"
-                                                                          style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                                          &#8358; <%= revenue.arrears==0 || revenue.arrears == null ? "0.00" : parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                                                        
-                                                                      </td>
-                                                                  </tr>
-                                                                  <% if(revenue.goodwill> 0){%>
-                                                                      <tr>
-                                                                          <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                          <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                          <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                          <td class="td sess"
-                                                                              style="font-weight: bold !important; text-align: right !important; ">
-                                                                              <strong>Discount</strong>
-                                                                          </td>
-                                                                          <td class="td sess"
-                                                                              style="font-weight: bold !important;">
-                                                                              &#8358;<%= revenue.goodwill ? parseFloat(revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, "," ) : "0.00" %>
-                                                                          </td>
-                                                                      </tr>
-                                                                  <% } %>
-                                                                  <tr>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                                                      <td class="td sess"
-                                                                          style="font-weight: bold !important; text-align: right !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                                          <strong>Grand Total</strong>
-                                                                      </td>
-                                                                      <td class="td sess"
-                                                                          style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important ">
-                                                                          &#8358; <%= gtotal.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                                                      </td>
-                                                                  </tr>
-
-                                      </tbody>
-                                  </table>
-                              </td>
-                              <td width="1%"></td>
-                              <td>
-
-                                <table style="text-align: center;">
-                                    <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                        ABAJI LOCAL GOVERNMENT COUNCIL
+                        <tr>
+                          <td width="75%">
+                            <table width="100%" class="tbl">
+                              <thead style="background-color: green; color: #fff;">
+                                <tr>
+                                  <th>S/N</th>
+                                  <th>REVENUE CODE</th>
+                                  <th>TRADE</th>
+                                  <th>DESCRIPTION</th>
+                                  <th>RATE PAYABLE</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% let total=0; let count=0; items.forEach(k=> {
+                                  count += 1
+                                  let sub=parseFloat(k.amount).toFixed(2);
+                                  total +=+sub ;
+                                  %>
+                                  <tr>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= count %>
                                     </td>
-                                    
-                                    <tr>
-                                        <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                            Contact Us
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.revenue_code %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.taxitem %>
+                                    </td>
+                                    <td
+                                      style="padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      &#8358;<%= k.amount?
+                                        parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                        ) : "0.00" %>
+                                    </td>
+                                  </tr>
+                                  <% }) %>
+                                    <% let gtotal=total + parseFloat(revenue.arrears==0 || revenue.arrears==null ? 0
+                                      :revenue.arrears); %>
+
+
+                                      <tr>
+                                        <td
+                                          style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                          08032126276
+                                        <td
+                                          style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
                                         </td>
-                                    </tr>
-                                </table>
+                                        <td
+                                          style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                        </td>
+                                        <td class="td sess"
+                                          style="font-weight: bold !important; text-align: right !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                          <strong>Arrears</strong>
+                                        </td>
+                                        <td class="td sess"
+                                          style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                          &#8358; <%= revenue.arrears==0 || revenue.arrears==null ? "0.00" :
+                                            parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                            ) %>
+
+                                        </td>
+                                      </tr>
+                                      <% if(revenue.goodwill> 0){%>
+                                        <tr>
+                                          <td
+                                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                          </td>
+                                          <td
+                                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                          </td>
+                                          <td
+                                            style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                          </td>
+                                          <td class="td sess"
+                                            style="font-weight: bold !important; text-align: right !important; ">
+                                            <strong>Discount</strong>
+                                          </td>
+                                          <td class="td sess" style="font-weight: bold !important;">
+                                            &#8358;<%= revenue.goodwill ?
+                                              parseFloat(revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                              ) : "0.00" %>
+                                          </td>
+                                        </tr>
+                                        <% } %>
+                                          <tr>
+                                            <td
+                                              style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                            </td>
+                                            <td
+                                              style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                            </td>
+                                            <td
+                                              style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                            </td>
+                                            <td class="td sess"
+                                              style="font-weight: bold !important; text-align: right !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                              <strong>Grand Total</strong>
+                                            </td>
+                                            <td class="td sess"
+                                              style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important ">
+                                              &#8358; <%=
+                                                gtotal.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                                ) %>
+                                            </td>
+                                          </tr>
+
+                              </tbody>
+                            </table>
+                          </td>
+                          <td width="1%"></td>
+                          <td>
+
+                            <table style="text-align: center;">
+                              <td
+                                style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                ABAJI LOCAL GOVERNMENT COUNCIL
                               </td>
-                          </tr>
+
+                              <tr>
+                                <td
+                                  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                  Contact Us
+                                </td>
+                              </tr>
+                              <tr>
+                                <td
+                                  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                  08032126276
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
                       </table>
 
 
 
                       <div class="row ">
 
-                          <div class="col">
-                              Note: <br>
-                              kindly use any Banks branch of your choice or USSD <span
-                                  class="invo_no">*723*053399401*<%= total %># </span> to make
-                              payment with your Bill No. <span class="invo_no">
-                                  <%= revenue.bill_ref_no %>
-                              </span><br>
-                              <span style="font-weight: bold !important;">If payment is not made
-                                  within 14 days of the demand notice, LEGAL PROCEEDINGS
-                                  MAY BE TAKEN IMMEDIATELY
-                              </span>
-                          </div>
+                        <div class="col">
+                          Note: <br>
+                          kindly use any Banks branch of your choice or USSD <span class="invo_no">*723*053399401*<%=
+                              total %># </span> to make
+                          payment with your Bill No. <span class="invo_no">
+                            <%= revenue.bill_ref_no %>
+                          </span><br>
+                          <span style="font-weight: bold !important;">If payment is not made
+                            within 14 days of the demand notice, LEGAL PROCEEDINGS
+                            MAY BE TAKEN IMMEDIATELY
+                          </span>
+                        </div>
 
                       </div>
 
                       <table width="100%">
-                          <tr>
+                        <tr>
 
-                              <td>
-                                      
-                                <div>
-                                    <% const dtff='/invoice_rocessing/'+revenue.invoice_number %>
-                                        <img src="https://quickchart.io/qr?text=<%= dtff %>" style="width: 30% !important; height: 30% !important; border: 1px solid black !important;" />
-                                </div>
-                                      
-                              </td>
-
-                              <td>
-                                  <div style="text-align: right;">
-                                      <img src="/abaji_signature.png"
-                                      style="height: 50px; width: 130px;" alt=""> <br>
-                                        Council Treasurer
-                                  </div>
-                              </td>
-                          </tr>
-                      </table>
-                 
-
-
-                  <table width="100%">
-                      <tr>
                           <td>
-                              <div class="headings" style="color: red !important;"><span><b>ABAJI
-                                          LOCAL GOVERNMENT</b> </span></div>
+
+                            <div>
+                              <% const dtff='/invoice_rocessing/' +revenue.invoice_number %>
+                                <img src="https://quickchart.io/qr?text=<%= dtff %>"
+                                  style="width: 30% !important; height: 30% !important; border: 1px solid black !important;" />
+                            </div>
+
                           </td>
-                      </tr>
-                      <tr>
+
+                          <td>
+                            <div style="text-align: right;">
+                              <img src="/abaji_signature.png" style="height: 50px; width: 130px;" alt=""> <br>
+                              Council Treasurer
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+
+
+
+                      <table width="100%">
+                        <tr>
+                          <td>
+                            <div class="headings" style="color: red !important;"><span><b>ABAJI
+                                  LOCAL GOVERNMENT</b> </span></div>
+                          </td>
+                        </tr>
+                        <tr>
                           <td width="70%">
-                              Rate Payer’s Name: <b>%= revenue.name_of_business %>
-                              </b>
-                              <br>Address: <b>
-                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
-                                      revenue.address_of_property %>
-                              </b>
-                              <br>
-                              <table width="100%" style="padding: 20px;" class="tbl pb-2">
-                                  <thead style="background-color: green; color: #fff;">
-                                      <tr>
-                                          <th>S/N</th>
-                                          <th>REVENUE CODE</th>
-                                          <th>TRADE</th>
-                                          <th>DESCRIPTION</th>
-                                          <th>RATE PAYABLE</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% let count1=0; 
-                                      items.forEach(k=> {
-                                          count1 += 1 %>
-                                          <tr>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= count1 %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= k.revenue_code %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= k.taxitem %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">&#8358;<%= k.amount ?
-                                                      parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
-                                                      ) : "0.00" %>
-                                              </td>
-                                          </tr>
-                                          <% }) %>
+                            Rate Payer’s Name: <b>%= revenue.name_of_business %>
+                            </b>
+                            <br>Address: <b>
+                              <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
+                                revenue.address_of_property %>
+                            </b>
+                            <br>
+                            <table width="100%" style="padding: 20px;" class="tbl pb-2">
+                              <thead style="background-color: green; color: #fff;">
+                                <tr>
+                                  <th>S/N</th>
+                                  <th>REVENUE CODE</th>
+                                  <th>TRADE</th>
+                                  <th>DESCRIPTION</th>
+                                  <th>RATE PAYABLE</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% let count1=0; items.forEach(k=> {
+                                  count1 += 1 %>
+                                  <tr>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= count1 %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.revenue_code %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.taxitem %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      &#8358;<%= k.amount ?
+                                        parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                        ) : "0.00" %>
+                                    </td>
+                                  </tr>
+                                  <% }) %>
 
-                                          <tr>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td class="td sess"
-                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                  <strong>Arrears</strong></td>
-                                              <td class="td sess"
-                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                  &#8358;<%= revenue.arrears==0 || revenue.arrears == null ? "0.00" : parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                                        
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td class="td sess"
-                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                  <strong>Grand Total</strong></td>
-                                              <td class="td sess"
-                                                  style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                                  &#8358;<%= gtotal ? parseFloat(gtotal).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" %>
-                                              </td>
-                                          </tr>
+                                    <tr>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td class="td sess"
+                                        style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                        <strong>Arrears</strong>
+                                      </td>
+                                      <td class="td sess"
+                                        style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                        &#8358;<%= revenue.arrears==0 || revenue.arrears==null ? "0.00" :
+                                          parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                          ) %>
 
-                                  </tbody>
-                              </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td
+                                        style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      </td>
+                                      <td class="td sess"
+                                        style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                        <strong>Grand Total</strong>
+                                      </td>
+                                      <td class="td sess"
+                                        style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
+                                        &#8358;<%= gtotal ?
+                                          parseFloat(gtotal).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                          ) : "0.00" %>
+                                      </td>
+                                    </tr>
+
+                              </tbody>
+                            </table>
                           </td>
                           <td width="3%"></td>
                           <td>
-                              <span class="sess">
-                                  Date: <b>
-                                      <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
-                                  </b> <br>
-                                  Year of Billing: <b>
-                                      <%= revenue.rate_year %>
-                                  </b> <br>
-                                  Payer ID: <b> <span>
-                                          <%= revenue.biller_accountid %>
-                                      </span></b><br>
-                                  BILL NO: <b>
-                                      <%= revenue.bill_ref_no %>
-                                  </b>
-                              </span>
+                            <span class="sess">
+                              Date: <b>
+                                <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                              </b> <br>
+                              Year of Billing: <b>
+                                <%= revenue.rate_year %>
+                              </b> <br>
+                              Payer ID: <b> <span>
+                                  <%= revenue.biller_accountid %>
+                                </span></b><br>
+                              BILL NO: <b>
+                                <%= revenue.bill_ref_no %>
+                              </b>
+                            </span>
 
-                              <table width="100%">
-                                  <tr>
-                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                          DATE ISSUES: <%=
-                                              revenue.date_uploaded.toLocaleDateString('en-US')
-                                              %>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                          <b>SERVED BY:</b>
-                                      </td>
-                                  </tr>
+                            <table width="100%">
+                              <tr>
+                                <td
+                                  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                  DATE ISSUES: <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td
+                                  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                  <b>SERVED BY:</b>
+                                </td>
+                              </tr>
 
-                              </table>
+                            </table>
                           </td>
-                      </tr>
-                  </table>
+                        </tr>
+                      </table>
 
 
-                </div>
-                </div>
-              
-                <div class="col-xl-3 col-md-4 col-12 invoice-actions">
-                  <div class="card">
-                    <div class="card-body">
-                      <button
-                        class="btn btn-primary d-grid w-100 mb-4"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#sendInvoiceOffcanvas">
-                        <span class="d-flex align-items-center justify-content-center text-nowrap"
-                          ><i class="ti ti-send ti-xs me-2"></i>Send Invoice</span>
-                      </button>
-                      <button
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#applyDiscount" class="btn btn-label-secondary d-grid w-100 mb-4">Apply discount</button>
-                      
-                      <div class="d-flex mb-4">
-                        <a
-                          class="btn btn-label-secondary d-grid w-100 me-4"
-                          href="javascript:;" onclick="printDiv('invoice')">
-                          Print
-                        </a>
-                        <a href="./app-invoice-edit.html" class="btn btn-label-secondary d-grid w-100"> Edit </a>
-                      </div>
-                      <% if (revenue.payment_status == 0) { %>
-                        <button
-                          class="btn btn-success d-grid w-100"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#addPaymentOffcanvas">
-                          <span class="d-flex align-items-center justify-content-center text-nowrap">Make Payment</span>
-                        </button>
-                      <% } %>
-                     
                     </div>
                   </div>
-                </div>
-                <!-- /Invoice Actions -->
-              </div>
 
-              <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
-                <div class="offcanvas-header mb-6 border-bottom">
-                  <h5 class="offcanvas-title">Send Invoice</h5>
-                  <button
-                    type="button"
-                    class="btn-close text-reset"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
+                  <div class="col-xl-3 col-md-4 col-12 invoice-actions">
+                    <div class="card">
+                      <div class="card-body">
+                        <button class="btn btn-primary d-grid w-100 mb-4" data-bs-toggle="offcanvas"
+                          data-bs-target="#sendInvoiceOffcanvas">
+                          <span class="d-flex align-items-center justify-content-center text-nowrap"><i
+                              class="ti ti-send ti-xs me-2"></i>Send Invoice</span>
+                        </button>
+                        <button data-bs-toggle="offcanvas" data-bs-target="#applyDiscount"
+                          class="btn btn-label-secondary d-grid w-100 mb-4">Apply discount</button>
+
+                        <div class="d-flex mb-4">
+                          <a class="btn btn-label-secondary d-grid w-100 me-4" href="javascript:;"
+                            onclick="printDiv('invoice')">
+                            Print
+                          </a>
+                          <a href="./app-invoice-edit.html" class="btn btn-label-secondary d-grid w-100"> Edit </a>
+                        </div>
+                        <% if (revenue.payment_status==0) { %>
+                          <button class="btn btn-success d-grid w-100" data-bs-toggle="offcanvas"
+                            data-bs-target="#addPaymentOffcanvas">
+                            <span class="d-flex align-items-center justify-content-center text-nowrap">Make
+                              Payment</span>
+                          </button>
+                          <% } %>
+
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Invoice Actions -->
                 </div>
-                <div class="offcanvas-body pt-0 flex-grow-1">
-                  <form>
-                    <div class="mb-6">
-                      <label for="invoice-from" class="form-label">From</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-from"
-                        value="shelbyComapny@email.com"
-                        placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-to" class="form-label">To</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-to"
-                        value="qConsolidated@email.com"
-                        placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-subject" class="form-label">Subject</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="invoice-subject"
-                        value="Invoice of purchased Admin Templates"
-                        placeholder="Invoice regarding goods" />
-                    </div>
-                    <div class="mb-6">
-                      <label for="invoice-message" class="form-label">Message</label>
-                      <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">
+
+                <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
+                  <div class="offcanvas-header mb-6 border-bottom">
+                    <h5 class="offcanvas-title">Send Invoice</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                      aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body pt-0 flex-grow-1">
+                    <form>
+                      <div class="mb-6">
+                        <label for="invoice-from" class="form-label">From</label>
+                        <input type="text" class="form-control" id="invoice-from" value="shelbyComapny@email.com"
+                          placeholder="company@email.com" />
+                      </div>
+                      <div class="mb-6">
+                        <label for="invoice-to" class="form-label">To</label>
+                        <input type="text" class="form-control" id="invoice-to" value="qConsolidated@email.com"
+                          placeholder="company@email.com" />
+                      </div>
+                      <div class="mb-6">
+                        <label for="invoice-subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="invoice-subject"
+                          value="Invoice of purchased Admin Templates" placeholder="Invoice regarding goods" />
+                      </div>
+                      <div class="mb-6">
+                        <label for="invoice-message" class="form-label">Message</label>
+                        <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">
 Dear Queen Consolidated,
           Thank you for your business, always a pleasure to work with you!
           We have generated a new invoice in the amount of $95.59
-          We would appreciate payment of this invoice by 05/11/2021</textarea
-                      >
-                    </div>
-                    <div class="mb-6">
-                      <span class="badge bg-label-primary">
-                        <i class="ti ti-link ti-xs"></i>
-                        <span class="align-middle">Invoice Attached</span>
-                      </span>
-                    </div>
-                    <div class="mb-6 d-flex flex-wrap">
-                      <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
-                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              <div class="offcanvas offcanvas-end" id="applyDiscount" aria-hidden="true">
-                <div class="offcanvas-header mb-6 border-bottom">
-                  <h5 class="offcanvas-title">Apply discount</h5>
-                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body pt-0 flex-grow-1">
-                  <form>
-                    <div class="mb-2">
-                      <label for="invoice-from" class="form-label">Assessment Item</label>
-                      <select name="id" id="id" class="form-control">
-                        <option value="">Select options</option>
-                        <% items.forEach(k=> { %>
-                          <option value="<%= k.id %>"><%= k.taxitem %></option>
-                        <%})%>
-
-                      </select>
-                    </div>
-                    <div class="mb-2">
-                      <label for="invoice-to" class="form-label">Discount Amount</label>
-                      <input type="text" class="form-control" id="amount" name="amount" />
-                    </div>
-                    
-                    
-                    <div class="mb-6">
-                      <span class="badge bg-label-primary">
-                        <i class="ti ti-link ti-xs"></i>
-                        <span class="align-middle">Invoice Attached</span>
-                      </span>
-                    </div>
-                    <div class="mb-6 d-flex flex-wrap">
-                      <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
-                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            
-              <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
-                <div class="offcanvas-header border-bottom">
-                  <h5 class="offcanvas-title">Add Payment</h5>
-                  <button
-                    type="button"
-                    class="btn-close text-reset"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body flex-grow-1">
-                  <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
-                    <p class="mb-0">Wallet Balance:</p>
-                    <p class="fw-medium mb-0" id="wal"></p>
-                  </div>
-                  <form id="make_payment" onsubmit="return false">
-                    <div class="mb-6">
-                      <label class="form-label" for="invoiceAmount">Payment Amount</label>
-                      <div class="input-group">
-                        <span class="input-group-text">₦</span>
-                        <input
-                          type="text"
-                          id="invoiceAmount"
-                          value="<%= parseFloat(revenue.grand_total).toFixed(2) %>"
-                          name="invoiceAmount"
-                          class="form-control invoice-amount"
-                          placeholder="100" />
+          We would appreciate payment of this invoice by 05/11/2021</textarea>
                       </div>
-                    </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-date">Payment Date</label>
-                      <input id="payment-date" name="payment_date" class="form-control invoice-date" type="date" />
-                    </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-method">Payment Method</label>
-                      <select class="form-select" id="payment-method" name="payment_method">
-                        <option value="" selected disabled>Select payment method</option>
-                        <option value="Wallet" selected>Wallet</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Debit Card">Debit Card</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Paypal">Paypal</option> 
-                      </select>
-                    </div>
-                    <div class="mb-6">
-                      <label class="form-label" for="payment-note">Payment Note</label>
-                      <textarea class="form-control" id="payment-note" name="payment_note"  rows="2"></textarea>
-                    </div>
-                    <div class="mb-6 d-flex flex-wrap">
-                      <button type="submit" class="btn btn-primary me-4" id="wallet_payment" >Send</button>
-                      <button type="button" class="btn btn-label-secondary"  data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                  </form>
+                      <div class="mb-6">
+                        <span class="badge bg-label-primary">
+                          <i class="ti ti-link ti-xs"></i>
+                          <span class="align-middle">Invoice Attached</span>
+                        </span>
+                      </div>
+                      <div class="mb-6 d-flex flex-wrap">
+                        <button type="button" class="btn btn-primary me-4" data-bs-dismiss="offcanvas">Send</button>
+                        <button type="button" class="btn btn-label-secondary"
+                          data-bs-dismiss="offcanvas">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </div>
-              <!-- /Add Payment Sidebar -->
-              </div>
-              <!-- / Content -->
 
-        <%- include('../../layout/footer') %>
-        <script src="/assets/js/offcanvas-send-invoice.js"></script>
-    <script>
-       function printDiv(invoice) {
-            var printContents = document.getElementById("invoice").innerHTML;
-            var originalContents = document.body.innerHTML;
+                <div class="offcanvas offcanvas-end" id="applyDiscount" aria-hidden="true">
+                  <div class="offcanvas-header mb-6 border-bottom">
+                    <h5 class="offcanvas-title">Apply discount</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                      aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body pt-0 flex-grow-1">
+                    <form id="discountForm">
+                      <div class="mb-2">
+                        <label for="invoice-from" class="form-label">Assessment Item</label>
+                        <select name="taxitem_id" id="taxitem_id" class="form-control" required>
+                          <option value="">Select options</option>
+                          <% items.forEach(k=> { %>
+                            <option value="<%= k.id %>" data-invoice-number="<%= k.invoice_number %>">
+                              <%= k.taxitem %>
+                            </option>
+                            <% }) %>
+                        </select>
+                      </div>
+                      <div class="mb-2">
+                        <label for="amount" class="form-label">Discount Amount</label>
+                        <input type="text" class="form-control" id="amount" name="amount" required />
+                      </div>
 
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-      }
-
-      addEventListener("DOMContentLoaded", async (event) => {
-        const wal = document.getElementById("wal")
-        const request = await fetch('/admin/wallet_balance')
-        const balance = await request.json();
-        wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
-
-        // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
-        if(parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
-          document.getElementById("wallet_payment").disabled = true;
-        }
-      });
-
-      if(document.getElementById("make_payment")) {
-        const make_payment = document.getElementById("make_payment");
-        make_payment.addEventListener("submit", async function(e) {
-          e.preventDefault();
-          $(".spinner-border").show()
-          const data = new FormData(make_payment);
-          const payload = {
-            amount_paid: data.get("invoiceAmount"),
-            payment_date: data.get("payment_date"),
-            payment_method: data.get("payment_method"),
-            payment_note: data.get("payment_note"),
-            assessment_no: '<%= revenue.assessment_no %>',
-            rate_year: '<%= revenue.rate_year %>',
-            grand_total: '<%= revenue.grand_total %>',
-            customerName: '<%= revenue.name_of_business %>',
-            assessment_type: '<%= revenue.type_of_property %>',
-          }
-
-          console.log(payload)
-          // return
-          try {
-            const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
-              method: "post",
-              body: JSON.stringify(payload),
-              headers: {
-                "Content-Type": "application/json"
-              }
-            })
-
-            const response = await req.json();
-            $(".spinner-border").hide()
-
-            if(response.status == true) {
-                toastr.success(response.message);
-                setTimeout(() => {
-                  location.reload()
-                }, "3000");
-            } else {
-                // for errors - red box
-                toastr.error(response.message);
-            }
-          } catch (error) {
-            console.log(error)
-            $(".spinner-border").hide()
-            // for errors - red box
-            toastr.error(error.message);
-          }
-        }) 
-      }
+                      <div class="mb-6">
+                        <span class="badge bg-label-primary">
+                          <i class="ti ti-link ti-xs"></i>
+                          <span class="align-middle">Invoice Attached</span>
+                        </span>
+                      </div>
+                      <div class="mb-6 d-flex flex-wrap">
+                        <button type="submit" class="btn btn-primary me-4">Send</button>
+                        <button type="button" class="btn btn-label-secondary"
+                          data-bs-dismiss="offcanvas">Cancel</button>
+                      </div>
+                    </form>
 
 
+                  </div>
+                </div>
 
-    </script>
-  </body>
+                <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
+                  <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title">Add Payment</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                      aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body flex-grow-1">
+                    <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
+                      <p class="mb-0">Wallet Balance:</p>
+                      <p class="fw-medium mb-0" id="wal"></p>
+                    </div>
+                    <form id="make_payment" onsubmit="return false">
+                      <div class="mb-6">
+                        <label class="form-label" for="invoiceAmount">Payment Amount</label>
+                        <div class="input-group">
+                          <span class="input-group-text">₦</span>
+                          <input type="text" id="invoiceAmount"
+                            value="<%= parseFloat(revenue.grand_total).toFixed(2) %>" name="invoiceAmount"
+                            class="form-control invoice-amount" placeholder="100" />
+                        </div>
+                      </div>
+                      <div class="mb-6">
+                        <label class="form-label" for="payment-date">Payment Date</label>
+                        <input id="payment-date" name="payment_date" class="form-control invoice-date" type="date" />
+                      </div>
+                      <div class="mb-6">
+                        <label class="form-label" for="payment-method">Payment Method</label>
+                        <select class="form-select" id="payment-method" name="payment_method">
+                          <option value="" selected disabled>Select payment method</option>
+                          <option value="Wallet" selected>Wallet</option>
+                          <option value="Bank Transfer">Bank Transfer</option>
+                          <option value="Debit Card">Debit Card</option>
+                          <option value="Credit Card">Credit Card</option>
+                          <option value="Paypal">Paypal</option>
+                        </select>
+                      </div>
+                      <div class="mb-6">
+                        <label class="form-label" for="payment-note">Payment Note</label>
+                        <textarea class="form-control" id="payment-note" name="payment_note" rows="2"></textarea>
+                      </div>
+                      <div class="mb-6 d-flex flex-wrap">
+                        <button type="submit" class="btn btn-primary me-4" id="wallet_payment">Send</button>
+                        <button type="button" class="btn btn-label-secondary"
+                          data-bs-dismiss="offcanvas">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+         
+          
+
+              <%- include('../../layout/footer') %>
+                <script src="/assets/js/offcanvas-send-invoice.js"></script>
+                <script>
+                  function printDiv(invoice) {
+                    var printContents = document.getElementById("invoice").innerHTML;
+                    var originalContents = document.body.innerHTML;
+
+                    document.body.innerHTML = printContents;
+
+                    window.print();
+
+                    document.body.innerHTML = originalContents;
+                  }
+
+                  addEventListener("DOMContentLoaded", async (event) => {
+                    const wal = document.getElementById("wal")
+                    const request = await fetch('/admin/wallet_balance')
+                    const balance = await request.json();
+                    wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
+
+                    // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
+                    if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
+                      document.getElementById("wallet_payment").disabled = true;
+                    }
+                  });
+
+                  if (document.getElementById("make_payment")) {
+                    const make_payment = document.getElementById("make_payment");
+                    make_payment.addEventListener("submit", async function (e) {
+                      e.preventDefault();
+                      $(".spinner-border").show()
+                      const data = new FormData(make_payment);
+                      const payload = {
+                        amount_paid: data.get("invoiceAmount"),
+                        payment_date: data.get("payment_date"),
+                        payment_method: data.get("payment_method"),
+                        payment_note: data.get("payment_note"),
+                        assessment_no: '<%= revenue.assessment_no %>',
+                        rate_year: '<%= revenue.rate_year %>',
+                        grand_total: '<%= revenue.grand_total %>',
+                        customerName: '<%= revenue.name_of_business %>',
+                        assessment_type: '<%= revenue.type_of_property %>',
+                      }
+
+                      console.log(payload)
+                      // return
+                      try {
+                        const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
+                          method: "post",
+                          body: JSON.stringify(payload),
+                          headers: {
+                            "Content-Type": "application/json"
+                          }
+                        })
+
+                        const response = await req.json();
+                        $(".spinner-border").hide()
+
+                        if (response.status == true) {
+                          toastr.success(response.message);
+                          setTimeout(() => {
+                            location.reload()
+                          }, "3000");
+                        } else {
+                          // for errors - red box
+                          toastr.error(response.message);
+                        }
+                      } catch (error) {
+                        console.log(error)
+                        $(".spinner-border").hide()
+                        // for errors - red box
+                        toastr.error(error.message);
+                      }
+                    })
+                  }
+              document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('discountForm');
+
+                form.addEventListener('submit', function (event) {
+                  event.preventDefault(); 
+
+                  const taxitemSelect = document.getElementById('taxitem_id');
+                  const taxitemId = taxitemSelect.value;
+                  const invoiceNumber = taxitemSelect.selectedOptions[0].getAttribute('data-invoice-number');
+                  const discountAmount = document.getElementById('amount').value;
+
+                
+                  const url = `/admin/discount/${invoiceNumber}`;
+                  const data = [{
+                       id: taxitemId,
+                       amount: discountAmount,
+                  }]
+
+                  fetch(url, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                  })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                  })
+                  .then(data => {
+                  
+                    toastr.success('Discount added successfully');
+                     setTimeout(() => {
+                            location.reload()
+                          }, "3000");
+                  })
+                  .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    toastr.error('Failed to add discount');
+                  });
+                });
+              });
+                </script>
+</body>
+
 </html>

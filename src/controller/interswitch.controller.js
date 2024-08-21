@@ -5,34 +5,48 @@ const interSwitch = new InterSwitch();
 
 module.exports = {
     interSwitchControllers:  function(req, res) {
+        // console.log(req.rawBody, req.params.services_id);
+        // return
         try {
 
-            interSwitch.initInterSwitch(req.rawBody, req.params.services_id);
+            interSwitch.initInterSwitch(req.rawBody, req.params.service_id);
 
             // listening to customer validation event emit
-            interSwitch.on("customer-validation", detail => {
+            interSwitch.once("customer-validation", (detail) => {
                 console.log({detail})
                 const builder = new xml2js.Builder()
                 let xml = builder.buildObject(detail);
                 res.header('Content-Type', 'text/xml')
                 res.send(xml) 
+                res.end();
             })
 
             // Listening to payment notification emit
-            interSwitch.on("payment-notification", detail => {
-                console.log({detail})
+            interSwitch.once("payment-notification", (payment) => {
+                console.log({payment})
                 const builder = new xml2js.Builder()
-                let xml = builder.buildObject(detail);
+                let xml = builder.buildObject(payment);
                 res.header('Content-Type', 'text/xml')
                 res.send(xml) 
+                res.end();
             })
 
             interSwitch.on("custom-error", detail => {
-                console.log({error: detail})
+                console.log({custom_error: detail})
                 const builder = new xml2js.Builder()
                 let xml = builder.buildObject(detail);
                 res.header('Content-Type', 'text/xml')
                 res.send(xml) 
+                res.end();
+            })
+
+            interSwitch.on("error", (error) => {
+                console.log({error})
+                // const builder = new xml2js.Builder()
+                // let xml = builder.buildObject(detail);
+                // res.header('Content-Type', 'text/xml')
+                // res.send(xml) 
+                // res.end();
             })
         } catch (error) {
             console.log(error)

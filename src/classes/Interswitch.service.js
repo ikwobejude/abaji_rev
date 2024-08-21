@@ -33,7 +33,7 @@ class InterSwitch extends eventEmitter {
                 const MCode = result.CustomerInformationRequest.MerchantReference[0];
                 const customerReference = result.CustomerInformationRequest.CustReference[0]
                 if(MCode == process.env.MID) {
-                    const response = await this.customerValidation(customerReference);
+                    const response = await this.customerValidation(customerReference, service_id);
                     this.emit("customer-validation", response)
                     // console.log({jk: result})
                     // return result;
@@ -57,13 +57,13 @@ class InterSwitch extends eventEmitter {
                             }
                         }
                     }
-                    return response
+                    this.emit("custom-error", response)
                 }
 
             }
 
             if(result.PaymentNotificationRequest){
-                const payment = await this.paymentNotification(result.PaymentNotificationRequest);
+                const payment = await this.paymentNotification(result.PaymentNotificationRequest, service_id,);
                 this.emit("payment-notification", payment)
                 
             }
@@ -71,7 +71,7 @@ class InterSwitch extends eventEmitter {
     }
 
 
-    async customerValidation(ref_no) {
+    async customerValidation(ref_no, service_id) {
 
         // console.log({ref_no})
         
@@ -79,6 +79,7 @@ class InterSwitch extends eventEmitter {
             
             const assessment = await this.revenue_uploads.findOne({
                 where: {
+                    service_id: service_id,
                     [Op.or]: [
                         { bill_ref_no: ref_no },
                         { biller_accountid: ref_no },
@@ -91,6 +92,7 @@ class InterSwitch extends eventEmitter {
             if(!assessment){
                 const revenue = await this.revenues_invoices.findOne({
                     where: {
+                        service_id: service_id,
                         [Op.or]: [
                             { invoice_number: ref_no },
                             { tin: ref_no }
@@ -195,7 +197,7 @@ class InterSwitch extends eventEmitter {
         }
     }
 
-    async paymentNotification(data) {
+    async paymentNotification(data, service_id,) {
         const Payments = data.Payments[0].Payment[0];
         // console.log({Payments})
     
@@ -217,6 +219,7 @@ class InterSwitch extends eventEmitter {
             } else {
                 const assessment = await this.revenue_uploads.findOne({
                     where: {
+                        service_id: service_id,
                         [Op.or]: [
                             { bill_ref_no: Payments.CustReference[0] },
                             { biller_accountid: Payments.CustReference[0] },
@@ -229,14 +232,15 @@ class InterSwitch extends eventEmitter {
                 // console.log({assessment})
                 if(assessment) {
                    
-                     await this.clearApiPayment(Payments, t)
+                     await this.clearApiPayment(Payments, service_id, t)
                      const obj = await this.clearAssessmentPayment(assessment, Payments, t)
                      await t.commit();
                      return  obj   
                        
                 } else {
-                    const uploaded = await this.revenueModels.RevenuesInvoices.findOne({
+                    const uploaded = await this.revenues_invoices.findOne({
                         where: {
+                            service_id: service_id,
                             invoice_number: Payments.CustReference[0], 
                             year: this.year
                         },
@@ -245,7 +249,7 @@ class InterSwitch extends eventEmitter {
                     // console.log({uploaded}, this.year)
                     // return
                     if(uploaded){
-                        const payment = await this.clearApiPayment(Payments, t)
+                        await this.clearApiPayment(Payments, service_id, t)
                         const obj = await this.clearRevenueInvoicesPayments(uploaded, Payments, t)
                         await t.commit();
                         return obj;
@@ -277,14 +281,13 @@ class InterSwitch extends eventEmitter {
                     }
                 }
             }
-
             this.emit("custom-error", obj)
             // return obj;
         }
        
     }
 
-    async clearApiPayment(Payments, t) {
+    async clearApiPayment(Payments, service_id, t) {
         // console.log({Payments});
         return await this.api_payments.create( {
             PaymentLogId: Payments ? Payments.PaymentLogId[0] : '',
@@ -312,6 +315,7 @@ class InterSwitch extends eventEmitter {
             DepositSlipNumber: Payments.ProductGroupCode[0],
             // tax_office_id: assessment.tax_office_id,
             // CustomerName: assessment.bill_ref_no
+            service_id: service_id
         }, {transaction: t});
        
     }
@@ -323,14 +327,15 @@ class InterSwitch extends eventEmitter {
         const amountPaid = parseFloat(Payments.Amount[0]);
         // const amountPaid = parseFloat(dt.amount_paid) + parseFloat(Payments.Amount[0]) ;
         const disc = parseFloat(dt.grand_total) - parseFloat(dt.goodwill);
+        console.log(amountPaid >= outstanding)
 
         if(amountPaid >= outstanding) {
           
                 
             const prevP = previousAmount + parseFloat(Payments.Amount[0]);
-            await this.revenueModels.Revenue_upload.update(
+            await this.revenue_uploads.update(
                 {amount_paid: prevP, payment_status:1, payment_date:new Date()}, 
-                {where: {bill_ref_no: Payments.CustReference[0], rate_year: currentYear}}, 
+                {where: {bill_ref_no: Payments.CustReference[0]}}, 
                 {new:true});
             // await db.query(`UPDATE tax_items SET payment_status = 1 WHERE invoice_number = '${Payments.CustReference[0]}'`, {type: Sequelize.QueryTypes.UPDATE});
 
@@ -342,9 +347,11 @@ class InterSwitch extends eventEmitter {
                 raw:true
             });
 
-            // console.log(taxItems)
+            // console.log(taxItems, Payments.CustReference[0])
 
             for (const m of taxItems) {
+                console.log(m)
+                // return
                 const taxUpdate = {
                     payment_status: 1,
                     amount_paid: parseFloat(m.amount) - parseFloat(m.discount)
@@ -355,6 +362,7 @@ class InterSwitch extends eventEmitter {
                     }}, 
                     {new:true});
             }
+            // return
             // await t.commit()
             let obj = {
                 PaymentNotificationResponse: {
@@ -430,7 +438,7 @@ class InterSwitch extends eventEmitter {
         const previousAmount = parseFloat(assessment.amount_paid);
         const amountPaid = parseFloat(Payments.Amount[0]);
 
-        console.log({outstanding, previousAmount, amountPaid})
+        // console.log({outstanding, previousAmount, amountPaid})
         
             // console.log({ outstanding, previousAmount, amountPaid, data });
             // return;

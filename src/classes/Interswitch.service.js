@@ -33,12 +33,12 @@ class InterSwitch extends eventEmitter {
                 const MCode = result.CustomerInformationRequest.MerchantReference[0];
                 const customerReference = result.CustomerInformationRequest.CustReference[0]
                 if(MCode == process.env.MID) {
-                    const result = await this.customerValidation(customerReference);
-                    this.emit("customer-validation", result)
+                    const response = await this.customerValidation(customerReference);
+                    this.emit("customer-validation", response)
                     // console.log({jk: result})
                     // return result;
                 } else {
-                    const result = {
+                    const response = {
                         CustomerInformationResponse: {
                             MerchantReference: result.CustomerInformationRequest.MerchantReference,
                             Customers: {
@@ -57,7 +57,7 @@ class InterSwitch extends eventEmitter {
                             }
                         }
                     }
-                    return result
+                    return response
                 }
 
             }

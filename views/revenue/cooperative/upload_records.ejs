@@ -64,7 +64,7 @@
                                     </button>
                                     <div class="dropdown-menu">
                                       <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>"><i class="ti ti-eye me-1"></i>View more </a>
-                                      <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i> Delete</a>
+                                      <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= item.year %>')"><i class="ti ti-trash me-1"></i> Delete</a>
                                     </div>
                                   </div>
                                 </td>
@@ -159,8 +159,8 @@
         }
     
         
-      const fileInput = document.getElementById('upload_excel');
-        //  console.log(fileInput)
+        const fileInput = document.getElementById('upload_excel');
+          //  console.log(fileInput)
         fileInput.addEventListener('change', async (e) => {
             // console.log("Hi")
             try {
@@ -181,7 +181,36 @@
             }
         });
 
-
+        async function deleteRecords(year) {
+          // console.log(year)
+          try {
+            const response = await fetch(`/admin/revenue_upload?year=${year}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers if necessary, e.g., Authorization
+                }
+            })
+            // console.log(response)
+            if (response.ok) {
+                const d = await response.json(); // or response.text() if expecting plain text
+                if(d.status == true) {
+                  toastr.success(d.message);
+                  setTimeout(() => {
+                    location.reload()
+                  }, "3000");
+                } else {
+                  toastr.error(d.message);
+                }
+               
+            } else {
+              toastr.error('Failed to delete the resource.');
+                // throw new Error();
+            }
+          } catch (error) {
+            toastr.error(error.message);
+          }
+        }
     </script>
   </body>
 </html>

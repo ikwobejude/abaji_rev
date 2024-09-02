@@ -51,6 +51,15 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
+  deleteYearly: async function (req, res) {
+    try {
+      const response = await revenue.truncateYearlyRecord(req.query);
+      res.status(200).json(response)
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({ error: error.message });
+    }
+  },
   demandNotice: async function (req, res) {
     const response = await revenue.demandNotice(req.params);
     res
@@ -70,7 +79,6 @@ module.exports = {
     const request = await user.userGroup();
     res.status(200).render("./users/user_role", { ...request });
   },
-
   postUserRoles: async function (req, res) {
     try {
       const response = await user.createUserGroup(req.body);
@@ -81,6 +89,20 @@ module.exports = {
         message: error.message,
       });
     }
+  },
+  editUserRole: async function (req, res) {
+    try {
+      const response = await user.editUserGroup(req.body);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  },
+  deleteUserRole: async function (req, res) {
+
   },
   postUser: async function (req, res) {
     try {

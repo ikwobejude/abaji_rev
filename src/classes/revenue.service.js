@@ -27,6 +27,23 @@ class Revenue {
     };
   }
 
+  async truncateYearlyRecord(data) {
+    try {
+      await this.revenueUpload.destroy({
+        where: {
+          rate_year: data.year
+        }
+      })
+  
+      return {
+        status: true,
+        message: "Deleted!"
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
   async revenuesInvoices(query) {
     // Define an array for conditions and an array for query parameters
     let condition = [];

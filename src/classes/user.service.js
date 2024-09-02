@@ -9,7 +9,8 @@ const Op = Sequelize.Op;
 class User {
   constructor() {
     this.users = Users;
-    (this.user_group = User_groups), (this.inputValidate = validation);
+    (this.user_group = User_groups), 
+    (this.inputValidate = validation);
   }
 
   async userGroup() {
@@ -33,6 +34,39 @@ class User {
       };
     }
   }
+
+  async editUserGroup(data) {
+   try {
+     const { value, error } = this.inputValidate.validateUserGrpp(data);
+     if (error) {
+       throw Error(error.message);
+     } else {
+       await this.user_group.update({
+         group_name: value.group_name
+       }, { where: { idgroups: value.id } }, {new:true});
+ 
+       return {
+         status: true,
+         message: "Updated",
+       };
+     }
+   } catch (error) {
+    throw error
+   }
+  }
+
+  async deleteUserRole(id) {
+    try {
+      await this.user_group.destroy({ where: { idgroups: value.id }})
+      return {
+        status: true,
+        message: "Deleted"
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async createUser(data) {
     const {
       group_id,

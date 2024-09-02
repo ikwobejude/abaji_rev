@@ -50,12 +50,8 @@
                                         <i class="ti ti-dots-vertical"></i>
                                       </button>
                                       <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/admin/demand_notice"
-                                          ><i class="ti ti-pencil me-1"></i>Edit</a
-                                        >
-                                        <a class="dropdown-item" href="javascript:void(0);"
-                                          ><i class="ti ti-trash me-1"></i> Delete</a
-                                        >
+                                        <a class="dropdown-item" href="javascript:;" data-bs-target="#addRoleModal" data-bs-toggle="modal" onclick="editData('<%= res.group_name %>', '<%= res.idgroups %>')"><i class="ti ti-pencil me-1"></i>Edit</a>
+                                        <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i> Delete</a>
                                       </div>
                                     </div>
                                   </td>
@@ -143,6 +139,39 @@
               </div>
               <!-- / Content -->
 
+
+              <!-- Add Role Modal -->
+              <div class="modal fade" id="addRoleModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-md modal-simple modal-dialog-centered modal-add-new-role">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center mb-6">
+                      <h4 class="role-title mb-2">Edit User Role</h4>
+                      <p>Edit user role</p>
+                    </div>
+                    <!-- Add role form -->
+                    <form id="addRoleForm" class="row g-6" onsubmit="return false">
+                      <div class="col-12">
+                        <label class="form-label" for="modalRoleName">Role Name</label>
+                        <input type="text" id="group_name" name="group_name" class="form-control" placeholder="Enter a role name" tabindex="-1" />
+                        <input type="hidden" name="id" id="id">
+                      </div>
+                      
+                      <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary me-3">Submit</button>
+                        <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                    <!--/ Add role form -->
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!--/ Add Role Modal -->
+
         <%- include('../layout/footer') %>
         <script src="/assets/js/offcanvas-send-invoice.js"></script>
          <!-- Page JS -->
@@ -188,6 +217,52 @@
             toastr.error(error.message);
           }
         }) 
+      }
+
+      if(document.getElementById("addRoleForm")) {
+        $(".spinner-border").hide()
+        const add_role = document.getElementById("addRoleForm");
+        add_role.addEventListener("submit", async function(e) {
+          e.preventDefault();
+          $(".spinner-border").show()
+          const data = new FormData(add_role);
+          const payload = {
+            user_role: data.get("user_role"),
+            user_role: data.get("user_role")
+          }
+
+          // console.log(payload)
+          try {
+            const req = await fetch(`/admin/user_group`, {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+
+            const response = await req.json();
+            $(".spinner-border").hide()
+            if(response.status == true) {
+                toastr.success(response.message);
+                setTimeout(() => {
+                  location.reload()
+                }, "3000");
+            } else {
+                // for errors - red box
+                toastr.error(response.message);
+            }
+          } catch (error) {
+            $(".spinner-border").hide()
+            // for errors - red box
+            toastr.error(error.message);
+          }
+        }) 
+      }
+
+      function editData(name, id) {
+        document.getElementById('group_name').value = name;
+        document.getElementById('id').value = id;
       }
 
 

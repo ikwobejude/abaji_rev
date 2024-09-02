@@ -92,6 +92,7 @@ module.exports = {
   },
   editUserRole: async function (req, res) {
     try {
+      // console.log(req.body)
       const response = await user.editUserGroup(req.body);
       res.status(200).json(response);
     } catch (error) {
@@ -102,7 +103,15 @@ module.exports = {
     }
   },
   deleteUserRole: async function (req, res) {
-
+    try {
+      const response = await user.deleteUserRole(req.query.id);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
   },
   postUser: async function (req, res) {
     try {

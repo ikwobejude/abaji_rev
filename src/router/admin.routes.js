@@ -27,7 +27,8 @@ Router.route("/user").get(revenue.getUser).post(revenue.postUser);
 Router.route("/user_group")
 .get(revenue.getUserRoles)
 .post(revenue.postUserRoles)
-.put(revenue.editUserRole);
+.put(revenue.editUserRole)
+.delete(revenue.deleteUserRole);
 Router.delete("/user/:userId", revenue.deleteUser);
 Router.put("/user/:userId", revenue.updateUser);
 Router.route("/profile").get(adminController.getprofile);

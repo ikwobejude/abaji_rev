@@ -183,34 +183,39 @@
 
         async function deleteRecords(year) {
           // console.log(year)
-          try {
-            const response = await fetch(`/admin/revenue_upload?year=${year}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any other headers if necessary, e.g., Authorization
-                }
-            })
-            // console.log(response)
-            if (response.ok) {
-                const d = await response.json(); // or response.text() if expecting plain text
-                if(d.status == true) {
-                  toastr.success(d.message);
-                  setTimeout(() => {
-                    location.reload()
-                  }, "3000");
+          if(confirm('Do you want to delete?')) {
+            try {
+                const response = await fetch(`/admin/revenue_upload?year=${year}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if necessary, e.g., Authorization
+                    }
+                })
+                // console.log(response)
+                if (response.ok) {
+                    const d = await response.json(); // or response.text() if expecting plain text
+                    if(d.status == true) {
+                      toastr.success(d.message);
+                      setTimeout(() => {
+                        location.reload()
+                      }, "3000");
+                    } else {
+                      toastr.error(d.message);
+                    }
+                  
                 } else {
-                  toastr.error(d.message);
+                  toastr.error('Failed to delete the resource.');
+                    // throw new Error();
                 }
-               
-            } else {
-              toastr.error('Failed to delete the resource.');
-                // throw new Error();
-            }
-          } catch (error) {
-            toastr.error(error.message);
+              } catch (error) {
+                toastr.error(error.message);
+              }
           }
+          
         }
-    </script>
+   
+   
+   </script>
   </body>
 </html>

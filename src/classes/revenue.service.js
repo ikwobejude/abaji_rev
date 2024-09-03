@@ -248,6 +248,93 @@ class Revenue {
     }
   }
 
+  // async payments_records(query) {
+  //   return {};
+  // }
+
+  async viewUploadedPayment(query) {
+    let sql = `
+      SELECT 
+        revenue_invoices.ref_no,
+        revenue_invoices.tin,
+        revenue_invoices.taxpayer_name,
+        revenue_invoices.revenue_id,
+        revenue_invoices.description,
+        revenue_invoices.amount,
+        revenue_invoices.day,
+        revenue_invoices.month,
+        revenue_invoices.year,
+        revenue_invoices.payment_date,
+        revenue_invoices.RevenueHeadName,
+        _cities.city,
+        _streets.street
+      FROM revenue_invoices 
+      LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
+      LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
+    `;
+
+    const data = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
+    return {
+      data
+    }
+  }
+
+  async upload_payments(data) {
+    const res = await this.base64ToExcel(data.base64url);
+    
+    // return
+    delete data.base64url;
+    // console.log(data)
+    if (res.status == true) {
+      const res1 = new Promise((resolve, reject) => {
+        const file = res.fileName;
+        console.log(file);
+        const worker = new Worker(
+          path.join(__dirname, `../worker/reconciliation.js`),
+          {
+            workerData: {
+              file,
+              ...data,
+            },
+          }
+        );
+
+        worker.on("message", (data) => {
+          // console.log(data)
+          resolve(data);
+
+          let deleteFile = path.join(__dirname, `../../uploads/${file}`);
+
+          if (fs.existsSync(deleteFile)) {
+            fs.unlink(deleteFile, (err) => {
+              if (err) {
+                console.log(err);
+              }
+              console.log("deleted");
+            });
+          }
+          return data;
+        });
+
+        worker.on("error", (error) => {
+          console.log({ error });
+          reject(error);
+          throw Error(error.message);
+        });
+
+        worker.on("exit", (code) => {
+          if (code !== 0)
+            throw Error(`Worker has stopped working with exit code ${code}`);
+        });
+      });
+
+      return res1;
+    } else {
+      // return res
+      throw Error(res.message);
+    }
+  }
+
   async initiateDiscount(invoice, data) {
     // console.log(invoice, data)
     let sum = 0;

@@ -35,6 +35,10 @@ Router.route("/profile").get(adminController.getprofile);
 Router.route("/security").get(adminController.security);
 
 
-Router.get('/revenue_uploads', admin.getRevenueUGraph)
+Router.get('/revenue_uploads', admin.getRevenueUGraph);
+
+Router.route('/payment_reconciliation')
+.get(revenue.upload_payment_rec)
+.post(revenue.upload_payment)
 
 module.exports = Router;

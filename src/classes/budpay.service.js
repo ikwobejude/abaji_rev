@@ -43,7 +43,7 @@ class BudPay {
       );
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data || error.message);
+      throw new Error( error);
     }
   }
   async callback(invoiceNumber) {

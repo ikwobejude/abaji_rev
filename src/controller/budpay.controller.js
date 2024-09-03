@@ -43,7 +43,7 @@ module.exports = {
       email: req.body.email,
       amount: req.body.amount,
       currency: "NGN",
-      reference: invoiceNumber,
+      reference: "invoice_1725368940516", // for testing invoice number from the generated invoice
       callback: `https://1c17-105-112-230-161.ngrok-free.app/pay/budpay`,
     };
     if (!checkoutData) {
@@ -53,7 +53,7 @@ module.exports = {
       const checkoutResponse = await Pay.createStandardCheckout(checkoutData);
       res.status(200).json({ checkoutResponse });
     } catch (error) {
-      console.error("Error during standard checkout:", error.message);
+      console.error("Error during standard checkout:", error);
       res.status(500).json({ error: error.message });
     }
   },

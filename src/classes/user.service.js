@@ -18,21 +18,47 @@ class User {
   }
 
   async createUserGroup(data) {
-    // const { value, error } = this.inputValidate.validateUserGrpp(data);
-    // if (error) {
-    //   throw Error(error.message);
-    // } else {
-      await this.user_group.create({
-        group_id: data.group_id,
-        group_name: data.group_name,
+    await this.user_group.create({
+      group_id: data.group_id,
+      group_name: data.group_name,
+    });
+
+    return {
+      status: true,
+      message: "Successfully Created",
+      // };
+    };
+  }
+  async editUserGroup(data) {
+    try {
+      // Find the group by its ID
+      const group = await this.user_group.findOne({
+        where: { idgroups: data.id },
+      });
+      if (!group) {
+        return {
+          status: false,
+          message: "User Role not found",
+        };
+      }
+      await group.update({
+        group_name: data.user_role,
       });
 
       return {
         status: true,
-        message: "creates",
-      // };
+        message: "User Role updated successfully",
+        data: group,
+      };
+    } catch (error) {
+      console.error("Error updating user group:", error);
+      return {
+        status: false,
+        message: "Error updating user group",
+      };
     }
   }
+
   async createUser(data) {
     const {
       group_id,
@@ -90,7 +116,7 @@ class User {
     }
   }
 
-  async deleteUserRole(id){
+  async deleteUserRole(id) {
     await this.user_group.destroy({ where: { idgroups: id } });
     return { status: true, message: "User group deleted successfully." };
   }

@@ -9,8 +9,7 @@ const Op = Sequelize.Op;
 class User {
   constructor() {
     this.users = Users;
-    (this.user_group = User_groups), 
-    (this.inputValidate = validation);
+    (this.user_group = User_groups), (this.inputValidate = validation);
   }
 
   async userGroup() {
@@ -19,60 +18,21 @@ class User {
   }
 
   async createUserGroup(data) {
-    const { value, error } = this.inputValidate.validateUserGrpp.validate(data);
-    if (error) {
-      throw Error(error.message);
-    } else {
+    // const { value, error } = this.inputValidate.validateUserGrpp(data);
+    // if (error) {
+    //   throw Error(error.message);
+    // } else {
       await this.user_group.create({
-        group_id: value.group_id,
-        group_name: value.group_name,
+        group_id: data.group_id,
+        group_name: data.group_name,
       });
 
       return {
         status: true,
         message: "creates",
-      };
+      // };
     }
   }
-
-  async editUserGroup(data) {
-   try {
-    // console.log(data)
-     const { value, error } = this.inputValidate.validateUserGrpp.validate(data);
-    //  console.log( { value, error } )
-     if (error) {
-      // console.log(error)
-       throw Error(error.message);
-     } else {
-
-      //  console.log({value})
-       await this.user_group.update({
-         group_name: value.user_role
-       }, { where: { idgroups: value.id } }, {new:true});
- 
-       return {
-         status: true,
-         message: "Updated",
-       };
-     }
-   } catch (error) {
-    console.log(error)
-    throw error
-   }
-  }
-
-  async deleteUserRole(id) {
-    try {
-      await this.user_group.destroy({ where: { idgroups: id }})
-      return {
-        status: true,
-        message: "Deleted"
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async createUser(data) {
     const {
       group_id,
@@ -130,6 +90,10 @@ class User {
     }
   }
 
+  async deleteUserRole(id){
+    await this.user_group.destroy({ where: { idgroups: id } });
+    return { status: true, message: "User group deleted successfully." };
+  }
   async deleteUser(userId) {
     const user = await this.users.findByPk(userId);
 

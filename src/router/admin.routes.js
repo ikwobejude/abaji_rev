@@ -7,9 +7,13 @@ const Router = express.Router();
 
 Router.get("/dashboard", admin.adminDashboard);
 
-Router.route("/revenue_upload").get(revenue.getRevenueItemByYear).post(revenue.createAssessments);
+Router.route("/revenue_upload")
+.get(revenue.getRevenueItemByYear)
+.post(revenue.createAssessments)
+.delete(revenue.deleteYearly);
 
-Router.get("/revenue_upload/view/:year", revenue.viewAssessmentInvoice);
+Router.route("/revenue_upload/view/:year")
+.get(revenue.viewAssessmentInvoice);
 
 Router.route("/demand_notice/:year/:invoice")
 .get(revenue.demandNotice)
@@ -20,13 +24,21 @@ Router.route("/wallet_balance").get(revenue.getWalletBalance).post(revenue.getWa
 
 Router.route("/user").get(revenue.getUser).post(revenue.postUser);
 
-Router.route("/user_group").get(revenue.getUserRoles).post(revenue.postUserRoles);
+Router.route("/user_group")
+.get(revenue.getUserRoles)
+.post(revenue.postUserRoles)
+.put(revenue.editUserRole)
+.delete(revenue.deleteUserRole);
 Router.delete("/user/:userId", revenue.deleteUser);
 Router.put("/user/:userId", revenue.updateUser);
 Router.route("/profile").get(adminController.getprofile);
 Router.route("/security").get(adminController.security);
 
 
-Router.get('/revenue_uploads', admin.getRevenueUGraph)
+Router.get('/revenue_uploads', admin.getRevenueUGraph);
+
+Router.route('/payment_reconciliation')
+.get(revenue.upload_payment_rec)
+.post(revenue.upload_payment)
 
 module.exports = Router;

@@ -3,100 +3,41 @@ const db = require('../db/connection');
 
 const RevenuesInvoices = db.define('revenue_invoices',{
     revenue_invoice_id:{
-        type: Sequelize.INTEGER(20)
+        type: Sequelize.BIGINT(20),
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull : true
     },
-    ref_no:{
-        type: Sequelize.STRING(100),
-        allowNull: true
-    },
-    tin:{
-        type: Sequelize.STRING(45)
-    },
-    taxpayer_name:{
-        type: Sequelize.STRING(255)
-    },
-    revenue_id:{
-        type: Sequelize.TEXT
-    },
-    description:{
-        type: Sequelize.TEXT
-    },
-    amount:{
-        type: Sequelize.DECIMAL(50),
-        decimals: 2,
-        allowNull: true
-    },
-    amount_paid:{
-        type: Sequelize.DECIMAL(50),
-        decimals: 2,
-    },
-    date_log:{
-        type: Sequelize.DATE
-    },
-    day:{
-        type: Sequelize.STRING(100)
-    },
-    month:{
-        type: Sequelize.STRING(100)
-    },
-    year:{
-        type: Sequelize.STRING(100)
-    },
-    entered_by:{
-        type: Sequelize.STRING(100)
-    },
-    invoice_number:{
-        type: Sequelize.STRING(100),
-        allowNull: true
-    },
-    paid:{
-        type: Sequelize.TINYINT(1)
-    },
-    service_id:{
-        type: Sequelize.STRING(45)
-    },
-    registered_by:{
-        type: Sequelize.STRING(55)
-    },
-    registered_on:{
-        type: Sequelize.DATE
-    },
-    source:{
-        type: Sequelize.STRING(455)
-    },
-    zone_id:{
-        type: Sequelize.STRING(115)
-    },
-    session_id:{
-        type: Sequelize.STRING(115)
-    },
-    amount_remaining:{
-        type: Sequelize.DECIMAL(50),
-        decimals: 2,
-    },
-    authorized:{
-        type: Sequelize.TINYINT(1)
-    },
-    authorized_by:{
-        type: Sequelize.STRING(55)
-    },
-    rebet:{
-        type: Sequelize.TINYINT(1)
-    },
-    prev_amount:{
-        type: Sequelize.DECIMAL(50),
-        decimals: 2,
-        allowNull: true
-    },
-    discount: {
-        type: Sequelize.DECIMAL(50),
-        decimals: 2
-    },
-    batch: {
-        type: Sequelize.STRING(50)
-    },
-    tax_office: { type: Sequelize.STRING(50) },
-    business_tag: { type: Sequelize.STRING(55)},
+    ref_no:Sequelize.STRING(100),
+    tin:Sequelize.STRING(45),
+    taxpayer_name:Sequelize.STRING(255),
+    revenue_id:Sequelize.TEXT,
+    description: Sequelize.TEXT,
+    amount: Sequelize.DECIMAL(50),
+    amount_paid: Sequelize.DECIMAL(50),
+    date_log: Sequelize.DATE,
+    day: Sequelize.STRING(100),
+    month: Sequelize.STRING(100),
+    year: Sequelize.STRING(100),
+    entered_by: Sequelize.STRING(100),
+    invoice_number: Sequelize.STRING(100),
+    paid: Sequelize.TINYINT(1),
+    service_id: Sequelize.STRING(45),
+    registered_by: Sequelize.STRING(55),
+    registered_on: Sequelize.DATE,
+    source: Sequelize.STRING(455),
+    zone_id: Sequelize.STRING(115),
+    session_id: Sequelize.STRING(115),
+    amount_remaining: Sequelize.DECIMAL(50),
+    authorized: Sequelize.TINYINT(1),
+    authorized_by: Sequelize.STRING(55),
+    rebet: Sequelize.TINYINT(1),
+    prev_amount: Sequelize.DECIMAL(50),
+    discount: Sequelize.DECIMAL(50),
+    batch: Sequelize.STRING(50),
+    tax_office: Sequelize.STRING(50),
+    ward: Sequelize.STRING(50),
+    business_tag: Sequelize.STRING(55),
     payment_date: { type: Sequelize.DATE},
     RevenueHeadName: Sequelize.STRING,
     ExternalRefNumber: Sequelize.STRING,

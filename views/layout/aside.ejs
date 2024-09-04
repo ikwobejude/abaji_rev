@@ -121,6 +121,21 @@
         </ul>
       </li>
 
+      <% let tPayment = link == "/admin/payment_reconciliation" ? "active open" : ""  %>
+      <li class="menu-item <%= tPayment %>">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons ti ti-credit-card"></i>
+          <div data-i18n="Ticket Payment">Ticket Payment</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item <%= link == '/admin/payment_reconciliation' ? 'active' : '' %>">
+            <a href="/wallet" class="menu-link">
+              <div data-i18n="Upload ticket payments">Upload ticket payments</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+
 
       <% let reports = link == "/report/payment_reports" ? "active open" : link == "/report/revenue_assessments_reports" ? "active open" : "" %>
       <li class="menu-item <%= reports %>">
@@ -129,12 +144,12 @@
           <div data-i18n="Report">Report</div>
         </a>
         <ul class="menu-sub">
-          <li class="menu-item <%= link == "/report/payment_reports" ? "active" : "" %>">
+          <li class="menu-item <%= link == '/report/payment_reports' ? 'active' : '' %>">
             <a href="/report/payment_reports" class="menu-link">
               <div data-i18n="Payment Report">Payment Report</div>
             </a>
           </li>
-          <li class="menu-item <%= link == "/report/revenue_assessments_reports" ? "active" : "" %>">
+          <li class="menu-item <%= link == '/report/revenue_assessments_reports' ? 'active' : '' %>">
             <a href="/report/revenue_assessments_reports" class="menu-link">
               <div data-i18n="Assessment report">Assessment report</div>
             </a>
@@ -176,18 +191,10 @@
           </li>
         </ul>
       </li>
-
-      
-
- 
- 
-
-    
-  
-
       <!-- Misc -->
       
       
       
+
     </ul>
   </aside>

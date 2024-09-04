@@ -23,7 +23,12 @@ module.exports = {
         service_id: req.user.service_id,
       });
       res.status(200).json(response);
-    } catch (error) {}
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message
+      })
+    }
   },
   viewAssessmentInvoice: async function (req, res) {
     try {
@@ -51,6 +56,15 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
+  deleteYearly: async function (req, res) {
+    try {
+      const response = await revenue.truncateYearlyRecord(req.query);
+      res.status(200).json(response)
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({ error: error.message });
+    }
+  },
   demandNotice: async function (req, res) {
     const response = await revenue.demandNotice(req.params);
     res
@@ -70,10 +84,32 @@ module.exports = {
     const request = await user.userGroup();
     res.status(200).render("./users/user_role", { ...request });
   },
-
   postUserRoles: async function (req, res) {
     try {
       const response = await user.createUserGroup(req.body);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  },
+  editUserRole: async function (req, res) {
+    try {
+      // console.log(req.body)
+      const response = await user.editUserGroup(req.body);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  },
+  deleteUserRole: async function (req, res) {
+    try {
+      const response = await user.deleteUserRole(req.query.id);
       res.status(200).json(response);
     } catch (error) {
       res.status(400).json({
@@ -137,5 +173,33 @@ module.exports = {
     const { invoice } = req.params;
     const response = await revenue.initiateDiscount(invoice, req.body);
     res.status(200).json(response);
+  },
+
+
+  addDiscount: async function (req, res) {
+    const { invoice } = req.params;
+    const response = await revenue.initiateDiscount(invoice, req.body);
+    res.status(200).render();
+  },
+
+  upload_payment_rec: async function(req, res) {
+    const response = await revenue.viewUploadedPayment(req.query)
+    res.status(200).render('./revenue/cooperative/upload_payments', {...response})
+  },
+
+  upload_payment: async function (req, res) {
+    try {
+      // console.log(req.body)
+      const response = await revenue.upload_payments({
+        ...req.body,
+        ...req.user
+      });
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message
+      })
+    }
   },
 };

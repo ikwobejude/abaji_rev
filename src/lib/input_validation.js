@@ -63,7 +63,7 @@ module.exports = {
         "string.empty": `User role cannot be empty`,
       })
       
-    }),
+    }).unknown(),
 
     walletToitValidation: Joi.object({
       email: Joi.string().email().required().messages({

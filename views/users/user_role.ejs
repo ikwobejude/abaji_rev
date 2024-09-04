@@ -50,12 +50,8 @@
                                         <i class="ti ti-dots-vertical"></i>
                                       </button>
                                       <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/admin/demand_notice"
-                                          ><i class="ti ti-pencil me-1"></i>Edit</a
-                                        >
-                                        <a class="dropdown-item" href="javascript:void(0);"
-                                          ><i class="ti ti-trash me-1"></i> Delete</a
-                                        >
+                                        <a class="dropdown-item" href="javascript:;" data-bs-target="#addRoleModal" data-bs-toggle="modal" onclick="editData('<%= res.group_name %>', '<%= res.idgroups %>')"><i class="ti ti-pencil me-1"></i>Edit</a>
+                                        <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= res.idgroups %>')"><i class="ti ti-trash me-1"></i> Delete</a>
                                       </div>
                                     </div>
                                   </td>
@@ -143,6 +139,41 @@
               </div>
               <!-- / Content -->
 
+
+              <!-- Add Role Modal -->
+              <div class="modal fade" id="addRoleModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-md modal-simple modal-dialog-centered modal-add-new-role">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center mb-6">
+                      <h4 class="role-title mb-2">Edit User Role</h4>
+                      <p>Edit user role</p>
+                    </div>
+                    <!-- Add role form -->
+                    <form id="update_role" class="row g-6" onsubmit="return false">
+                      <div class="col-12">
+                        <label class="form-label" for="modalRoleName">Role Name</label>
+                        <input type="text" id="group_name" name="group_name" class="form-control" placeholder="Enter a role name" tabindex="-1" />
+                        <input type="hidden" name="id" id="id">
+                      </div>
+                      
+                      <div class="col-12 text-center">
+                        <button type="submit" id="role_name" class="btn btn-primary me-3">
+                          Submit
+                        </button>
+                        <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                    <!--/ Add role form -->
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!--/ Add Role Modal -->
+
         <%- include('../layout/footer') %>
         <script src="/assets/js/offcanvas-send-invoice.js"></script>
          <!-- Page JS -->
@@ -161,7 +192,7 @@
             user_role: data.get("user_role")
           }
 
-          // console.log(payload)
+          console.log({payload})
           try {
             const req = await fetch(`/admin/user_group`, {
               method: "POST",
@@ -189,6 +220,95 @@
           }
         }) 
       }
+
+
+      // document.getElementById("role_name").dis
+      if(document.getElementById("update_role")) {
+        // document.getElementById("role_name").disabled = true
+        const update_role = document.getElementById("update_role");
+        update_role.addEventListener("submit", async function(e) {
+          e.preventDefault();
+
+          const data = new FormData(update_role);
+          const payload = {
+            user_role: data.get("group_name"),
+            id: data.get("id")
+          }
+
+          console.log(payload)
+          try {
+            const req = await fetch(`/admin/user_group`, {
+              method: "put",
+              body: JSON.stringify(payload),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+
+            if(req.ok) {
+              const response = await req.json();
+              document.getElementById("role_name").disabled = false
+              if(response.status == true) {
+                  toastr.success(response.message);
+                  setTimeout(() => {
+                    location.reload()
+                  }, "3000");
+              } else {
+                  // for errors - red box
+                  toastr.error(response.message);
+              }
+            } else {
+              const response = await req.json();
+              document.getElementById("role_name").disabled = false
+              console.log(response.message)
+            }
+            
+          } catch (error) {
+            document.getElementById("role_name").disabled = false
+            toastr.error(error.message);
+          }
+        }) 
+      }
+
+      function editData(name, id) {
+        document.getElementById('group_name').value = name;
+        document.getElementById('id').value = id;
+      }
+
+
+      async function deleteRecords(year) {
+          // console.log(year)
+          if(confirm('Do you want to delete?')) {
+            try {
+              const response = await fetch(`/admin/user_group?id=${year}`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      // Add any other headers if necessary, e.g., Authorization
+                  }
+              })
+              // console.log(response)
+              if (response.ok) {
+                  const d = await response.json(); // or response.text() if expecting plain text
+                  if(d.status == true) {
+                    toastr.success(d.message);
+                    setTimeout(() => {
+                      location.reload()
+                    }, "3000");
+                  } else {
+                    toastr.error(d.message);
+                  }
+                
+              } else {
+                toastr.error('Failed to delete the resource.');
+                  // throw new Error();
+              }
+            } catch (error) {
+              toastr.error(error.message);
+            }
+          }
+          
+        }
 
 
 

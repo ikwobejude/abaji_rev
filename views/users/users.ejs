@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="card-datatable table-responsive pt-0">
-                  <table class="datatables-basic table">
+                  <table class="table" id="userTable">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -416,8 +416,9 @@
 
     <!-- Include Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    //
     <script src="/assets/js/tables-datatables-basic.js"></script>
-  
+
     <script src="../../assets/vendor/libs/toastr/toastr.js"></script>
     <script src="../../assets/js/ui-toasts.js"></script>
 
@@ -426,6 +427,12 @@
 
     <!-- Page JS -->
     <script>
+      $(document).ready(function () {
+        $("#userTable").DataTable({
+          ordering: false,
+        });
+      });
+
       document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".edit-btn").forEach((button) => {
           button.addEventListener("click", function () {

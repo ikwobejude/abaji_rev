@@ -27,6 +27,52 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
+                <!-- Search Form -->
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Search Payments</h5>
+                  </div>
+                  <div class="card-body">
+                    <form method="GET" action="">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="invoice" class="form-label">Invoice</label>
+                            <input type="text" id="invoice" name="assessment_no" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentRef" class="form-label">Payment Ref</label>
+                            <input type="text" id="paymentRef" name="payment_ref" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <input type="text" id="paymentMethod" name="payment_method" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentDateFrom" class="form-label">Payment Date From</label>
+                            <input type="date" id="paymentDateFrom" name="payment_date_from" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentDateTo" class="form-label">Payment Date To</label>
+                            <input type="date" id="paymentDateTo" name="payment_date_to" class="form-control" value="" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
                 <!-- DataTable with Buttons -->
                 <div class="card">
                     <div class="card-header">
@@ -39,7 +85,6 @@
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
-                          <!-- <th></th> -->
                           <th>Payment Ref</th>
                           <th>Invoice </th>
                           <th>Payment Method</th>
@@ -47,7 +92,6 @@
                           <th>Payment Date</th>
                           <th>Currency</th>
                           <th>Amount Yearly</th>
-                          <!-- <th></th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -59,9 +103,7 @@
                                 <td><%= item.BankName %></td>
                                 <td><%= item.PaymentDate.toLocaleDateString() %></td>
                                 <td><%= item.PaymentCurrency %></td>
-                                
                                 <td><%= item.Amount %></td>
-                                
                             </tr>
                         <% }) %>
                       </tbody>
@@ -69,10 +111,6 @@
                   </div>
                 </div>
               
-               
-  
-  
-                
               </div>
               <!-- / Content -->
 

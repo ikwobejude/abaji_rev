@@ -1,19 +1,21 @@
-const express = require('express');
-const setup = require('../controller/setup.controller');
+const express = require("express");
+const setup = require("../controller/setup.controller");
 const Router = express.Router();
 
-Router.route('/ticket_item')
-.get(setup.getTicketItem)
-.post(setup.postTicketItem)
+Router.route("/ticket_item")
+  .get(setup.getTicketItem)
+  .post(setup.postTicketItem);
 
-Router.get('/state', setup.getState)
+Router.route("/ticket_item/:id")
+  .put(setup.editTicketItem)
+  .delete(setup.deleteTicketItem);
 
-Router.route('/ward')
-.get(setup.getWard)
-.post(setup.postWard)
+Router.get("/state", setup.getState);
 
-Router.route('/street')
-.get(setup.getStreets)
-.post(setup.postStreet)
+Router.route("/ward").get(setup.getWard).post(setup.postWard);
 
-module.exports = Router
+Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);
+
+Router.route("/street").get(setup.getStreets).post(setup.postStreet);
+
+module.exports = Router;

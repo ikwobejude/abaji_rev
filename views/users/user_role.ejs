@@ -188,8 +188,10 @@
           e.preventDefault();
           $(".spinner-border").show()
           const data = new FormData(add_role);
+          const generatedId =  Math.floor(100000 + Math.random() * 900000)
           const payload = {
-            user_role: data.get("user_role")
+            group_name: data.get("user_role"),
+            group_id: generatedId
           }
 
           console.log({payload})

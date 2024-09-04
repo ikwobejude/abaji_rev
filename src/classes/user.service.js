@@ -3,14 +3,13 @@ const validation = require("../lib/input_validation");
 const User_groups = require("../model/User_group");
 const Users = require("../model/Users");
 const bcrypt = require("bcryptjs");
-const Sequelize = require("sequelize")
+const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 class User {
   constructor() {
     this.users = Users;
-    (this.user_group = User_groups), 
-    (this.inputValidate = validation);
+    (this.user_group = User_groups), (this.inputValidate = validation);
   }
 
   async userGroup() {
@@ -19,60 +18,21 @@ class User {
   }
 
   async createUserGroup(data) {
-    const { value, error } = this.inputValidate.validateUserGrpp.validate(data);
-    if (error) {
-      throw Error(error.message);
-    } else {
+    // const { value, error } = this.inputValidate.validateUserGrpp(data);
+    // if (error) {
+    //   throw Error(error.message);
+    // } else {
       await this.user_group.create({
-        group_id: value.group_id,
-        group_name: value.group_name,
+        group_id: data.group_id,
+        group_name: data.group_name,
       });
 
       return {
         status: true,
         message: "creates",
-      };
+      // };
     }
   }
-
-  async editUserGroup(data) {
-   try {
-    // console.log(data)
-     const { value, error } = this.inputValidate.validateUserGrpp.validate(data);
-    //  console.log( { value, error } )
-     if (error) {
-      // console.log(error)
-       throw Error(error.message);
-     } else {
-
-      //  console.log({value})
-       await this.user_group.update({
-         group_name: value.user_role
-       }, { where: { idgroups: value.id } }, {new:true});
- 
-       return {
-         status: true,
-         message: "Updated",
-       };
-     }
-   } catch (error) {
-    console.log(error)
-    throw error
-   }
-  }
-
-  async deleteUserRole(id) {
-    try {
-      await this.user_group.destroy({ where: { idgroups: id }})
-      return {
-        status: true,
-        message: "Deleted"
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async createUser(data) {
     const {
       group_id,
@@ -83,7 +43,7 @@ class User {
       user_phone,
       email,
       service_id,
-      service_code
+      service_code,
     } = data;
     const hashedPassword = await bcrypt.hash(password, 10);
     const existingUser = await this.users.findOne({ where: { email } });
@@ -98,7 +58,7 @@ class User {
       email,
       username: email,
       service_id: service_id,
-      service_code: service_code
+      service_code: service_code,
     });
 
     return { status: true, message: "User created successfully." };
@@ -108,29 +68,32 @@ class User {
     return { users };
   }
 
-
-  async validateUserEmail(email){
-    const user = await Users.findOne({attributes:['name', "user_phone", "id"],
+  async validateUserEmail(email) {
+    const user = await Users.findOne({
+      attributes: ["name", "user_phone", "id"],
       where: {
         [Op.or]: [{ username: email }, { email: email }],
       },
-      raw: true
+      raw: true,
     });
-  
-    if(user){
+
+    if (user) {
       return {
         status: true,
-        data: user
-      }
+        data: user,
+      };
     } else {
       return {
         status: false,
-        error: "User with the email address does not exist"
-      }
+        error: "User with the email address does not exist",
+      };
     }
   }
 
-  
+  async deleteUserRole(id){
+    await this.user_group.destroy({ where: { idgroups: id } });
+    return { status: true, message: "User group deleted successfully." };
+  }
   async deleteUser(userId) {
     const user = await this.users.findByPk(userId);
 
@@ -141,7 +104,6 @@ class User {
     await user.destroy();
     return { status: true, message: "User deleted successfully." };
   }
-
 
   async updateUser(userId, data) {
     const { group_id, name, password, user_phone, email } = data;
@@ -173,7 +135,6 @@ class User {
     await user.save();
     return { status: true, message: "User updated successfully." };
   }
-
 }
 
 module.exports = User;

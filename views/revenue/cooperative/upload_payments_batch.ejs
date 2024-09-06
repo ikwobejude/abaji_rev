@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('../../layout/head') %>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+       <%- include('../../layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <%- include('../../layout/side') %>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <!-- DataTable with Buttons -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col-6" style="text-align: end;">
+                                <button class="create-new btn btn-primary waves-effect waves-light">
+                                    <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  <div class="card-datatable  table-responsive pt-0">
+                    <table class="datatables-basic table">
+                      <thead>
+                        <tr>
+                          <!-- <th></th> -->
+                          <th>Batch No</th>
+                          <th>Day</th>
+                          <th>Month</th>
+                          <th>Year</th>
+                          <th>Number</th>
+                          <th>Total Amount</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% data.forEach(a => { %>
+                          <tr>
+                            <td><%= a.batch %></td>
+                            <td><%= a.day %></td>
+                            <td><%= a.month %></td>
+                            <td><%= a.year %></td>
+                            <td><%= a.count %></td>
+                            <td><%= a.amount %></td>
+                            <td class="d-flex align-items-center">
+                              <a href="/admin/ticket_payment/<%= a.batch %>"><i class="ti ti-eye edit-icon"></i></a>
+                              <a href="javascript:;" onclick="deleteRecords('<%= a.batch %>')"><i class="ti ti-trash delete-icon" ></i></i></a>
+                            </td>
+                            <!-- <td></td> -->
+                          </tr>
+                        <%})%>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Modal to add new record -->
+                <div class="offcanvas offcanvas-end" id="add-new-record">
+                  <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="exampleModalLabel">Upload new assessments</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body flex-grow-1">
+                    <form class="add-new-record pt-0 row g-2" id="form-upload-new-record" onsubmit="return false">
+                      
+                      
+                      <div class="col-sm-12">
+                        <label class="form-label" for="basicEmail">Upload Assessments</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="ti ti-file"></i></span>
+                          <input type="file" name="upload_excel" id="upload_excel" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                          <input type="hidden" id="base64url" name="base64url">
+                        </div>
+                        <div class="form-text" style="color: red;">Only excel file are allowed</div>
+                      </div>
+                      
+                      
+                      <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                            <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!--/ DataTable with Buttons -->
+  
+               
+  
+  
+                
+              </div>
+              <!-- / Content -->
+
+        <%- include('../../layout/footer') %>
+         <!-- Page JS -->
+    <script src="/assets/js/tables-datatables-basic.js"></script>
+    <script>
+        
+        async function deleteRecords(batch) {
+          // console.log(year)
+          if(confirm('Do you want to delete?')) {
+            try {
+                const response = await fetch(`/admin/ticket_payment/${batch}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if necessary, e.g., Authorization
+                    }
+                })
+                // console.log(response)
+                if (response.ok) {
+                    const d = await response.json(); // or response.text() if expecting plain text
+                    if(d.status == true) {
+                      toastr.success(d.message);
+                      setTimeout(() => {
+                        location.reload()
+                      }, "3000");
+                    } else {
+                      toastr.error(d.message);
+                    }
+                  
+                } else {
+                  toastr.error('Failed to delete the resource.');
+                    // throw new Error();
+                }
+              } catch (error) {
+                toastr.error(error.message);
+              }
+          }
+          
+        }
+   
+   
+
+   
+   
+   </script>
+  </body>
+</html>

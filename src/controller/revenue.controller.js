@@ -182,9 +182,26 @@ module.exports = {
     res.status(200).render();
   },
 
+  upload_payment_batch: async function(req, res) {
+    const response = await revenue.viewUploadedPaymentbATCH(req.query)
+    res.status(200).render('./revenue/cooperative/upload_payments_batch', {...response})
+  },
+
   upload_payment_rec: async function(req, res) {
-    const response = await revenue.viewUploadedPayment(req.query)
+    const response = await revenue.viewUploadedPayment({...req.query, ...req.params})
     res.status(200).render('./revenue/cooperative/upload_payments', {...response})
+  },
+
+  upload_payment_del: async function (req, res) {
+    try {
+      const response = await revenue.deleteBatchUpload(req.params.batch)
+      res.status(200).json(response)
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message
+      })
+    }
   },
 
   upload_payment: async function (req, res) {

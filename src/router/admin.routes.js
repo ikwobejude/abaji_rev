@@ -38,7 +38,11 @@ Router.route("/security").get(adminController.security);
 Router.get('/revenue_uploads', admin.getRevenueUGraph);
 
 Router.route('/payment_reconciliation')
-.get(revenue.upload_payment_rec)
+.get(revenue.upload_payment_batch)
 .post(revenue.upload_payment)
+
+Router.route('/ticket_payment/:batch')
+.get(revenue.upload_payment_rec)
+.delete(revenue.upload_payment_del)
 
 module.exports = Router;

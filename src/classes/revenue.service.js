@@ -5,6 +5,7 @@ const Revenue_upload = require("../model/Revenue_upload");
 const Sequelize = require("sequelize");
 const db = require("../db/connection");
 const Tax_items = require("../model/Tax_items");
+const Revenues_invoices = require("../model/Revenue_invoice");
 
 class Revenue {
   constructor() {
@@ -251,7 +252,31 @@ class Revenue {
   // async payments_records(query) {
   //   return {};
   // }
+  async viewUploadedPaymentbATCH(query) {
+    let sql = `
+      SELECT
+        count(*) as count, 
+        revenue_invoices.batch,
+        revenue_invoices.ref_no,
+        revenue_invoices.tin,
+        SUM(revenue_invoices.amount) as amount,
+        revenue_invoices.day,
+        revenue_invoices.month,
+        revenue_invoices.year,
+        _cities.city,
+        _streets.street
+      FROM revenue_invoices 
+      LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
+      LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
+      WHERE revenue_invoices.year = 2024
+      GROUP BY revenue_invoices.batch
+    `;
 
+    const data = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
+    return {
+      data
+    }
+  }
   async viewUploadedPayment(query) {
     let sql = `
       SELECT 
@@ -271,11 +296,20 @@ class Revenue {
       FROM revenue_invoices 
       LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
       LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
+      WHERE revenue_invoices.batch = '${query.batch}'
     `;
 
     const data = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
     return {
       data
+    }
+  }
+
+  async deleteBatchUpload(id) {
+    await Revenues_invoices.destroy({ where: {batch: id}})
+    return {
+      status: true,
+      message: "Deleted"
     }
   }
 

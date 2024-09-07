@@ -141,6 +141,8 @@ class Revenue {
     let sql = `
             SELECT 
                 r.service_id,
+                r.biller_accountid,
+                r.ass_status,
                 r.assessment_no,
                 r.revenue_code,
                 r.bill_ref_no,

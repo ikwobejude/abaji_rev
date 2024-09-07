@@ -84,5 +84,14 @@ module.exports = {
         "any.required": `Amount is required.`,
         "string.empty": `Amount cannot be empty.`,
       }),
+    }).unknown(),
+    
+
+    permissions: Joi.object({
+      permission: Joi.string().required().messages({
+        "any.required": `Permission is required`,
+        "string.empty": `Permission cannot be empty`,
+      })
     }).unknown()
+    
 }

@@ -3,6 +3,7 @@ const admin = require("../controller/admin.controller");
 const revenue = require("../controller/revenue.controller");
 const adminController = require("../controller/admin.controller");
 const wallet = require("../controller/wallet.controller");
+const permission = require("../controller/permission.controller");
 const Router = express.Router();
 
 Router.get("/dashboard", admin.adminDashboard);
@@ -44,5 +45,14 @@ Router.route('/payment_reconciliation')
 Router.route('/ticket_payment/:batch')
 .get(revenue.upload_payment_rec)
 .delete(revenue.upload_payment_del)
+
+Router.route('/permission')
+.get(permission.permission)
+.post(permission.new_permission)
+.put(permission.edit_permission)
+.delete(permission.delete_permission)
+
+
+// Router.get('/get_permissions', permission.get_permissions)
 
 module.exports = Router;

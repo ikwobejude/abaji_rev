@@ -157,7 +157,10 @@
         </ul>
       </li>
 
-      <% let users = link == "/admin/user_group" ? "active open" : link == "/admin/user" ? "active open" : ""  %>
+      <% let users = 
+      link == "/admin/user_group" ? "active open" : 
+      link == "/admin/user" ? "active open" : 
+      link == "/admin/permission" ? "active open" : "" %>
       <li class="menu-item <%= users %>">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-users"></i>
@@ -167,6 +170,11 @@
           <li class="menu-item <%= link == "/admin/user_group" ? "active" : "" %>">
             <a href="/admin/user_group" class="menu-link">
               <div data-i18n="User Roles">User Roles</div>
+            </a>
+          </li>
+          <li class="menu-item <%= link == "/admin/permission" ? "active" : "" %>">
+            <a href="/admin/permission" class="menu-link">
+              <div data-i18n="User Roles">Permission</div>
             </a>
           </li>
           <li class="menu-item <%= link == "/admin/user" ? "active" : "" %>">

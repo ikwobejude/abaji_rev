@@ -12,92 +12,94 @@ $(function () {
   // Users List datatable
   if (dataTablePermissions.length) {
     dt_permission = dataTablePermissions.DataTable({
-      ajax: assetsPath + 'json/permissions-list.json', // JSON file to add data
-      columns: [
-        // columns according to JSON
-        { data: '' },
-        { data: 'id' },
-        { data: 'name' },
-        { data: 'assigned_to' },
-        { data: 'created_date' },
-        { data: '' }
-      ],
-      columnDefs: [
-        {
-          // For Responsive
-          className: 'control',
-          orderable: false,
-          searchable: false,
-          responsivePriority: 2,
-          targets: 0,
-          render: function (data, type, full, meta) {
-            return '';
-          }
-        },
-        {
-          targets: 1,
-          searchable: false,
-          visible: false
-        },
-        {
-          // Name
-          targets: 2,
-          render: function (data, type, full, meta) {
-            var $name = full['name'];
-            return '<span class="text-nowrap text-heading">' + $name + '</span>';
-          }
-        },
-        {
-          // User Role
-          targets: 3,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            var $assignedTo = full['assigned_to'],
-              $output = '';
-            var roleBadgeObj = {
-              Admin: '<a href="' + userList + '"><span class="badge me-4 bg-label-primary">Administrator</span></a>',
-              Manager: '<a href="' + userList + '"><span class="badge me-4 bg-label-warning">Manager</span></a>',
-              Users: '<a href="' + userList + '"><span class="badge me-4 bg-label-success">Users</span></a>',
-              Support: '<a href="' + userList + '"><span class="badge me-4 bg-label-info">Support</span></a>',
-              Restricted:
-                '<a href="' + userList + '"><span class="badge me-4 bg-label-danger">Restricted User</span></a>'
-            };
-            for (var i = 0; i < $assignedTo.length; i++) {
-              var val = $assignedTo[i];
-              $output += roleBadgeObj[val];
-            }
-            return '<span class="text-nowrap">' + $output + '</span>';
-          }
-        },
-        {
-          // remove ordering from Name
-          targets: 4,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            var $date = full['created_date'];
-            return '<span class="text-nowrap">' + $date + '</span>';
-          }
-        },
-        {
-          // Actions
-          targets: -1,
-          searchable: false,
-          title: 'Actions',
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center">' +
-              '<span class="text-nowrap"><button class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill me-1" data-bs-target="#editPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="ti ti-edit ti-md"></i></button>' +
-              '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md mx-1"></i></a>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="javascript:;"" class="dropdown-item">Edit</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
-          }
-        }
-      ],
+      // ajax: '/admin/get_permissions', // JSON file to add data
+      // columns: [
+      //   // columns according to JSON
+      //   { data: '' },
+      //   { data: 'id' },
+      //   { data: 'permission_name' },
+      //   { data: 'role_id' },
+      //   { data: 'created_on' },
+      //   { data: '' }
+      // ],
+      // columnDefs: [
+      //   {
+      //     // For Responsive
+      //     className: 'control',
+      //     orderable: false,
+      //     searchable: false,
+      //     responsivePriority: 2,
+      //     targets: 0,
+      //     render: function (data, type, full, meta) {
+            
+      //       return '';
+      //     }
+      //   },
+      //   {
+      //     targets: 1,
+      //     searchable: false,
+      //     visible: false
+      //   },
+      //   {
+      //     // Name
+      //     targets: 2,
+      //     render: function (data, type, full, meta) {
+      //       console.log({data, type, full, meta})
+      //       var $name = full['permission_name'];
+      //       return '<span class="text-nowrap text-heading">' + $name + '</span>';
+      //     }
+      //   },
+      //   {
+      //     // User Role
+      //     targets: 3,
+      //     orderable: false,
+      //     render: function (data, type, full, meta) {
+      //       var $assignedTo = full['role_id'],
+      //         $output = '';
+      //       var roleBadgeObj = {
+      //         Admin: '<a href="' + userList + '"><span class="badge me-4 bg-label-primary">Administrator</span></a>',
+      //         Manager: '<a href="' + userList + '"><span class="badge me-4 bg-label-warning">Manager</span></a>',
+      //         Users: '<a href="' + userList + '"><span class="badge me-4 bg-label-success">Users</span></a>',
+      //         Support: '<a href="' + userList + '"><span class="badge me-4 bg-label-info">Support</span></a>',
+      //         Restricted:
+      //           '<a href="' + userList + '"><span class="badge me-4 bg-label-danger">Restricted User</span></a>'
+      //       };
+      //       for (var i = 0; i < $assignedTo.length; i++) {
+      //         var val = $assignedTo[i];
+      //         $output += roleBadgeObj[val];
+      //       }
+      //       return '<span class="text-nowrap">' + $output + '</span>';
+      //     }
+      //   },
+      //   {
+      //     // remove ordering from Name
+      //     targets: 4,
+      //     orderable: false,
+      //     render: function (data, type, full, meta) {
+      //       var $date = full['created_on'];
+      //       return '<span class="text-nowrap">' + $date + '</span>';
+      //     }
+      //   },
+      //   {
+      //     // Actions
+      //     targets: -1,
+      //     searchable: false,
+      //     title: 'Actions',
+      //     orderable: false,
+      //     render: function (data, type, full, meta) {
+      //       return (
+      //         '<div class="d-flex align-items-center">' +
+      //         '<span class="text-nowrap"><button class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill me-1" data-bs-target="#editPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="ti ti-edit ti-md"></i></button>' +
+      //         '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md mx-1"></i></a>' +
+      //         '<div class="dropdown-menu dropdown-menu-end m-0">' +
+      //         '<a href="javascript:;"" class="dropdown-item">Edit</a>' +
+      //         '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+      //         '</div>' +
+      //         '</div>'
+      //       );
+      //     }
+      //   }
+      // ],
       order: [[1, 'asc']],
       dom:
         '<"row mx-1"' +
@@ -137,7 +139,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Details of ' + data['name'];
+              return 'Details of ' + data['permission_name'];
             }
           }),
           type: 'column',
@@ -191,6 +193,7 @@ $(function () {
     });
   }
 
+  // console.log(dt_permission.$name)
   // Delete Record
   $('.datatables-permissions tbody').on('click', '.delete-record', function () {
     dt_permission.row($(this).parents('tr')).remove().draw();

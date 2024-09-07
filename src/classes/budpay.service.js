@@ -8,13 +8,14 @@ class BudPay {
   }
 
   async createInvoice(invoiceData) {
+    // console.log(process.env.BUDPAY_SECRET_KEY)
     try {
       const response = await axios.post(
         `${this.baseUrl}/create_invoice`,
         invoiceData,
         {
           headers: {
-            Authorization: `Bearer ${this.secretKey}`,
+            Authorization: `Bearer ${process.env.BUDPAY_SECRET_KEY}`,
             "Content-Type": "application/json",
           },
         }
@@ -22,9 +23,9 @@ class BudPay {
       console.log("Received response from invoice creation:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error response data:", error.response?.data);
-      console.error("Error response status:", error.response?.status);
-      console.error("Error response headers:", error.response?.headers);
+      // console.error("Error response data:", error.response?.data);
+      // console.error("Error response status:", error.response?.status);
+      // console.error("Error response headers:", error.response?.headers);
       throw new Error(error.response?.data?.message || error.message);
     }
   }
@@ -66,4 +67,4 @@ class BudPay {
   async handleWebhook() {}
 }
 
-module.exports = BudPay;
+module.exports = BudPay

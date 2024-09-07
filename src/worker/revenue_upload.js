@@ -12,6 +12,8 @@ const Revenue_upload = require("../model/Revenue_upload");
 const Revenue_item = require("../model/Revenue_item");
 const Invoice_number_count = require("../model/Invoice_count");
 const Tax_items = require("../model/Tax_items");
+const Bud_pay = require('../classes/budpay.service')
+const bud_pay = new Bud_pay()
 
 const Op = Sequelize.Op;
 
@@ -34,7 +36,7 @@ const run = async () => {
 
   for (const row of rows) {
     let invNum = await Invoice_number_count.findOne({ raw: true });
-    let InvoiceNumber = "ABJ" + invNum.invoice_number;
+    
 
     const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
     const street = await Streets.findOne({
@@ -51,12 +53,40 @@ const run = async () => {
     }, 0);
     // console.log(amt, sum)
     // return 
+    const bud_pay_payload = {
+        title: row[1],
+        duedate:"2023-12-30",
+        currency:"NGN",
+        invoicenumber: invNum.invoice_number, // optional
+        reminder:"", // optional
+        email: process.env.MAIL_FROM_ADDRESS,
+        first_name: row[2], // optional but neccessary
+        last_name:"", // optional but neccessary
+        billing_address: row[3],
+        billing_city:"ABAJI",
+        billing_state:"ABUJA",
+        billing_country:"Nigeria",
+        billing_zipcode:"234",
+        items:[
+            {
+                description: row[5],
+                quantity: "1",
+                unit_price: sum,
+                meta_data:""
+            }
+        ]
+    }
 
+
+    const data = await bud_pay.createInvoice(bud_pay_payload)
+    // console.log(data);
+    // return
+    let InvoiceNumber = "ABJ" + invNum.invoice_number;
     let payload = {
-      biller_accountid: new Date().getTime().toString(36),
+      biller_accountid: data.success == true ? data.data.paycode : new Date().getTime().toString(36),
       assessment_no: payerId,
       revenue_code: row[1],
-      bill_ref_no: InvoiceNumber, // invoice number
+      bill_ref_no:  InvoiceNumber, // invoice number
       name_of_business: row[2], // Name Of Rate Payers
       revenue_type: row[1], // Revenue Name
       address_of_property: row[3] /* Address Of Business */,
@@ -68,9 +98,11 @@ const run = async () => {
       rate_district: ward == null ? row[7] : ward.city_id,
       street: street == null ? row[4] : street.idstreet,
       batch: batchNumber,
-      invoice_number: InvoiceNumber,
+      invoice_number: data.success == true ? data.data.ref_id : InvoiceNumber,
+      state_tin: data.success == true ? data.data.invoice_id : InvoiceNumber,
       phone_number: "0910009900",
       generated_phone: "0910009900",
+      ass_status: data.success == true ? 1: 0,
       tax_office_id: 8477,
       service_id: workerData.service_id
     };

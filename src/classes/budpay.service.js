@@ -1,8 +1,10 @@
 const axios = require("axios");
+const SettlePayment = require("./payment.service");
 require("dotenv").config();
 
-class BudPay {
+class BudPay extends SettlePayment {
   constructor() {
+    super()
     this.baseUrl = "https://api.budpay.com/api/v2";
     this.secretKey = process.env.BUDPAY_SECRET_KEY;
   }
@@ -64,7 +66,13 @@ class BudPay {
       throw new Error(error.message);
     }
   }
-  async handleWebhook() {}
+
+
+  async webhook(query) {
+    // console.log({query})
+    return this.settle_payment(query)
+  }
+
 }
 
 module.exports = BudPay

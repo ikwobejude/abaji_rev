@@ -12,8 +12,8 @@ class SettlePayment {
         this.db = sequelize
     }
 
-    async settle_into_api_payment(query, t) {
-        const query = query.data;
+    async settle_into_api_payment(data, t) {
+        const query = data.data;
         const payment = await this.api_payments.findOne({ where: {CustReference: query.reference}, raw: true });
         if(payment){
            

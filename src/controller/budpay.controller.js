@@ -71,11 +71,18 @@ module.exports = {
   },
   webhook: async function (req, res) {
     const data = req.body;
-    console.log({ data });
+    // console.log({ data });
     console.log("testing webhook");
-    if (data.data.status == "success") {
+    if (data.notifyType == "successful") {
       // Update User Payment Status
-      console.log("Payment Confirmed by budpay");
+      if(data.notify == "transaction")  {
+        const tran = await Pay.webhook(data)
+        console.log(tran)
+      }
+      if(data.notify == "payout") {
+        // const tran = await Pay.webhook(data)
+        // console.log(tran)
+      }
     } else {
       console.log("Payment failed, try again...");
     }

@@ -133,10 +133,13 @@
                           <p>
                           <h4 style="text-align: center;"> <span class="invo_no"><b>DEMAND NOTICE</b></span></h4>
                           <span style="text-align: center;">
-                          In accordance with the provision of section 7 (4th schedule) of the 1999 constitution of the Federal Republic of
-                          Nigeria: Federal Capital Territory Act Cap 503, LFN, 2004 (vol. 3) as amended, Taxes and levies Act CAPT2 of 2004 LFN
-                          and Abaji Area Council Bye Laws, we forward herewith your bill in respect of the propert(ies) you are occupying as
-                          per details below:
+                            In accordance with the provision of section 7 (4th schedule) of the 1999 constitution of the
+                            Federal Republic of
+                            Nigeria: Federal Capital Territory Act Cap 503, LFN, 2004 (vol. 3) as amended, Taxes and
+                            levies Act CAPT2 of 2004 LFN
+                            and Abaji Area Council Bye Laws, we forward herewith your bill in respect of the
+                            propert(ies) you are occupying as
+                            per details below:
                           </span>
                           </p>
                         </div>
@@ -290,11 +293,11 @@
 
                         <div class="col">
                           Note: <br>
-                          kindly use any Banks branch of your choice or USSD <span class="invo_no">*723*053399401*<%=
-                              total %># </span> to make
-                          payment with your Bill No. <span class="invo_no">
+                          Kindly make payment(s) to Abaji Area Council, First Bank Plc <strong> 2000318051 </strong>or
+                          make payment with your
+                          Bill No. <span class="invo_no">
                             <%= revenue.bill_ref_no %>
-                          </span><br>
+                          </span> through the POS at the Council Office and obtain E-receipt<br>
                           <span style="font-weight: bold !important;">If payment is not made
                             within 14 days of the demand notice, LEGAL PROCEEDINGS
                             MAY BE TAKEN IMMEDIATELY
@@ -336,44 +339,50 @@
                         </tr>
                         <tr>
                           <td width="70%">
-                              Rate Payer’s Name: <b>%= revenue.name_of_business %>
-                              </b>
-                              <br>Address: <b>
-                                  <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
-                                      revenue.address_of_property %>
-                              </b>
-                              <br>
-                              <table width="100%" style="padding: 20px;" class="tbl pb-2">
-                                  <thead style="background-color: green; color: #fff;">
-                                      <tr>
-                                          <th>S/N</th>
-                                          <th>REVENUE CODE</th>
-                                          <th>TRADE</th>
-                                          <th>DESCRIPTION</th>
-                                          <th>RATE PAYABLE</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% let count1=0; 
-                                      items.forEach(k=> {
-                                          count1 += 1 %>
-                                          <tr>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= count1 %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= k.revenue_code %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"></td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                                  <%= k.taxitem %>
-                                              </td>
-                                              <td  style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">&#8358;<%= k.amount ?
-                                                      parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
-                                                      ) : "0.00" %>
-                                              </td>
-                                          </tr>
-                                          <% }) %>
+                            Rate Payer’s Name: <b><%= revenue.name_of_business %>
+                            </b>
+                            <br>Address: <b>
+                              <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
+                                revenue.address_of_property %>
+                            </b>
+                            <br>
+                            <table width="100%" style="padding: 20px;" class="tbl pb-2">
+                              <thead style="background-color: green; color: #fff;">
+                                <tr>
+                                  <th>S/N</th>
+                                  <th>REVENUE CODE</th>
+                                  <th>TRADE</th>
+                                  <th>DESCRIPTION</th>
+                                  <th>RATE PAYABLE</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% let count1=0; items.forEach(k=> {
+                                  count1 += 1 %>
+                                  <tr>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= count1 %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.revenue_code %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      <%= k.taxitem %>
+                                    </td>
+                                    <td
+                                      style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
+                                      &#8358;<%= k.amount ?
+                                        parseFloat(k.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                        ) : "0.00" %>
+                                    </td>
+                                  </tr>
+                                  <% }) %>
 
                                     <tr>
                                       <td
@@ -629,129 +638,129 @@ Dear Queen Consolidated,
                     </form>
                   </div>
                 </div>
-         
-          
 
-              <%- include('../../layout/footer') %>
-                <script src="/assets/js/offcanvas-send-invoice.js"></script>
-                <script>
-                  function printDiv(invoice) {
-                    var printContents = document.getElementById("invoice").innerHTML;
-                    var originalContents = document.body.innerHTML;
 
-                    document.body.innerHTML = printContents;
 
-                    window.print();
+                <%- include('../../layout/footer') %>
+                  <script src="/assets/js/offcanvas-send-invoice.js"></script>
+                  <script>
+                    function printDiv(invoice) {
+                      var printContents = document.getElementById("invoice").innerHTML;
+                      var originalContents = document.body.innerHTML;
 
-                    document.body.innerHTML = originalContents;
-                  }
+                      document.body.innerHTML = printContents;
 
-                  addEventListener("DOMContentLoaded", async (event) => {
-                    const wal = document.getElementById("wal")
-                    const request = await fetch('/admin/wallet_balance')
-                    const balance = await request.json();
-                    wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
+                      window.print();
 
-                    // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
-                    if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
-                      document.getElementById("wallet_payment").disabled = true;
+                      document.body.innerHTML = originalContents;
                     }
-                  });
 
-                  if (document.getElementById("make_payment")) {
-                    const make_payment = document.getElementById("make_payment");
-                    make_payment.addEventListener("submit", async function (e) {
-                      e.preventDefault();
-                      $(".spinner-border").show()
-                      const data = new FormData(make_payment);
-                      const payload = {
-                        amount_paid: data.get("invoiceAmount"),
-                        payment_date: data.get("payment_date"),
-                        payment_method: data.get("payment_method"),
-                        payment_note: data.get("payment_note"),
-                        assessment_no: '<%= revenue.assessment_no %>',
-                        rate_year: '<%= revenue.rate_year %>',
-                        grand_total: '<%= revenue.grand_total %>',
-                        customerName: '<%= revenue.name_of_business %>',
-                        assessment_type: '<%= revenue.type_of_property %>',
+                    addEventListener("DOMContentLoaded", async (event) => {
+                      const wal = document.getElementById("wal")
+                      const request = await fetch('/admin/wallet_balance')
+                      const balance = await request.json();
+                      wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
+
+                      // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
+                      if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
+                        document.getElementById("wallet_payment").disabled = true;
                       }
+                    });
 
-                      console.log(payload)
-                      // return
-                      try {
-                        const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
-                          method: "post",
-                          body: JSON.stringify(payload),
-                          headers: {
-                            "Content-Type": "application/json"
-                          }
-                        })
-
-                        const response = await req.json();
-                        $(".spinner-border").hide()
-
-                        if (response.status == true) {
-                          toastr.success(response.message);
-                          setTimeout(() => {
-                            location.reload()
-                          }, "3000");
-                        } else {
-                          // for errors - red box
-                          toastr.error(response.message);
+                    if (document.getElementById("make_payment")) {
+                      const make_payment = document.getElementById("make_payment");
+                      make_payment.addEventListener("submit", async function (e) {
+                        e.preventDefault();
+                        $(".spinner-border").show()
+                        const data = new FormData(make_payment);
+                        const payload = {
+                          amount_paid: data.get("invoiceAmount"),
+                          payment_date: data.get("payment_date"),
+                          payment_method: data.get("payment_method"),
+                          payment_note: data.get("payment_note"),
+                          assessment_no: '<%= revenue.assessment_no %>',
+                          rate_year: '<%= revenue.rate_year %>',
+                          grand_total: '<%= revenue.grand_total %>',
+                          customerName: '<%= revenue.name_of_business %>',
+                          assessment_type: '<%= revenue.type_of_property %>',
                         }
-                      } catch (error) {
-                        console.log(error)
-                        $(".spinner-border").hide()
-                        // for errors - red box
-                        toastr.error(error.message);
-                      }
-                    })
-                  }
-              document.addEventListener('DOMContentLoaded', function () {
-                const form = document.getElementById('discountForm');
 
-                form.addEventListener('submit', function (event) {
-                  event.preventDefault(); 
+                        console.log(payload)
+                        // return
+                        try {
+                          const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
+                            method: "post",
+                            body: JSON.stringify(payload),
+                            headers: {
+                              "Content-Type": "application/json"
+                            }
+                          })
 
-                  const taxitemSelect = document.getElementById('taxitem_id');
-                  const taxitemId = taxitemSelect.value;
-                  const invoiceNumber = taxitemSelect.selectedOptions[0].getAttribute('data-invoice-number');
-                  const discountAmount = document.getElementById('amount').value;
+                          const response = await req.json();
+                          $(".spinner-border").hide()
 
-                
-                  const url = `/admin/discount/${invoiceNumber}`;
-                  const data = [{
-                       id: taxitemId,
-                       amount: discountAmount,
-                  }]
-
-                  fetch(url, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                  })
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error('Network response was not ok');
+                          if (response.status == true) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                              location.reload()
+                            }, "3000");
+                          } else {
+                            // for errors - red box
+                            toastr.error(response.message);
+                          }
+                        } catch (error) {
+                          console.log(error)
+                          $(".spinner-border").hide()
+                          // for errors - red box
+                          toastr.error(error.message);
+                        }
+                      })
                     }
-                    return response.json();
-                  })
-                  .then(data => {
-                  
-                    toastr.success('Discount added successfully');
-                     setTimeout(() => {
-                            location.reload()
-                          }, "3000");
-                  })
-                  .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                    toastr.error('Failed to add discount');
-                  });
-                });
-              });
-                </script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                      const form = document.getElementById('discountForm');
+
+                      form.addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        const taxitemSelect = document.getElementById('taxitem_id');
+                        const taxitemId = taxitemSelect.value;
+                        const invoiceNumber = taxitemSelect.selectedOptions[0].getAttribute('data-invoice-number');
+                        const discountAmount = document.getElementById('amount').value;
+
+
+                        const url = `/admin/discount/${invoiceNumber}`;
+                        const data = [{
+                          id: taxitemId,
+                          amount: discountAmount,
+                        }]
+
+                        fetch(url, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify(data)
+                        })
+                          .then(response => {
+                            if (!response.ok) {
+                              throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                          })
+                          .then(data => {
+
+                            toastr.success('Discount added successfully');
+                            setTimeout(() => {
+                              location.reload()
+                            }, "3000");
+                          })
+                          .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
+                            toastr.error('Failed to add discount');
+                          });
+                      });
+                    });
+                  </script>
 </body>
 
 </html>

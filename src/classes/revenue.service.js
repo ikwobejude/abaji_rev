@@ -258,15 +258,15 @@ class Revenue {
     let sql = `
       SELECT
         count(*) as count, 
-        revenue_invoices.batch,
-        revenue_invoices.ref_no,
-        revenue_invoices.tin,
+        ANY_VALUE(revenue_invoices.batch) AS batch ,
+        ANY_VALUE(revenue_invoices.ref_no) AS ref_no,
+        ANY_VALUE(revenue_invoices.tin) AS tin,
         SUM(revenue_invoices.amount) as amount,
-        revenue_invoices.day,
-        revenue_invoices.month,
-        revenue_invoices.year,
-        _cities.city,
-        _streets.street
+        ANY_VALUE(revenue_invoices.day) AS day,
+        ANY_VALUE(revenue_invoices.month) AS month,
+        ANY_VALUE(revenue_invoices.year) AS year,
+        ANY_VALUE(_cities.city) AS city,
+        ANY_VALUE(_streets.street) AS street
       FROM revenue_invoices 
       LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
       LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id

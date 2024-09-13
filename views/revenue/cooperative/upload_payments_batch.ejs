@@ -119,7 +119,69 @@
          <!-- Page JS -->
     <script src="/assets/js/tables-datatables-basic.js"></script>
     <script>
+
+if(document.getElementById("form-upload-new-record")) {
+            $(".spinner-border").hide()
+            const dt = document.getElementById("form-upload-new-record");
+            dt.addEventListener("submit", async function(e) {
+                e.preventDefault();
+                $(".spinner-border").show()
+                const data = new FormData(dt);
+                const payload = {
+                  base64url: data.get("base64url"),
+                }
+
+                console.log(payload)
+
+                try {
+                    const request = await fetch('/admin/payment_reconciliation', {
+                        method: "post",
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    const response = await request.json()
+                    $(".spinner-border").hide()
+                    if(response.status == true) {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                          location.reload()
+                        }, "3000");
+                    } else {
+                        // for errors - red box
+                        toastr.error(response.message);
+                    }
+                } catch (error) {
+                    $(".spinner-border").hide()
+                    // for errors - red box
+                    toastr.error(error.message);
+                }
+            })
+        }
+    
         
+        const fileInput = document.getElementById('upload_excel');
+          //  console.log(fileInput)
+        fileInput.addEventListener('change', async (e) => {
+            // console.log("Hi")
+            try {
+              $('#cover-spin').show(0)
+                const file = fileInput.files[0];
+
+                const reader = new FileReader();
+                reader.addEventListener('load', async () => {
+                    // console.log(reader.result)
+                    $('#cover-spin').hide(0)
+                    $('#base64url').val(reader.result)
+                })
+
+                reader.readAsDataURL(file)
+            } catch (error) {
+              $('#cover-spin').hide(0)
+                toastr.error(error.message)
+            }
+        });
         async function deleteRecords(batch) {
           // console.log(year)
           if(confirm('Do you want to delete?')) {

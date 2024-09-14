@@ -115,8 +115,8 @@ class Revenue {
             c.city,
             s.street
         FROM revenue_upload AS r
-        INNER JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
-        INNER JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
+        LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
+        LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
         ${whereClause}
     `;
     // console.log("SQL Query:", sql);

@@ -73,7 +73,7 @@ const run = async () => {
       payment_date: new Date(row[7])
     };
 
-    console.log(payload)
+    // console.log(payload)
 
     // for (let i = 0; i < rv.length; i++) {
     //   const itemName = rv[i] == "Business Premises" ? 10010 : rv[i] == "RTV" ? 10011 : rv[i] == "Abaji Main Market Shade" ? 10012: 10014;

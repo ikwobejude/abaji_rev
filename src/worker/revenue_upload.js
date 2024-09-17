@@ -98,11 +98,11 @@ const run = async () => {
       rate_district: ward == null ? row[7] : ward.city_id,
       street: street == null ? row[4] : street.idstreet,
       batch: batchNumber,
-      invoice_number: data.success == true ? data.data.ref_id : InvoiceNumber,
-      state_tin: data.success == true ? data.data.invoice_id : InvoiceNumber,
+      invoice_number: InvoiceNumber,  // data.success == true ? data.data.ref_id : InvoiceNumber,
+      state_tin: InvoiceNumber, //data.success == true ? data.data.invoice_id : InvoiceNumber,
       phone_number: "0910009900",
       generated_phone: "0910009900",
-      ass_status: data.success == true ? 1: 0,
+      ass_status: 0, // data.success == true ? 1: 0,
       tax_office_id: 8477,
       service_id: workerData.service_id
     };

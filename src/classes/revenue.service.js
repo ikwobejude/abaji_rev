@@ -6,9 +6,13 @@ const Sequelize = require("sequelize");
 const db = require("../db/connection");
 const Tax_items = require("../model/Tax_items");
 const Revenues_invoices = require("../model/Revenue_invoice");
+const Bud_pay = require('../classes/budpay.service')
 
-class Revenue {
+
+
+class Revenue extends Bud_pay {
   constructor() {
+    super()
     this.revenueUpload = Revenue_upload;
     this.tax_item = Tax_items;
     this.db = db;
@@ -24,24 +28,24 @@ class Revenue {
       group: ["rate_year"],
       raw: true,
     });
-    return {
-      revenue,
-    };
-  }
-
-  async revenueByBatch(data) {
     const batchRevenue = await this.revenueUpload.findAll({
       attributes: [
         ["batch", "batch"],
         [Sequelize.fn("COUNT", Sequelize.col("*")), "total"],
+        [Sequelize.fn("SUM", Sequelize.col("ass_status")), "status_count"],
       ],
       group: ["batch"],
       raw: true,
     });
+   
     return {
-      batchRevenue,
+      revenue, batchRevenue
     };
   }
+
+  // async revenueByBatch(data) {
+    
+  // }
 
   async truncateYearlyRecord(data) {
     try {
@@ -57,6 +61,71 @@ class Revenue {
       throw error;
     }
   }
+
+  async generate_pay_code_bud_pay(data) {
+    try {
+      const assessments = await this.revenueUpload.findAll({
+        where: { 
+          ass_status: 0,
+          [this.Op.or]: [
+            {  rate_year: data.id }, 
+            { batch: data.id }
+          ] 
+        },
+      });
+
+      for (const assessment of assessments) {
+        const date = new Date(assessment.date_uploaded);
+        const bud_pay_payload = {
+            title: assessment.revenue_code,
+            duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
+            currency:"NGN",
+            invoicenumber: assessment.invoice_number, // optional
+            reminder:"", // optional
+            email: process.env.MAIL_FROM_ADDRESS,
+            first_name: assessment.name_of_business, // optional but neccessary
+            last_name:"", // optional but neccessary
+            billing_address: assessment.address_of_property,
+            billing_city:"ABAJI",
+            billing_state:"ABUJA",
+            billing_country:"Nigeria",
+            billing_zipcode:"234",
+            items:[
+                {
+                    description: assessment.type_of_property,
+                    quantity: "1",
+                    unit_price: assessment.grand_total,
+                    meta_data:""
+                }
+            ]
+        }
+
+    
+    
+        const data = await this.createInvoice(bud_pay_payload)
+        await this.revenueUpload.update({
+          biller_accountid: data.success == true ? data.data.paycode: assessment.biller_accountid,
+          invoice_number: data.success == true ? data.data.ref_id : assessment.invoice_number,
+          state_tin: data.success == true ? data.data.invoice_id : assessment.state_tin,
+          ass_status: data.success == true ? 1: 0,
+        }, 
+        { where: {bill_ref_no: assessment.bill_ref_no }}, 
+        {new: true})
+      // return
+      }
+
+      return {
+        status: true,
+        message: "Deleted!",
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  
+
 
   async revenuesInvoices(query) {
     let condition = [];

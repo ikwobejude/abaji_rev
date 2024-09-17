@@ -11,7 +11,10 @@ Router.get("/dashboard", admin.adminDashboard);
 Router.route("/revenue_upload")
 .get(revenue.getRevenueItemByYear)
 .post(revenue.createAssessments)
+// .put(revenue.deleteYearly)
 .delete(revenue.deleteYearly);
+
+Router.get("/generate_budpay_pay_code", revenue.generate_pay_code)
 
 Router.route("/revenue_upload/view/:year")
 .get(revenue.viewAssessmentInvoice);

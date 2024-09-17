@@ -118,10 +118,17 @@
                                     <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
                                       <i class="ti ti-eye me-1"></i>View more
                                     </a>
+                                    <% if(item.status_count != item.total ) {%>
+                                    <a class="dropdown-item" href="javascript:;"
+                                      onclick="generatePay_code('<%= item.batch %>')">
+                                      <i class="ti ti-reload me-1"></i>Generate Pay code 
+                                    </a>
+                                    <% } %>
                                     <a class="dropdown-item" href="javascript:void(0);"
                                       onclick="deleteRecords('<%= item.batch %>')">
                                       <i class="ti ti-trash me-1"></i>Delete
                                     </a>
+                                    
                                   </div>
                                 </div>
                               </td>
@@ -275,7 +282,32 @@
           
         }
    
-   
+        async function generatePay_code(id) {
+          if(confirm('Do you want to generate pay code?')) {
+            try {
+                const response = await fetch(`/admin/generate_budpay_pay_code?id=${id}`)
+                // console.log(response)
+                if (response.ok) {
+                    const d = await response.json(); // or response.text() if expecting plain text
+                    if(d.status == true) {
+                      toastr.success(d.message);
+                      setTimeout(() => {
+                        location.reload()
+                      }, "3000");
+                    } else {
+                      toastr.error(d.message);
+                    }
+                  
+                } else {
+                  toastr.error('Failed to generate pay code for the resource.');
+                    // throw new Error();
+                }
+              } catch (error) {
+                toastr.error(error.message);
+              }
+          }
+          
+        }
    </script>
   </body>
 </html>

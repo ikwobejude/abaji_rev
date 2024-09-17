@@ -11,13 +11,12 @@ const setup = new Setup();
 module.exports = {
   getRevenueItemByYear: async function (req, res) {
     const response = await revenue.revenueByYear(req.query);
-    const batchResponse = await revenue.revenueByBatch(req.query);
-    console.log(batchResponse);
+    // const batchResponse = await revenue.revenueByBatch(req.query);
+    // console.log(batchResponse);
     res
       .status(200)
       .render("./revenue/cooperative/upload_records", {
         ...response,
-        ...batchResponse,
       });
   },
 
@@ -86,6 +85,15 @@ viewBatchAssessmentInvoice: async function (req, res) {
   deleteYearly: async function (req, res) {
     try {
       const response = await revenue.truncateYearlyRecord(req.query);
+      res.status(200).json(response);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ error: error.message });
+    }
+  },
+  generate_pay_code: async function (req, res) {
+    try {
+      const response = await revenue.generate_pay_code_bud_pay(req.query);
       res.status(200).json(response);
     } catch (error) {
       console.log(error);

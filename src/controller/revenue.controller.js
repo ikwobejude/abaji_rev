@@ -11,9 +11,14 @@ const setup = new Setup();
 module.exports = {
   getRevenueItemByYear: async function (req, res) {
     const response = await revenue.revenueByYear(req.query);
+    const batchResponse = await revenue.revenueByBatch(req.query);
+    console.log(batchResponse);
     res
       .status(200)
-      .render("./revenue/cooperative/upload_records", { ...response });
+      .render("./revenue/cooperative/upload_records", {
+        ...response,
+        ...batchResponse,
+      });
   },
 
   createAssessments: async function (req, res) {
@@ -26,8 +31,8 @@ module.exports = {
     } catch (error) {
       res.status(400).json({
         status: false,
-        message: error.message
-      })
+        message: error.message,
+      });
     }
   },
   viewAssessmentInvoice: async function (req, res) {
@@ -46,8 +51,30 @@ module.exports = {
 
       const response = await revenue.revenuesInvoices(query);
       const street = await setup.AllStreets();
-      // console.log(street.streets)
-      // console.log({response})
+      res.status(200).render("./revenue/cooperative/revenue_invoice", {
+        ...response,
+        ...street,
+      });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
+viewBatchAssessmentInvoice: async function (req, res) {
+    try {
+      const query = {
+        batch: req.query.batch || req.params.batch,
+        street: req.query.street,
+        assessment_no: req.query.assessment_no,
+        revenue_code: req.query.revenue_code,
+        bill_ref_no: req.query.bill_ref_no,
+        name_of_business: req.query.name_of_business,
+        address_of_property: req.query.address_of_property,
+        type_of_property: req.query.type_of_property,
+        revenue_type: req.query.revenue_type,
+      };
+      console.log(query)
+      const response = await revenue.revenuesInvoices(query);
+      const street = await setup.AllStreets();
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,
@@ -59,9 +86,9 @@ module.exports = {
   deleteYearly: async function (req, res) {
     try {
       const response = await revenue.truncateYearlyRecord(req.query);
-      res.status(200).json(response)
+      res.status(200).json(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res.status(500).send({ error: error.message });
     }
   },
@@ -175,32 +202,38 @@ module.exports = {
     res.status(200).json(response);
   },
 
-
   addDiscount: async function (req, res) {
     const { invoice } = req.params;
     const response = await revenue.initiateDiscount(invoice, req.body);
     res.status(200).render();
   },
 
-  upload_payment_batch: async function(req, res) {
-    const response = await revenue.viewUploadedPaymentbATCH(req.query)
-    res.status(200).render('./revenue/cooperative/upload_payments_batch', {...response})
+  upload_payment_batch: async function (req, res) {
+    const response = await revenue.viewUploadedPaymentbATCH(req.query);
+    res
+      .status(200)
+      .render("./revenue/cooperative/upload_payments_batch", { ...response });
   },
 
-  upload_payment_rec: async function(req, res) {
-    const response = await revenue.viewUploadedPayment({...req.query, ...req.params})
-    res.status(200).render('./revenue/cooperative/upload_payments', {...response})
+  upload_payment_rec: async function (req, res) {
+    const response = await revenue.viewUploadedPayment({
+      ...req.query,
+      ...req.params,
+    });
+    res
+      .status(200)
+      .render("./revenue/cooperative/upload_payments", { ...response });
   },
 
   upload_payment_del: async function (req, res) {
     try {
-      const response = await revenue.deleteBatchUpload(req.params.batch)
-      res.status(200).json(response)
+      const response = await revenue.deleteBatchUpload(req.params.batch);
+      res.status(200).json(response);
     } catch (error) {
       res.status(400).json({
         status: false,
-        message: error.message
-      })
+        message: error.message,
+      });
     }
   },
 
@@ -209,14 +242,14 @@ module.exports = {
       // console.log(req.body)
       const response = await revenue.upload_payments({
         ...req.body,
-        ...req.user
+        ...req.user,
       });
       res.status(200).json(response);
     } catch (error) {
       res.status(400).json({
         status: false,
-        message: error.message
-      })
+        message: error.message,
+      });
     }
   },
 };

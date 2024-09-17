@@ -74,49 +74,57 @@ class Revenue extends Bud_pay {
         },
       });
 
-      for (const assessment of assessments) {
-        const date = new Date(assessment.date_uploaded);
-        const bud_pay_payload = {
-            title: assessment.revenue_code,
-            duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
-            currency:"NGN",
-            invoicenumber: assessment.invoice_number, // optional
-            reminder:"", // optional
-            email: process.env.MAIL_FROM_ADDRESS,
-            first_name: assessment.name_of_business, // optional but neccessary
-            last_name:"", // optional but neccessary
-            billing_address: assessment.address_of_property,
-            billing_city:"ABAJI",
-            billing_state:"ABUJA",
-            billing_country:"Nigeria",
-            billing_zipcode:"234",
-            items:[
-                {
-                    description: assessment.type_of_property,
-                    quantity: "1",
-                    unit_price: assessment.grand_total,
-                    meta_data:""
-                }
-            ]
-        }
 
+      while (assessments.length > 0) {
+          const batch = assessments.splice(0, 10);
+          // console.log(`Processing batch of size: ${batch.length}`);
+          // Your processing code here
+          for (const assessment of batch) {
+            const date = new Date(assessment.date_uploaded);
+            const bud_pay_payload = {
+                title: assessment.revenue_code,
+                duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
+                currency:"NGN",
+                invoicenumber: assessment.invoice_number, // optional
+                reminder:"", // optional
+                email: process.env.MAIL_FROM_ADDRESS,
+                first_name: assessment.name_of_business, // optional but neccessary
+                last_name:"", // optional but neccessary
+                billing_address: assessment.address_of_property,
+                billing_city:"ABAJI",
+                billing_state:"ABUJA",
+                billing_country:"Nigeria",
+                billing_zipcode:"234",
+                items:[
+                    {
+                        description: assessment.type_of_property || assessment.name_of_business,
+                        quantity: "1",
+                        unit_price: assessment.grand_total,
+                        meta_data:""
+                    }
+                ]
+            }
     
-    
-        const data = await this.createInvoice(bud_pay_payload)
-        await this.revenueUpload.update({
-          biller_accountid: data.success == true ? data.data.paycode: assessment.biller_accountid,
-          invoice_number: data.success == true ? data.data.ref_id : assessment.invoice_number,
-          state_tin: data.success == true ? data.data.invoice_id : assessment.state_tin,
-          ass_status: data.success == true ? 1: 0,
-        }, 
-        { where: {bill_ref_no: assessment.bill_ref_no }}, 
-        {new: true})
-      // return
+        // console.log(bud_pay_payload)
+        
+            const data = await this.createInvoice(bud_pay_payload)
+            await this.revenueUpload.update({
+              biller_accountid: data.success == true ? data.data.paycode: assessment.biller_accountid,
+              invoice_number: data.success == true ? data.data.ref_id : assessment.invoice_number,
+              state_tin: data.success == true ? data.data.invoice_id : assessment.state_tin,
+              ass_status: data.success == true ? 1: 0,
+            }, 
+            { where: {bill_ref_no: assessment.bill_ref_no }}, 
+            {new: true})
+          // return
+          }
       }
+
+      
 
       return {
         status: true,
-        message: "Deleted!",
+        message: "successfull!",
       };
     } catch (error) {
       throw error;

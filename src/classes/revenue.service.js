@@ -105,7 +105,7 @@ class Revenue extends Bud_pay {
                 ]
             }
     
-        // console.log(bud_pay_payload)
+          //  console.log(bud_pay_payload)
         
             const data = await this.createInvoice(bud_pay_payload)
             await this.revenueUpload.update({

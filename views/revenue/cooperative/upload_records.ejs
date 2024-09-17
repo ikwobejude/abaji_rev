@@ -23,7 +23,7 @@
           <!-- / Navbar -->
 
           <!-- Content wrapper -->
-          <div class="content-wrapper">
+          <div class="content-wrapper" id="body_holder">
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
@@ -284,10 +284,13 @@
    
         async function generatePay_code(id) {
           if(confirm('Do you want to generate pay code?')) {
+            $('#cover-spin').show();
             try {
                 const response = await fetch(`/admin/generate_budpay_pay_code?id=${id}`)
                 // console.log(response)
+                
                 if (response.ok) {
+                  $('#cover-spin').hide();
                     const d = await response.json(); // or response.text() if expecting plain text
                     if(d.status == true) {
                       toastr.success(d.message);
@@ -299,10 +302,12 @@
                     }
                   
                 } else {
+                  $('#cover-spin').hide();
                   toastr.error('Failed to generate pay code for the resource.');
                     // throw new Error();
                 }
               } catch (error) {
+                $('#cover-spin').hide();
                 toastr.error(error.message);
               }
           }

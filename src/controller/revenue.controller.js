@@ -97,7 +97,10 @@ viewBatchAssessmentInvoice: async function (req, res) {
       res.status(200).json(response);
     } catch (error) {
       console.log(error);
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: true,
+        message: error.message 
+      });
     }
   },
   demandNotice: async function (req, res) {

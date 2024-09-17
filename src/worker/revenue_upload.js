@@ -38,11 +38,31 @@ const run = async () => {
     let invNum = await Invoice_number_count.findOne({ raw: true });
     
 
-    const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
-    const street = await Streets.findOne({
+    const wd = await Ward.findOne({ where: { city: row[4] }, raw: true });
+    if(!wd) {
+      await Ward.create({
+        city: row[4],
+        lga_id: 276,
+        service_id: workerData.service_id
+      })
+    }
+    const strt = await Streets.findOne({
       where: { street: row[7] },
       raw: true,
     });
+
+    if(!strt) {
+      const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
+      await Streets.create({
+        street: row[7],
+        city_id: ward.city_id
+      })
+    }
+
+    const ward = wd ? wd : await Ward.findOne({ where: { city: row[4] }, raw: true });
+    const street = strt ? strt  : await Streets.findOne({ where: { street: row[7] }, raw: true,});
+
+
     const payerId = randomNum(10) + parseInt(invNum.invoice_number);
     
     // let revenueCodes = typeof row[2] === "string" ? row[2].split("/") : [row[2]];

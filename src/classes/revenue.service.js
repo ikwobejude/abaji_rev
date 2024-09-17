@@ -12,6 +12,7 @@ class Revenue {
     this.revenueUpload = Revenue_upload;
     this.tax_item = Tax_items;
     this.db = db;
+    this.Op = Sequelize.Op
   }
 
   async revenueByYear(data) {
@@ -45,9 +46,7 @@ class Revenue {
   async truncateYearlyRecord(data) {
     try {
       await this.revenueUpload.destroy({
-        where: {
-          rate_year: data.year,
-        },
+        where: { [this.Op.or]: [{  rate_year: data.year }, { batch: data.year }] },
       });
 
       return {
@@ -176,11 +175,21 @@ class Revenue {
             FROM revenue_upload AS r
             INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
             INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
-            WHERE r.rate_year = ${query.year} AND r.bill_ref_no='${query.invoice}'
+            WHERE r.rate_year = :rate_year AND r.bill_ref_no= :bill_ref_no
         `;
+
+
     const revenue = await this.db.query(sql, {
+      replacements: {
+        bill_ref_no: query.invoice,
+        rate_year: query.year
+      },
       type: Sequelize.QueryTypes.SELECT,
     });
+
+    // console.log(sql)
+
+    // console.log(revenue)
     const tax_items = await this.tax_item.findAll({
       where: { invoice_number: query.invoice },
       raw: true,

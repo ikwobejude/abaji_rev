@@ -119,7 +119,7 @@
                                       <i class="ti ti-eye me-1"></i>View more
                                     </a>
                                     <a class="dropdown-item" href="javascript:void(0);"
-                                      onclick="deleteRecordsBatch('<%= item.batch %>')">
+                                      onclick="deleteRecords('<%= item.batch %>')">
                                       <i class="ti ti-trash me-1"></i>Delete
                                     </a>
                                   </div>
@@ -189,7 +189,7 @@
                   base64url: data.get("base64url"),
                 }
 
-                console.log(payload)
+                // console.log(payload)
 
                 try {
                     const request = await fetch('/admin/revenue_upload', {

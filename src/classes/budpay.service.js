@@ -22,12 +22,13 @@ class BudPay extends SettlePayment {
           },
         }
       );
+
+      // console.log(response)
       // console.log("Received response from invoice creation:", response.data);
       return response.data;
     } catch (error) {
+      console.log(error)
       // console.error("Error response data:", error.response?.data);
-      // console.error("Error response status:", error.response?.status);
-      // console.error("Error response headers:", error.response?.headers);
       throw new Error(error.response?.data?.message || error.message);
     }
   }

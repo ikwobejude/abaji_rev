@@ -78,12 +78,12 @@ const run = async () => {
     }
 
 
-    const data = await bud_pay.createInvoice(bud_pay_payload)
+    // const data = await bud_pay.createInvoice(bud_pay_payload)
     // console.log(data);
     // return
     let InvoiceNumber = "ABJ" + invNum.invoice_number;
     let payload = {
-      biller_accountid: data.success == true ? data.data.paycode : new Date().getTime().toString(36),
+      biller_accountid: invNum.invoice_number, //data.success == true ? data.data.paycode : new Date().getTime().toString(36),
       assessment_no: payerId,
       revenue_code: row[1],
       bill_ref_no:  InvoiceNumber, // invoice number

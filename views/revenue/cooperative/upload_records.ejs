@@ -40,39 +40,98 @@
                         </div>
                     </div>
                     
-                  <div class="card-datatable  table-responsive pt-0">
-                    <table class="datatables-basic table">
-                      <thead>
-                        <tr>
-                          <!-- <th></th> -->
-                          <th></th>
-                          <th>Year</th>
-                          <th>Total Assessments</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% revenue.forEach(item => { %>
+                <div class="row">
+                  <!-- Revenue by Year -->
+                  <div class="col-md-12">
+                    <div class="card-datatable table-responsive pt-0">
+                      <table class="datatables-basic table">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Year</th>
+                            <th>Total Assessments</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% revenue.forEach(item=> { %>
                             <tr>
-                                <td></td>
-                                <td><%= item.year %></td>
-                                <td><%= item.total %></td>
-                                <td>
-                                  <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                      <i class="ti ti-dots-vertical"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>"><i class="ti ti-eye me-1"></i>View more </a>
-                                      <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= item.year %>')"><i class="ti ti-trash me-1"></i> Delete</a>
-                                    </div>
+                              <td></td>
+                              <td>
+                                <%= item.year %>
+                              </td>
+                              <td>
+                                <%= item.total %>
+                              </td>
+                              <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="ti ti-dots-vertical"></i>
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>">
+                                      <i class="ti ti-eye me-1"></i>View more
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= item.year %>')">
+                                      <i class="ti ti-trash me-1"></i>Delete
+                                    </a>
                                   </div>
-                                </td>
+                                </div>
+                              </td>
                             </tr>
-                        <% }) %>
-                      </tbody>
-                    </table>
+                            <% }) %>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
+                
+                  <!-- Revenue by Batch -->
+                  <div class="col-md-12">
+                    <div class="card-datatable table-responsive pt-0">
+                      <table class="datatables-basic table">
+                        <h5 class="p-7">REVENUES BY BATCHES</h5>
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Batch</th>
+                            <th>Total Assessments</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% batchRevenue.forEach(item=> { %>
+                            <tr>
+                              <td></td>
+                              <td>
+                                <%= item.batch %>
+                              </td>
+                              <td>
+                                <%= item.total %>
+                              </td>
+                              <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="ti ti-dots-vertical"></i>
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
+                                      <i class="ti ti-eye me-1"></i>View more
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0);"
+                                      onclick="deleteRecordsBatch('<%= item.batch %>')">
+                                      <i class="ti ti-trash me-1"></i>Delete
+                                    </a>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
                 </div>
                 <!-- Modal to add new record -->
                 <div class="offcanvas offcanvas-end" id="add-new-record">
@@ -118,7 +177,7 @@
          <!-- Page JS -->
     <script src="/assets/js/tables-datatables-basic.js"></script>
     <script>
-        if(document.getElementById("form-upload-new-record")) {
+          if(document.getElementById("form-upload-new-record")) {
             $(".spinner-border").hide()
             const dt = document.getElementById("form-upload-new-record");
             dt.addEventListener("submit", async function(e) {

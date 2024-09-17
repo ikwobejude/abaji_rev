@@ -15,6 +15,9 @@ Router.route("/revenue_upload")
 
 Router.route("/revenue_upload/view/:year")
 .get(revenue.viewAssessmentInvoice);
+Router.route("/revenue_upload/view/batch/:batch").get(
+  revenue.viewBatchAssessmentInvoice
+);
 
 Router.route("/demand_notice/:year/:invoice")
 .get(revenue.demandNotice)

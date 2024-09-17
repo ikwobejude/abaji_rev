@@ -28,25 +28,38 @@ class Revenue {
     };
   }
 
+  async revenueByBatch(data) {
+    const batchRevenue = await this.revenueUpload.findAll({
+      attributes: [
+        ["batch", "batch"],
+        [Sequelize.fn("COUNT", Sequelize.col("*")), "total"],
+      ],
+      group: ["batch"],
+      raw: true,
+    });
+    return {
+      batchRevenue,
+    };
+  }
+
   async truncateYearlyRecord(data) {
     try {
       await this.revenueUpload.destroy({
         where: {
-          rate_year: data.year
-        }
-      })
-  
+          rate_year: data.year,
+        },
+      });
+
       return {
         status: true,
-        message: "Deleted!"
-      }
+        message: "Deleted!",
+      };
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async revenuesInvoices(query) {
-    // Define an array for conditions and an array for query parameters
     let condition = [];
     let queryParams = [];
 
@@ -95,6 +108,12 @@ class Revenue {
       queryParams.push(`%${query.revenue_type}%`);
     }
 
+    if (query.batch) {
+      condition.push("r.batch = ?");
+      queryParams.push(query.batch);
+    }
+
+    // Clean up any null conditions
     condition = condition.filter((cond) => cond !== null);
 
     let whereClause = condition.length
@@ -102,25 +121,23 @@ class Revenue {
       : "";
 
     let sql = `
-        SELECT 
-            r.assessment_no,
-            r.revenue_code,
-            r.bill_ref_no,
-            r.name_of_business,
-            r.address_of_property,            
-            r.type_of_property,
-            r.revenue_type,
-            r.grand_total,
-            r.rate_year,
-            c.city,
-            s.street
-        FROM revenue_upload AS r
-        LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
-        LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
-        ${whereClause}
-    `;
-    // console.log("SQL Query:", sql);
-    // console.log("Parameters:", queryParams);
+      SELECT 
+          r.assessment_no,
+          r.revenue_code,
+          r.bill_ref_no,
+          r.name_of_business,
+          r.address_of_property,            
+          r.type_of_property,
+          r.revenue_type,
+          r.grand_total,
+          r.rate_year,
+          c.city,
+          s.street
+      FROM revenue_upload AS r
+      LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
+      LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
+      ${whereClause}
+  `;
 
     try {
       const revenue = await this.db.query(sql, {
@@ -274,10 +291,12 @@ class Revenue {
       GROUP BY revenue_invoices.batch
     `;
 
-    const data = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
+    const data = await this.db.query(sql, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
     return {
-      data
-    }
+      data,
+    };
   }
   async viewUploadedPayment(query) {
     let sql = `
@@ -301,23 +320,25 @@ class Revenue {
       WHERE revenue_invoices.batch = '${query.batch}'
     `;
 
-    const data = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT})
+    const data = await this.db.query(sql, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
     return {
-      data
-    }
+      data,
+    };
   }
 
   async deleteBatchUpload(id) {
-    await Revenues_invoices.destroy({ where: {batch: id}})
+    await Revenues_invoices.destroy({ where: { batch: id } });
     return {
       status: true,
-      message: "Deleted"
-    }
+      message: "Deleted",
+    };
   }
 
   async upload_payments(data) {
     const res = await this.base64ToExcel(data.base64url);
-    
+
     // return
     delete data.base64url;
     // console.log(data)
@@ -375,17 +396,21 @@ class Revenue {
     // console.log(invoice, data)
     let sum = 0;
     for (const el of data) {
-        sum += parseFloat(el.amount)
-        await this.tax_item.update({discount: el.amount}, {where: {id: el.id}}, {new: true})
-        // console.log(el)
+      sum += parseFloat(el.amount);
+      await this.tax_item.update(
+        { discount: el.amount },
+        { where: { id: el.id } },
+        { new: true }
+      );
+      // console.log(el)
     }
     // await this.revenueUpload.update({goodwill: sum}, { where: {bill_ref_no: invoice} }, {new: true})
 
     // console.log(sum)
     return {
       status: true,
-      message: "Discount applied"
-    }
+      message: "Discount applied",
+    };
   }
 }
 

@@ -89,7 +89,7 @@
                   <!-- Revenue by Batch -->
                   <div class="col-md-7">
                     <div class="card-datatable table-responsive pt-0">
-                      <div class="table-responsive">
+                      <!-- <div class="table-responsive"> -->
                         <table class="datatables-basic table">
                           <h5 class="p-7">REVENUES BY BATCHES</h5>
                           <thead>
@@ -105,7 +105,7 @@
                               <tr>
                                 <td></td>
                                 <td>
-                                  <%= item.batch %>
+                                  <%= item.batch.slice(0, 20) %>
                                 </td>
                                 <td>
                                   <%= item.total %>
@@ -137,7 +137,7 @@
                               <% }) %>
                           </tbody>
                         </table>
-                      </div>
+                      <!-- </div> -->
                     </div>
                   </div>
                 </div>

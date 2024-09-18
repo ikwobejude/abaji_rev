@@ -89,53 +89,55 @@
                   <!-- Revenue by Batch -->
                   <div class="col-md-7">
                     <div class="card-datatable table-responsive pt-0">
-                      <table class="datatables-basic table">
-                        <h5 class="p-7">REVENUES BY BATCHES</h5>
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th>Batch</th>
-                            <th>Total Assessments</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% batchRevenue.forEach(item=> { %>
+                      <div class="table-responsive">
+                        <table class="datatables-basic table">
+                          <h5 class="p-7">REVENUES BY BATCHES</h5>
+                          <thead>
                             <tr>
-                              <td></td>
-                              <td>
-                                <%= item.batch %>
-                              </td>
-                              <td>
-                                <%= item.total %>
-                              </td>
-                              <td>
-                                <div class="dropdown">
-                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="ti ti-dots-vertical"></i>
-                                  </button>
-                                  <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
-                                      <i class="ti ti-eye me-1"></i>View more
-                                    </a>
-                                    <% if(item.status_count != item.total ) {%>
-                                    <a class="dropdown-item" href="javascript:;"
-                                      onclick="generatePay_code('<%= item.batch %>')">
-                                      <i class="ti ti-reload me-1"></i>Generate Pay code 
-                                    </a>
-                                    <% } %>
-                                    <a class="dropdown-item" href="javascript:void(0);"
-                                      onclick="deleteRecords('<%= item.batch %>')">
-                                      <i class="ti ti-trash me-1"></i>Delete
-                                    </a>
-                                    
-                                  </div>
-                                </div>
-                              </td>
+                              <th></th>
+                              <th>Batch</th>
+                              <th>Total Assessments</th>
+                              <th>Action</th>
                             </tr>
-                            <% }) %>
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            <% batchRevenue.forEach(item=> { %>
+                              <tr>
+                                <td></td>
+                                <td>
+                                  <%= item.batch %>
+                                </td>
+                                <td>
+                                  <%= item.total %>
+                                </td>
+                                <td>
+                                  <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                      <i class="ti ti-dots-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
+                                        <i class="ti ti-eye me-1"></i>View more
+                                      </a>
+                                      <% if(item.status_count != item.total ) {%>
+                                      <a class="dropdown-item" href="javascript:;"
+                                        onclick="generatePay_code('<%= item.batch %>')">
+                                        <i class="ti ti-reload me-1"></i>Generate Pay code 
+                                      </a>
+                                      <% } %>
+                                      <a class="dropdown-item" href="javascript:void(0);"
+                                        onclick="deleteRecords('<%= item.batch %>')">
+                                        <i class="ti ti-trash me-1"></i>Delete
+                                      </a>
+                                      
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>

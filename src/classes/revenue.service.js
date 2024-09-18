@@ -124,7 +124,7 @@ class Revenue extends Bud_pay {
 
       return {
         status: true,
-        message: "successfull!",
+        message: "successful!",
       };
     } catch (error) {
       throw error;

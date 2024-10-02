@@ -83,7 +83,7 @@ class Revenue extends Bud_pay {
             const date = new Date(assessment.date_uploaded);
             const bud_pay_payload = {
                 title: assessment.revenue_code,
-                duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
+                duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
                 currency:"NGN",
                 invoicenumber: assessment.invoice_number, // optional
                 reminder:"", // optional

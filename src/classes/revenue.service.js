@@ -81,9 +81,11 @@ class Revenue extends Bud_pay {
           // Your processing code here
           for (const assessment of batch) {
             const date = new Date(assessment.date_uploaded);
+             date.setMonth(date.getMonth() + 2);
             const bud_pay_payload = {
                 title: assessment.revenue_code,
-                duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+                // duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
+                 duedate: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
                 currency:"NGN",
                 invoicenumber: assessment.invoice_number, // optional
                 reminder:"", // optional

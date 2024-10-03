@@ -127,7 +127,13 @@ const Users = db.define(
     tax_office_id: {
       type: Sequelize.STRING,
     },
+    permissions: {
+      type: Sequelize.JSON,
+      allowNull: true,
+      defaultValue: [],
+    },
   },
+
   {
     freezeTableName: true,
     timestamps: false,

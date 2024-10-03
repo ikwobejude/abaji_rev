@@ -3,21 +3,18 @@ const wallet = new Wallet();
 const Revenue = require("../classes/revenue.service");
 const User = require("../classes/user.service");
 const Setup = require("../classes/setup.service");
-
+const permission = require("../classes/permission.service");
 const revenue = new Revenue();
 const user = new User();
 const setup = new Setup();
-
 module.exports = {
   getRevenueItemByYear: async function (req, res) {
     const response = await revenue.revenueByYear(req.query);
     // const batchResponse = await revenue.revenueByBatch(req.query);
     // console.log(batchResponse);
-    res
-      .status(200)
-      .render("./revenue/cooperative/upload_records", {
-        ...response,
-      });
+    res.status(200).render("./revenue/cooperative/upload_records", {
+      ...response,
+    });
   },
 
   createAssessments: async function (req, res) {
@@ -58,7 +55,7 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
-viewBatchAssessmentInvoice: async function (req, res) {
+  viewBatchAssessmentInvoice: async function (req, res) {
     try {
       const query = {
         batch: req.query.batch || req.params.batch,
@@ -71,7 +68,7 @@ viewBatchAssessmentInvoice: async function (req, res) {
         type_of_property: req.query.type_of_property,
         revenue_type: req.query.revenue_type,
       };
-      console.log(query)
+      console.log(query);
       const response = await revenue.revenuesInvoices(query);
       const street = await setup.AllStreets();
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
@@ -97,9 +94,9 @@ viewBatchAssessmentInvoice: async function (req, res) {
       res.status(200).json(response);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ 
+      res.status(500).json({
         status: true,
-        message: error.message 
+        message: error.message,
       });
     }
   },
@@ -174,10 +171,31 @@ viewBatchAssessmentInvoice: async function (req, res) {
   getUser: async function (req, res) {
     const usergroup = await user.userGroup();
     const users = await user.getUser();
-
+    const perm = await permission.retrieve();
+    // console.log(perm)
     // console.log({ users });
-    res.status(200).render("./users/users", { ...usergroup, ...users });
+    res
+      .status(200)
+      .render("./users/users", { ...usergroup, ...users, ...perm });
   },
+addPermissionsToUser: async function (req, res) {
+  try {
+    const updatedUser = await user.addPermissionToUser(req.body)
+
+    res.status(201).json({ 
+      success: true, 
+      message: "Permissions added successfully", 
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error("Error adding permissions:", error); 
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to add permissions: " + error.message 
+    });
+  }
+}
+,
   deleteUser: async function (req, res) {
     const { userId } = req.params;
 

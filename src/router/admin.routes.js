@@ -30,7 +30,7 @@ Router.post('/discount/:invoice', revenue.addDiscount)
 Router.route("/wallet_balance").get(revenue.getWalletBalance).post(revenue.getWalletBalance);
 
 Router.route("/user").get(revenue.getUser).post(revenue.postUser);
-
+Router.route("/add_permission").post(revenue.addPermissionsToUser)
 Router.route("/user_group")
 .get(revenue.getUserRoles)
 .post(revenue.postUserRoles)

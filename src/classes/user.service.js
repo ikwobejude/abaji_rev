@@ -5,10 +5,11 @@ const Users = require("../model/Users");
 const bcrypt = require("bcryptjs");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-
+const Permissions = require("../model/Permission");
 class User {
   constructor() {
     this.users = Users;
+    this.permissions = Permissions;
     (this.user_group = User_groups), (this.inputValidate = validation);
   }
 
@@ -91,7 +92,64 @@ class User {
   }
   async getUser() {
     const users = await this.users.findAll();
-    return { users };
+
+    const usersWithPermissions = await Promise.all(
+      users.map(async (user) => {
+        const userPermissionsIds = user.permissions;
+        // console.log(userPermissionsIds);
+        const userPermissions = await Promise.all(
+          userPermissionsIds.map(async (permissionId) => {
+            const permission = await this.permissions.findOne({
+              where: { permission_id: permissionId },
+            });
+
+            return permission ? permission.permission_name : null;
+          })
+        );
+        return {
+          ...user.get(),
+          permissions: userPermissions.filter(Boolean),
+        };
+      })
+    );
+
+    // Return the result
+    return { users: usersWithPermissions };
+  }
+
+  async addPermissionToUser(data) {
+    const id = data.userId;
+
+    const user = await this.users.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (!user.permissions) {
+      user.permissions = [];
+    }
+
+    // manage unique permissions
+    const currentPermissions = new Set(user.permissions);
+
+    // Add new permissions to the Set
+    data.permissions.forEach((permission) => {
+      if (!currentPermissions.has(permission)) {
+        currentPermissions.add(permission);
+      } else {
+        console.warn(`Permission "${permission}" already exists for this user`);
+      }
+    });
+
+    user.permissions = Array.from(currentPermissions);
+
+    await user.save();
+    return user;
   }
 
   async validateUserEmail(email) {

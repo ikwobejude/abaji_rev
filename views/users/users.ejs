@@ -73,11 +73,11 @@
                                 <%= roleLookup[usr.group_id] || 'Unknown' %>
                               </td>
                               <td>
-                            <% if (usr.permissions && usr.permissions.length> 0) { %>
-                              <%= usr.permissions.join(', ') %> 
-                            <% } else { %>
-                              No permissions
-                            <% } %>
+                                <% if (usr.permissions && usr.permissions.length> 0) { %>
+                                  <%= usr.permissions%>
+                                    <% } else { %>
+                                      No permissions
+                                      <% } %>
 
                               </td>
                               <td>
@@ -586,7 +586,7 @@
               setTimeout(() => {
                 toastr.success(response.message);
               }, 1500);
-              window.location.reload()
+              // window.location.reload()
             } else {
               toastr.warning(response.message || "Unexpected response");
             }

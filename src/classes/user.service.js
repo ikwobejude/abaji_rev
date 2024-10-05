@@ -4,6 +4,7 @@ const User_groups = require("../model/User_group");
 const Users = require("../model/Users");
 const bcrypt = require("bcryptjs");
 const Sequelize = require("sequelize");
+const db = require("../db/connection");
 const Op = Sequelize.Op;
 const Permissions = require("../model/Permission");
 class User {
@@ -91,86 +92,55 @@ class User {
     return { status: true, message: "User created successfully." };
   }
   async getUser() {
-    const users = await this.users.findAll();
+    const users = await db.query(
+      `SELECT
+            users.id AS uid,
+            users.name,
+            users.email,
+            users.user_phone,
+            users.firstname,
+            users.middlename,
+            users.surname,
+            users.tax_office_id,
+            users.group_id,
 
-    const usersWithPermissions = await Promise.all(
-      users.map(async (user) => {
-        const userPermissionsIds = user.permissions;
-        // console.log(userPermissionsIds);
-        const userPermissions = await Promise.all(
-          userPermissionsIds.map(async (permissionId) => {
-            const permission = await this.permissions.findOne({
-              where: { permission_id: permissionId },
-            });
+            user_groups.group_name,
+            MAX(p.permission_id) AS permission_id, -- Aggregate permission_id
+            COALESCE(NULLIF(users.permissions, ''), '*') AS permissions
+          FROM users
 
-            return permission ? permission.permission_name : null;
-          })
-        );
-        return {
-          ...user.get(),
-          permissions: userPermissions.filter(Boolean),
-        };
-      })
-    );
+          LEFT JOIN user_groups
+            ON users.group_id = user_groups.group_id
+          LEFT JOIN permissions AS p
+            ON FIND_IN_SET(p.role_id, users.permissions) -- Ensure users.permission_id is a comma-separated string
+          WHERE users.service_id = '2147483647'
+          GROUP BY users.id, users.name, users.email, users.user_phone, users.firstname, 
+         users.middlename, users.surname, users.tax_office_id, users.group_id, 
+         user_groups.group_name;
 
-    // Return the result
-    return { users: usersWithPermissions };
-  }
-
-  async addPermissionToUser(data) {
-    const id = data.userId;
-
-    const user = await this.users.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (!user.permissions) {
-      user.permissions = [];
-    }
-
-    // manage unique permissions
-    const currentPermissions = new Set(user.permissions);
-
-    // Add new permissions to the Set
-    data.permissions.forEach((permission) => {
-      if (!currentPermissions.has(permission)) {
-        currentPermissions.add(permission);
-      } else {
-        console.warn(`Permission "${permission}" already exists for this user`);
+    `,
+      {
+        replacements: {
+          serviceId: req.user.service_id,
+        },
+        type: Sequelize.QueryTypes.SELECT,
       }
-    });
-
-    user.permissions = Array.from(currentPermissions);
-
-    await user.save();
-    return user;
+    );
+    return { users };
   }
 
-  async validateUserEmail(email) {
-    const user = await Users.findOne({
-      attributes: ["name", "user_phone", "id"],
-      where: {
-        [Op.or]: [{ username: email }, { email: email }],
-      },
-      raw: true,
-    });
-
-    if (user) {
-      return {
-        status: true,
-        data: user,
-      };
-    } else {
-      return {
-        status: false,
-        error: "User with the email address does not exist",
-      };
+  async addPermissionToUser(userId, permissions) {
+    try {
+      const user = await this.users.findByPk(userId);
+      if (user) {
+        user.permissions = permissions;
+        await user.save();
+        console.log("Permissions saved:", user.permissions);
+      } else {
+        console.error("User not found");
+      }
+    } catch (error) {
+      console.error("Error saving permissions:", error);
     }
   }
 

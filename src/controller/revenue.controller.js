@@ -178,24 +178,27 @@ module.exports = {
       .status(200)
       .render("./users/users", { ...usergroup, ...users, ...perm });
   },
-addPermissionsToUser: async function (req, res) {
-  try {
-    const updatedUser = await user.addPermissionToUser(req.body)
+  addPermissionsToUser: async function (req, res) {
+    try {
+      const data = req.body;
+      userId = data.userId
+      const permissions = data.permissions.toString();
+      // console.log(permissions)
+      const updatedUser = await user.addPermissionToUser(userId, permissions);
 
-    res.status(201).json({ 
-      success: true, 
-      message: "Permissions added successfully", 
-      user: updatedUser
-    });
-  } catch (error) {
-    console.error("Error adding permissions:", error); 
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to add permissions: " + error.message 
-    });
-  }
-}
-,
+      res.status(201).json({
+        success: true,
+        message: "Permissions added successfully",
+        user: updatedUser
+      });
+    } catch (error) {
+      console.error("Error adding permissions:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to add permissions: " + error.message,
+      });
+    }
+  },
   deleteUser: async function (req, res) {
     const { userId } = req.params;
 

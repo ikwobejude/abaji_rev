@@ -153,6 +153,8 @@ module.exports = {
       });
     }
   },
+
+
   postUser: async function (req, res) {
     try {
       const response = await user.createUser({
@@ -170,7 +172,7 @@ module.exports = {
   },
   getUser: async function (req, res) {
     const usergroup = await user.userGroup();
-    const users = await user.getUser();
+    const users = await user.getUser(req.user.service_id);
     const perm = await permission.retrieve();
     // console.log(perm)
     // console.log({ users });
@@ -181,10 +183,14 @@ module.exports = {
   addPermissionsToUser: async function (req, res) {
     try {
       const data = req.body;
-      userId = data.userId
+      // console.log(data)
+      // return
+     
+      // userId = 
       const permissions = data.permissions.toString();
-      // console.log(permissions)
-      const updatedUser = await user.addPermissionToUser(userId, permissions);
+      // console.log(permissions, data.userId)
+      // return
+      const updatedUser = await user.addPermissionToUser(data.userId, permissions);
 
       res.status(201).json({
         success: true,

@@ -128,9 +128,7 @@ const Users = db.define(
       type: Sequelize.STRING,
     },
     permissions: {
-      type: Sequelize.JSON,
-      allowNull: true,
-      defaultValue: [],
+      type: Sequelize.STRING(255),
     },
   },
 

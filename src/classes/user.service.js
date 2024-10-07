@@ -94,26 +94,25 @@ class User {
   async getUser(service_id) {
     const users = await db.query(
       `SELECT
-            users.id AS uid,
-            users.name,
-            users.email,
-            users.user_phone,
-            users.firstname,
-            users.middlename,
-            users.surname,
-            users.tax_office_id,
-            users.group_id,
-            user_groups.group_name,
-            GROUP_CONCAT(p.permission_name ORDER BY p.permission_name SEPARATOR ', ') AS permissions
-          FROM users
-
-          LEFT JOIN user_groups ON users.group_id = user_groups.group_id
-          LEFT JOIN permissions p ON FIND_IN_SET(p.permission_id, users.permissions) > 0
-          WHERE users.service_id = '2147483647'
-          GROUP BY users.id, users.name, users.email, users.user_phone, users.firstname, 
-         users.middlename, users.surname, users.tax_office_id, users.group_id, 
-         user_groups.group_name
-    `,
+          users.id AS uid,
+          users.name,
+          users.email,
+          users.user_phone,
+          users.firstname,
+          users.middlename,
+          users.surname,
+          users.tax_office_id,
+          users.group_id,
+          user_groups.group_name,
+          GROUP_CONCAT(TRIM(p.permission_name) ORDER BY p.permission_name SEPARATOR ', ') AS permissions
+        FROM users
+        LEFT JOIN user_groups ON users.group_id = user_groups.group_id
+        LEFT JOIN permissions p ON FIND_IN_SET(p.permission_id, users.permissions) > 0
+        WHERE users.service_id = :serviceId
+        GROUP BY users.id, users.name, users.email, users.user_phone, users.firstname, 
+               users.middlename, users.surname, users.tax_office_id, users.group_id, 
+               user_groups.group_name
+  `,
       {
         replacements: {
           serviceId: service_id,
@@ -122,7 +121,7 @@ class User {
       }
     );
 
-    // console.log(users)
+    // console.log(users);
     return { users };
   }
 
@@ -130,18 +129,17 @@ class User {
     try {
       const user = await this.users.findByPk(userId);
       if (!user) {
-        throw Error("User not found")
+        throw Error("User not found");
       }
-    
-      console.log("Current user:", user);
+
+      // console.log("Current user:", user);
       user.permissions = permissions; // Ensure permissions is valid
       await user.save();
 
       // console.log("Permissions saved:", user.permissions);
       return user; // Optionally return the updated user
-
     } catch (error) {
-      throw error
+      throw error;
       // console.error("Error saving permissions:", error);
     }
   }

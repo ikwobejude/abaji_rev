@@ -35,7 +35,7 @@
         <ul class="menu-sub">
 
           <% let setupItem=link=="/setup/ticket_item" ? "active open" : "" %>
-            <% if (user.permissions.includes('59')) { %>
+            <% if (user?.permissions?.includes('59')) { %>
               <li class="menu-item <%= setupItem %>">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <div data-i18n="Revenue Items">Revenue Items</div>
@@ -136,7 +136,7 @@
 
           <% let reports=link=="/report/payment_reports" ? "active open" : link=="/report/revenue_assessments_reports"
             ? "active open" : "" %>
-            <% if (user.permissions.includes('51')) { %>
+            <% if (user?.permissions?.includes('51')) { %>
               <li class="menu-item <%= reports %>">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <i class="menu-icon tf-icons ti ti-chart-pie"></i>
@@ -159,7 +159,7 @@
 
                 <% let users=link=="/admin/user_group" ? "active open" : link=="/admin/user" ? "active open" :
                   link=="/admin/permission" ? "active open" : "" %>
-                  <% if (user.permissions.includes('60')) { %>
+                  <% if (user?.permissions?.includes('60')) { %>
                     <li class="menu-item <%= users %>">
                       <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons ti ti-users"></i>
@@ -186,7 +186,7 @@
                     <% }%>
 
                       <% let wallet=link=="/wallet" ? "active open" : link=="/wallet/reports" ? "active open" : "" %>
-                        <% if (user.permissions.includes('48')) { %>
+                        <% if (user?.permissions?.includes('48')) { %>
                           <li class="menu-item <%= wallet %>">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                               <i class="menu-icon tf-icons ti ti-credit-card"></i>

@@ -97,6 +97,8 @@ window.onload = async () => {
 
     dataPoint3.push(lbl);
   });
+
+  console.log({dataPoint3})
   var chart4 = new CanvasJS.Chart("walletUpload", {
     theme: "light1", // "light1", "light2", "dark1", "dark2"
     exportEnabled: true,

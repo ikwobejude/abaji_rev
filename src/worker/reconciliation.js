@@ -24,53 +24,58 @@ const Op = Sequelize.Op;
 
 const run = async () => {
   const rows = await readXlsxFile(path.join(__dirname, "../../uploads/" + workerData.file));
-  rows.shift();
+  // rows.shift();
   // console.log(rows)
   // return 
   let uploads = [];
   let assessmentItems = [];
 
-  const batchNumber =new Date().getTime().toString(36) +"_" +(Date.now() + Math.random().toString()).split(".").join("_");
+  // console.log(rows)
 
-  for (const row of rows) {
+  const batchNumber =new Date().getTime().toString(36) +"_" +(Date.now() + Math.random().toString()).split(".").join("_");
+  
+  const PDate = transformData(rows)
+  // console.log(data)
+  // return;
+  for (const data of PDate) {
+    
     let invNum = await Invoice_number_count.findOne({ raw: true });
     let InvoiceNumber = "ABJ" + invNum.invoice_number;
 
-    const ward = await Ward.findOne({ where: { city: row[3] }, raw: true });
-    const street = await Streets.findOne({
-      where: { street: row[6] },
-      raw: true,
-    });
+    // const ward = await Ward.findOne({ where: { city: row[3] }, raw: true });
+    // const street = await Streets.findOne({
+    //   where: { street: row[6] },
+    //   raw: true,
+    // });
     const payerId = randomNum(10) + parseInt(invNum.invoice_number);
 
-    const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
-    const amt = typeof row[8] === "string" ? row[8].split('/') : [row[8]];
-    const sum = amt.reduce((accumulator, currentValue) => {
-      return accumulator + parseFloat(currentValue);
-    }, 0);
+    // const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
+    // const amt = typeof row[8] === "string" ? row[8].split('/') : [row[8]];
+    // const sum = amt.reduce((accumulator, currentValue) => {
+    //   return accumulator + parseFloat(currentValue);
+    // }, 0);
 
+    const dt = data.Date.split('-')
 
     let payload = {
       tax_office_id: 8477,
       service_id: workerData.service_id,
       ref_no: new Date().getTime().toString(36),
-      tin: row[9],
-      taxpayer_name: row[1],
-      revenue_id: row[2],
-      description: row[4],
-      amount: sum,
-      amount_paid: sum,
-      day: new Date().getDay(),
-      month: new Date().getMonth() + 1,
-      year: new Date().getFullYear(),
+      tin: payerId,
+      taxpayer_name: data.FeeType,
+      revenue_id: data.FeeType,
+      description: data.FeeType,
+      amount: data.Amount,
+      amount_paid: data.Amount,
+      day: dt[2],
+      month: dt[1],
+      year: dt[0],
       entered_by: workerData.username,
       invoice_number: InvoiceNumber,
       paid: 1,
       batch: batchNumber,
-      ward: ward == null ? row[7] : ward.city_id, 
-      session_id: street == null ? row[4] : street.idstreet,
-      RevenueHeadName: row[5],
-      payment_date: new Date(row[7])
+      RevenueHeadName: data.FeeType,
+      payment_date: data.Date
     };
 
     // console.log(payload)
@@ -103,9 +108,7 @@ const run = async () => {
     );
   }
 
-  // console.log({ uploads, assessmentItems })
-
-  // return
+ 
 
     await RevenuesInvoices.bulkCreate(uploads,{
       updateOnDuplicate: [
@@ -113,10 +116,7 @@ const run = async () => {
       ] // Fields to update if duplicate
     });
 
-  //   await Tax_items.bulkCreate(assessmentItems, {
-  //     updateOnDuplicate: ["taxitem", "amount", "business_tag", "taxyear", "revenue_code", "invoice_number", "type"] // Fields to update if duplicate
-  //   },
-  //  { transaction: t });
+ 
     
     parentPort.postMessage({
       status: true,
@@ -126,3 +126,46 @@ const run = async () => {
 };
 
 run();
+
+// Function to transform the data
+function transformData(rows) {
+  const headers = rows[0]; // First row will be the headers
+  const transformed = [];
+
+  // Loop through each row after the header row
+  for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      let date = row[0]; // Assuming the first column is Date
+
+       // If the date is an Excel serial number, convert it to a readable format
+       if (typeof date === 'number') {
+        date = excelDateToJSDate(date);
+       }
+
+      // For each row, loop through the rest of the columns (Fee types)
+      for (let j = 1; j < headers.length; j++) {
+          const feeType = headers[j];  // Fee type (Market Fee, Cattle fee, etc.)
+          const amount = row[j];        // Corresponding amount
+          // Ignore the row if the amount is 0 or null
+          if (amount !== 0 && amount !== null) {
+            transformed.push({
+                Date: date,
+                FeeType: feeType,
+                Amount: amount || 0  // Default to 0 if no amount
+            });
+          }
+      }
+  }
+
+  return transformed;
+}
+
+
+// Function to transform Excel serial date to JavaScript Date
+function excelDateToJSDate(excelDate) {
+  // Excel dates start from 1900-01-01 (serial date 1)
+  const excelEpoch = new Date(1899, 11, 30); // Excel epoch is December 30, 1899
+  const jsDate = new Date(excelEpoch.getTime() + excelDate * 86400000); // Multiply by milliseconds in a day
+  return jsDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}
+

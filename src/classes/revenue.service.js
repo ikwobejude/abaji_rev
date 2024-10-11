@@ -367,9 +367,7 @@ class Revenue extends Bud_pay {
         MAX(revenue_invoices.ref_no) AS ref_no,
         MAX(revenue_invoices.tin) AS tin,
         SUM(revenue_invoices.amount) as amount,
-        MAX(revenue_invoices.day) AS day,
-        MAX(revenue_invoices.month) AS month,
-        MAX(revenue_invoices.year) AS year,
+        MAX(revenue_invoices.payment_date) AS payment_date,
         MAX(_cities.city) AS city,
         MAX(_streets.street) AS street
       FROM revenue_invoices 

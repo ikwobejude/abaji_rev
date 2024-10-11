@@ -55,7 +55,7 @@ const run = async () => {
     //   return accumulator + parseFloat(currentValue);
     // }, 0);
 
-    const dt = data.Date.split('-')
+    // const dt = data.Date.split('-')
 
     let payload = {
       tax_office_id: 8477,
@@ -67,9 +67,6 @@ const run = async () => {
       description: data.FeeType,
       amount: data.Amount,
       amount_paid: data.Amount,
-      day: dt[2],
-      month: dt[1],
-      year: dt[0],
       entered_by: workerData.username,
       invoice_number: InvoiceNumber,
       paid: 1,
@@ -78,26 +75,6 @@ const run = async () => {
       payment_date: data.Date
     };
 
-    // console.log(payload)
-
-    // for (let i = 0; i < rv.length; i++) {
-    //   const itemName = rv[i] == "Business Premises" ? 10010 : rv[i] == "RTV" ? 10011 : rv[i] == "Abaji Main Market Shade" ? 10012: 10014;
-    //   let item = {
-    //     idtax: new Date().getTime().toString(36),
-    //     taxitem: rv[i],
-    //     amount: amt[i],
-    //     business_tag: payerId,
-    //     taxyear: new Date().getFullYear(),
-    //     revenue_code: itemName, // Revenue Name,
-    //     invoice_number: InvoiceNumber,
-    //     type: itemName, // Revenue Name,
-    //     service_id: workerData.service_id,
-    //     batch: batchNumber,
-    //     payment_status: 1,
-    //     amount_paid: amt[i],
-    //   };
-    //   assessmentItems.push(item);
-    // }
     
     uploads.push(payload);
     // pic uniq id

@@ -46,11 +46,6 @@
                         <tr>
                           <!-- <th></th> -->
                           <th>Revenue Name</th>
-                          <th>Rate Payers</th>
-                          <th>Address Of Business</th>
-                          <th>Ward</th>
-                          <th>Street</th>
-                          <th>Business Operation</th>
                           <th>Amount Paid</th>
                           <th>Payment Date</th>
                           <!-- <th>Action</th> -->
@@ -59,11 +54,6 @@
                       <tbody>
                         <% data.forEach(a => { %>
                           <tr>
-                            <td><%= a.description %></td>
-                            <td><%= a.taxpayer_name %></td>
-                            <td><%= a.revenue_id %></td>
-                            <td><%= a.city %></td>
-                            <td><%= a.street %></td>
                             <td><%= a.RevenueHeadName %></td>
                             <td><%= a.amount %></td>
                             <td><%= a.payment_date %></td>

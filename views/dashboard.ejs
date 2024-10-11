@@ -113,216 +113,49 @@
                 </div>
                 <!--/ Statistics -->
 
-                <div class="col-xxl-4 col-12">
+                <div class="col-xxl-6 col-12">
                   <div class="row g-6">
-                    <!-- Profit last month -->
-                    <!-- <div class="col-xl-6 col-sm-6">
-                      <div class="card h-100">
-                        <div class="card-header pb-0">
-                          <h5 class="card-title mb-1">Profit</h5>
-                          <p class="card-subtitle">Last Month</p>
-                        </div>
-                        <div class="card-body">
-                          <div id="profitLastMonth"></div>
-                          <div class="d-flex justify-content-between align-items-center mt-3 gap-3">
-                            <h4 class="mb-0">624k</h4>
-                            <small class="text-success">+8.24%</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-                    <!--/ Profit last month -->
-
-                    <!-- Expenses -->
-                    <!-- <div class="col-xl-6 col-sm-6">
-                      <div class="card h-100">
-                        <div class="card-header pb-2">
-                          <h5 class="card-title mb-1">82.5k</h5>
-                          <p class="card-subtitle">Expenses</p>
-                        </div>
-                        <div class="card-body">
-                          <div id="expensesChart"></div>
-                          <div class="mt-3 text-center">
-                            <small class="text-muted mt-3">$21k Expenses more than last month</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-                    <!--/ Expenses -->
 
                     <!-- Generated Leads -->
-                    <!-- <div class="col-xl-12">
+                    <div class="col-xl-12">
                       <div class="card h-100">
                         <div class="card-body d-flex justify-content-between">
-                          <div class="d-flex flex-column">
-                            <div class="card-title mb-auto">
-                              <h5 class="mb-0 text-nowrap">Uploaded Assessments</h5>
-                              <p class="mb-0"><%= new Date().getFullYear() %></p>
-                            </div>
-                            <div class="chart-statistics">
-                              <h3 class="card-title mb-0">4,350</h3>
-                              <p class="text-success text-nowrap mb-0"><i class="ti ti-chevron-up me-1"></i> 15.8%</p>
-                            </div>
-                          </div>
-                          <div id="generatedLeadsChart"></div>
+                         
+                          <div id="chartPayment" style="height: 370px; width: 100%;"></div>
                         </div>
                       </div>
-                    </div> -->
+                    </div>
                     <!--/ Generated Leads -->
                   </div>
                 </div>
 
                 <!-- Revenue Report -->
-                 <!-- <div class="col-xxl-8"> 
+                <div class="col-xxl-6"> 
                   <div class="card h-100">
                     <div class="card-body p-0">
                       <div class="row row-bordered g-0">
-                        <div class="col-md-8 position-relative p-6">
+                        <div class="col-md-12 position-relative p-6">
                           <div class="card-header d-inline-block p-0 text-wrap position-absolute">
                             <h5 class="m-0 card-title">Revenue Report</h5>
                           </div>
-                          <div id="totalRevenueChart" class="mt-n1"></div>
+                          <div id="chartContainer" style="height: 370px; width: 100%;"></div>
                         </div>
-                        <div class="col-md-4 p-4">
-                          <div class="text-center mt-5">
-                            <div class="dropdown">
-                              <button
-                                class="btn btn-sm btn-label-primary dropdown-toggle"
-                                type="button"
-                                id="budgetId"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                <script>
-                                  document.write(new Date().getFullYear());
-                                </script>
-                              </button>
-                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="budgetId">
-                                <a class="dropdown-item prev-year1" href="javascript:void(0);">
-                                  <script>
-                                    document.write(new Date().getFullYear() - 1);
-                                  </script>
-                                </a>
-                                <a class="dropdown-item prev-year2" href="javascript:void(0);">
-                                  <script>
-                                    document.write(new Date().getFullYear() - 2);
-                                  </script>
-                                </a>
-                                <a class="dropdown-item prev-year3" href="javascript:void(0);">
-                                  <script>
-                                    document.write(new Date().getFullYear() - 3);
-                                  </script>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                          <h3 class="text-center pt-8 mb-0">$25,825</h3>
-                          <p class="mb-8 text-center"><span class="fw-medium text-heading">Budget: </span>56,800</p>
-                          <div class="px-3">
-                            <div id="budgetChart"></div>
-                          </div>
-                          <div class="text-center mt-8">
-                            <button type="button" class="btn btn-primary">Increase Button</button>
-                          </div>
-                        </div>
+                        
                       </div>
                     </div>
                   </div>
-                </div>  -->
+                </div> 
                 <!--/ Revenue Report -->
 
                 <!-- Earning Reports -->
-                <!-- <div class="col-xxl-4 col-md-6">
+                <div class="col-xxl-6 col-md-6">
                   <div class="card h-100">
-                    <div class="card-header d-flex justify-content-between">
-                      <div class="card-title mb-0">
-                        <h5 class="mb-1">Recent payment report</h5>
-                        <p class="card-subtitle">Weekly Earnings Overview</p>
-                      </div>
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
-                          type="button"
-                          id="earningReports"
-                          data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false">
-                          <i class="ti ti-dots-vertical ti-md text-muted"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="earningReports">
-                          <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                          <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                          <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                        </div>
-                      </div>
-                    </div>
+                   
                     <div class="card-body pb-0">
-                      <ul class="p-0 m-0">
-                        <li class="d-flex align-items-center mb-5">
-                          <div class="me-4">
-                            <span class="badge bg-label-primary rounded p-1_5"
-                              ><i class="ti ti-chart-pie-2 ti-md"></i
-                            ></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Net Profit</h6>
-                              <small class="text-body">12.4k Sales</small>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-4">
-                              <small>$1,619</small>
-                              <div class="d-flex align-items-center gap-1">
-                                <i class="ti ti-chevron-up text-success"></i>
-                                <small class="text-muted">18.6%</small>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="d-flex align-items-center mb-5">
-                          <div class="me-4">
-                            <span class="badge bg-label-success rounded p-1_5"
-                              ><i class="ti ti-currency-dollar ti-md"></i
-                            ></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Total Income</h6>
-                              <small class="text-body">Sales, Affiliation</small>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-4">
-                              <small>$3,571</small>
-                              <div class="d-flex align-items-center gap-1">
-                                <i class="ti ti-chevron-up text-success"></i>
-                                <small class="text-muted">39.6%</small>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="d-flex align-items-center mb-5">
-                          <div class="me-4">
-                            <span class="badge bg-label-secondary text-body rounded p-1_5"
-                              ><i class="ti ti-credit-card ti-md"></i
-                            ></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Total Expenses</h6>
-                              <small class="text-body">ADVT, Marketing</small>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-4">
-                              <small>$430</small>
-                              <div class="d-flex align-items-center gap-1">
-                                <i class="ti ti-chevron-up text-success"></i>
-                                <small class="text-muted">52.8%</small>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                      <div id="reportBarChart"></div>
+                      <div id="walletUpload" style="height: 370px; width: 100%;"></div>
                     </div>
                   </div>
-                </div> -->
+                </div> 
                 <!--/ Earning Reports -->
 
                 <!-- Popular Product -->
@@ -716,5 +549,7 @@
             <!-- / Content -->
 
         <%- include('./layout/footer') %>
+        <script src="/canvasjs.min.js"></script>
+        <script src="/custom_chart.js"></script>
   </body>
 </html>

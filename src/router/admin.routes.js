@@ -7,6 +7,10 @@ const permission = require("../controller/permission.controller");
 const Router = express.Router();
 
 Router.get("/dashboard", admin.adminDashboard);
+Router.get('/payment/street_graph', admin.paymentsStreet)
+Router.get('/revenue/street_graph', admin.revenueStreet)
+Router.get('/wallet_payment', admin.walletPayment)
+
 
 Router.route("/revenue_upload")
 .get(revenue.getRevenueItemByYear)

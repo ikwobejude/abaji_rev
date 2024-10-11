@@ -82,7 +82,7 @@ class Admin {
             MAX(s.street) AS label 
         FROM revenue_upload AS r
         INNER JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
-        WHERE r.service_id = :serviceId AND r.payment_status = 1 and AND rate_year = :year GROUP BY s.street`;
+        WHERE r.service_id = :serviceId AND r.payment_status = 1 AND rate_year = :year GROUP BY s.street`;
 
         const data = await this.db.query(sql, {
             replacements: {

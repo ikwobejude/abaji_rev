@@ -72,7 +72,11 @@ const run = async () => {
       paid: 1,
       batch: batchNumber,
       RevenueHeadName: data.FeeType,
-      payment_date: data.Date
+      payment_date: data.Date,
+      day: new Date().getDay(),
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      entered_by: workerData.username
     };
 
     

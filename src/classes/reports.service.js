@@ -144,7 +144,74 @@ class Reports {
 
   async revenueReports(query) {}
 
-  async ticketReport(query) {}
+  async ticketReport(query) {
+    let perPage = 20; // Number of records per page
+    const page = query.page || 1;
+    const offset = perPage * (page - 1);
+    const year = query.year || new Date().getFullYear();
+
+    let sql = `
+        SELECT
+            tickets.id,
+            tickets.agent_id,
+            tickets.agent_name,
+            tickets.ticket_type,
+            tickets.location,
+            tickets.office_id,
+            tickets.day,
+            tickets.month,
+            tickets.year,
+            tickets.ticketId,
+            tickets.reference_number,
+            tickets.invoice_number,
+            tickets.created_on,
+            tickets.payment_status,
+            tickets.amount,
+            tickets.amount_paid,
+            tickets.payment_date,
+            tickets.batch
+        FROM tickets
+        WHERE tickets.year = '${year}'`;
+
+   
+    if (query.agent_id) sql += ` AND tickets.agent_id = '${query.agent_id}'`;
+    if (query.ticket_type)
+      sql += ` AND tickets.ticket_type = '${query.ticket_type}'`;
+    if (query.location) sql += ` AND tickets.location = '${query.location}'`;
+    if (query.payment_status !== undefined)
+      sql += ` AND tickets.payment_status = ${query.payment_status}`;
+    if (query.payment_date_from && query.payment_date_to) {
+      sql += ` AND Date(tickets.payment_date) BETWEEN '${query.payment_date_from}' AND '${query.payment_date_to}'`;
+    } else if (query.payment_date_from) {
+      sql += ` AND Date(tickets.payment_date) >= '${query.payment_date_from}'`;
+    } else if (query.payment_date_to) {
+      sql += ` AND Date(tickets.payment_date) <= '${query.payment_date_to}'`;
+    }
+
+    //  pagination
+    const totalRecordsQuery = await db.query(sql, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
+    const count = totalRecordsQuery.length;
+    sql += ` LIMIT ${perPage} OFFSET ${offset}`;
+
+    // Execute the final query with limit and offset
+    const result = await db.query(sql, { type: Sequelize.QueryTypes.SELECT });
+
+    return {
+      result,
+      year: year,
+      current: page,
+      count,
+      pages: Math.ceil(count / perPage),
+      agent_id: query.agent_id,
+      ticket_type: query.ticket_type,
+      location: query.location,
+      payment_status: query.payment_status,
+      payment_date_from: query.payment_date_from,
+      payment_date_to: query.payment_date_to,
+    };
+  }
 }
 
 module.exports = Reports;

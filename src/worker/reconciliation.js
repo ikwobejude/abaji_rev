@@ -35,7 +35,7 @@ const run = async () => {
   const batchNumber =new Date().getTime().toString(36) +"_" +(Date.now() + Math.random().toString()).split(".").join("_");
   
   const PDate = transformData(rows)
-  // console.log(data)
+  // console.log(PDate)
   // return;
   for (const data of PDate) {
     
@@ -128,7 +128,7 @@ function transformData(rows) {
           const feeType = headers[j];  // Fee type (Market Fee, Cattle fee, etc.)
           const amount = row[j];        // Corresponding amount
           // Ignore the row if the amount is 0 or null
-          if (amount !== 0 && amount !== null) {
+          if (amount !== 0 && amount !== null && !isNaN(amount)) {
             transformed.push({
                 Date: date,
                 FeeType: feeType,

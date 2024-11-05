@@ -138,78 +138,56 @@ class Reports {
       year: year,
       current: page,
       // count,
-      // pages: Math.ceil(count / perPage)
     };
   }
 
   async revenueReports(query) {}
 
   async ticketReport(query) {
-    let perPage = 20; // Number of records per page
-    const page = query.page || 1;
-    const offset = perPage * (page - 1);
-    const year = query.year || new Date().getFullYear();
+    // console.log({ query });
+   let sql = `
+    SELECT
+      revenue_invoices.ref_no,
+      revenue_invoices.tin,
+      revenue_invoices.taxpayer_name,
+      revenue_invoices.revenue_id,
+      revenue_invoices.description,
+      revenue_invoices.amount,
+      revenue_invoices.day,
+      revenue_invoices.month,
+      revenue_invoices.year,
+      revenue_invoices.payment_date,
+      revenue_invoices.RevenueHeadName,
+      _cities.city,
+      _streets.street
+    FROM revenue_invoices
+    LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
+    LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
+    WHERE 1 = 1
+`;
 
-    let sql = `
-        SELECT
-            tickets.id,
-            tickets.agent_id,
-            tickets.agent_name,
-            tickets.ticket_type,
-            tickets.location,
-            tickets.office_id,
-            tickets.day,
-            tickets.month,
-            tickets.year,
-            tickets.ticketId,
-            tickets.reference_number,
-            tickets.invoice_number,
-            tickets.created_on,
-            tickets.payment_status,
-            tickets.amount,
-            tickets.amount_paid,
-            tickets.payment_date,
-            tickets.batch
-        FROM tickets
-        WHERE tickets.year = '${year}'`;
+   if (query.from && query.to) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') BETWEEN '${query.from}' AND '${query.to}'`;
+   } else if (query.from) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') >= '${query.from}'`;
+   } else if (query.to) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') <= '${query.to}'`;
+   }
 
-   
-    if (query.agent_id) sql += ` AND tickets.agent_id = '${query.agent_id}'`;
-    if (query.ticket_type)
-      sql += ` AND tickets.ticket_type = '${query.ticket_type}'`;
-    if (query.location) sql += ` AND tickets.location = '${query.location}'`;
-    if (query.payment_status !== undefined)
-      sql += ` AND tickets.payment_status = ${query.payment_status}`;
-    if (query.payment_date_from && query.payment_date_to) {
-      sql += ` AND Date(tickets.payment_date) BETWEEN '${query.payment_date_from}' AND '${query.payment_date_to}'`;
-    } else if (query.payment_date_from) {
-      sql += ` AND Date(tickets.payment_date) >= '${query.payment_date_from}'`;
-    } else if (query.payment_date_to) {
-      sql += ` AND Date(tickets.payment_date) <= '${query.payment_date_to}'`;
-    }
 
-    //  pagination
+    if (query.assessment_item) sql += ` AND revenue_invoices.taxpayer_name = '${query.assessment_item}'`;
     const totalRecordsQuery = await db.query(sql, {
       type: Sequelize.QueryTypes.SELECT,
     });
-    const count = totalRecordsQuery.length;
-    sql += ` LIMIT ${perPage} OFFSET ${offset}`;
+    // console.log("Final SQL Query:", sql);
 
-    // Execute the final query with limit and offset
+    const count = totalRecordsQuery.length;
+    // console.log({ count });
     const result = await db.query(sql, { type: Sequelize.QueryTypes.SELECT });
 
     return {
-      result,
-      year: year,
-      current: page,
       count,
-      pages: Math.ceil(count / perPage),
-      agent_id: query.agent_id,
-      ticket_type: query.ticket_type,
-      location: query.location,
-      payment_status: query.payment_status,
-      payment_date_from: query.payment_date_from,
-      payment_date_to: query.payment_date_to,
+      result,
     };
   }
 }

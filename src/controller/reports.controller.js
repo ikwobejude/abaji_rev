@@ -24,7 +24,7 @@ module.exports = {
   ticketReports: async function (req, res) {
     try {
       const response = await reports.ticketReport(req.query);
-      //   console.log(response)
+        // console.log(response)
       res.status(200).render("./report/ticket_report", { ...response });
     } catch (error) {
       console.error(error);

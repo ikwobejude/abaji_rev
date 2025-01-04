@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = {
 
   clientServiceSchema: Joi.object({
-    client_name: Joi.string().required().messages({
+    client: Joi.string().required().messages({
       "any.required": `Client is required`,
       "string.empty": `Client cannot be empty`,
     }),

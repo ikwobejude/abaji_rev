@@ -24,7 +24,7 @@ Router.get('/success', middleware.requireAuth, app.loginSuccess)
 
 Router.route('/clients')
 .get(function(req, res) {
-    res.status(200).render('./blank')
+    res.status(200).render('./client')
 })
 .post((req, res, next) => {
     // console.log(req.body)

@@ -39,40 +39,27 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
-                                                        <label for="invoice" class="form-label">Invoice</label>
-                                                        <input type="text" id="invoice" name="assessment_no"
+                                                        <label for="assessment_item" class="form-label">Assessment
+                                                            Item</label>
+                                                        <input type="text" id="assessment_item" name="assessment_item"
                                                             class="form-control" value="" />
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label for="paymentRef" class="form-label">Payment Ref</label>
-                                                        <input type="text" id="paymentRef" name="payment_ref"
-                                                            class="form-control" value="" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label for="paymentMethod" class="form-label">Payment
-                                                            Method</label>
-                                                        <input type="text" id="paymentMethod" name="payment_method"
-                                                            class="form-control" value="" />
-                                                    </div>
-                                                </div>
+
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="paymentDateFrom" class="form-label">Payment Date
                                                             From</label>
-                                                        <input type="date" id="paymentDateFrom" name="payment_date_from"
-                                                            class="form-control" value="" />
+                                                        <input type="date" id="from" name="from" class="form-control"
+                                                            value="" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="paymentDateTo" class="form-label">Payment Date
                                                             To</label>
-                                                        <input type="date" id="paymentDateTo" name="payment_date_to"
-                                                            class="form-control" value="" />
+                                                        <input type="date" id="to" name="to" class="form-control"
+                                                            value="" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -88,6 +75,9 @@
                                     <div class="card-header">
                                         <div class="row">
                                             <div class="col-6">Payment Report</div>
+                                            <div class="col-6 text-end">
+                                                <span id="paymentCount">Total : ( <%= count %> )</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -95,37 +85,26 @@
                                         <table class="datatables-basic table">
                                             <thead>
                                                 <tr>
-                                                    <th>Batch No</th>
-                                                    <th>Bill Ref</th>
-                                                    <th>Agent Name </th>
-                                                    <th>Ticket Type</th>
+                                                    <th>Revenue Name</th>
                                                     <th>Amount Paid</th>
-                                                    <th>Date Paid</th>
-                                                    <!-- <th>Amount Yearly</th> -->
+                                                    <th>Payment Date </th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <% result.forEach(item=> { %>
                                                     <tr>
                                                         <td>
-                                                            <%= item.batch %>
+                                                            <%= item.taxpayer_name %>
                                                         </td>
                                                         <td>
-                                                            <%= item.invoice_number %>
+                                                            <%= item.amount %>
                                                         </td>
+
                                                         <td>
-                                                            <%= item.agent_name %>
+                                                            <%= item.payment_date %>
                                                         </td>
-                                                        <td>
-                                                            <%= item.ticket_type %>
-                                                        </td>
-                                                        <td>
-                                                            <%= item.amount_paid %>
-                                                        </td>
-                                                        <td>
-                                                            <%= item.payment_date.toLocaleDateString() %>
-                                                        </td>
-                                                       
+
                                                     </tr>
                                                     <% }) %>
                                             </tbody>

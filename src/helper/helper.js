@@ -1,3 +1,4 @@
+const fs = require("fs");
 module.exports = {
     getDayWeekMonth: () => {
         const date = new Date();
@@ -37,6 +38,23 @@ module.exports = {
         i++;
         }
         return s;
+    },
+
+    deleteFile: function (filePath) {
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+          if (err) {
+            console.error(`File not found: ${filePath}`);
+            return;
+          }
+    
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error(`Error deleting file: ${filePath}`);
+            } else {
+              console.log(`Deleted: ${filePath}`);
+            }
+          });
+        });
     },
     
 }

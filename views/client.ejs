@@ -5,6 +5,27 @@
 
 <head>
   <%- include('./layout/client/head') %>
+  <style>
+    .fieldset {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      margin: 10em;
+    }
+
+    .fieldset h1 {
+      position: absolute;
+      top: 0;
+      font-size: 18px;
+      line-height: 1;
+      margin: -9px 0 0;
+      /* half of font-size */
+      background: #fff;
+      padding: 0 3px;
+    }
+  </style>
 </head>
 
 <body style="background-color:white">
@@ -15,102 +36,90 @@
       <div class="row justify-content-center">
         <!-- Login -->
         <div class="card " style="box-shadow:none; padding-left: 50px; padding-right: 50px;">
-          <div class="card-body " style="">
-            <!-- Logo -->
-            <div class="app-brand justify-content-center mb-6">
-              <a href="index.html" class="app-brand-link">
-                <img src="/smartapps_logo.png" alt="abaji local government" style="width: 150px;">
-                <span class="app-brand-text demo text-heading fw-bold"></span>
-              </a>
-            </div>
-            <!-- /Logo -->
-            <!-- <h4 class="mb-1">Login 👋</h4> -->
+          <div class="fieldset">
+            <h1>CREATE NEW SERVICE CLIENT</h1>
+            <div class="card-body " style="">
+              <!-- Logo -->
+              <div class="app-brand justify-content-center mb-6">
+                <a href="/" class="app-brand-link">
+                  <img src="/smartapps_logo.png" alt="abaji local government" style="width: 150px;">
+                  <span class="app-brand-text demo text-heading fw-bold"></span>
+                </a>
+              </div>
+              <!-- /Logo -->
+              <!-- <h4 class="mb-1">Login 👋</h4> -->
 
-            <form id="create_client" class="row g-6" onsubmit="return false">
-              <div class="col-12">
-                <label class="form-label" for="client_name">ORGAINSATION NAME <span style="color: red;">*</span></label>
-                <input type="text" id="client_name" name="client_name" class="form-control"
-                  placeholder="ORGAINSATION NAME" value="" required />
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="client_email">ORGAINSATION EMAIL</label>
-                <input type="email" id="client_email" name="client_email" class="form-control"
-                  placeholder="ORGAINSATION EMAIL ADDRESS" value="" required />
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="client_phone">ORGAINSATION PHONE</label>
-                <input type="text" id="client_phone" name="client_phone" maxlength="11"
-                  class="form-control phone-number-mask" placeholder="ORGAINSATION PHONE"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="" />
-              </div>
-
-              <div class="divider">
-                <div class="divider-text">ADMIN INFO</div>
-              </div>
-              <div class="col-12 col-md-4">
-                <label class="form-label" for="admin_surname">SURNAME <span style="color: red;">*</span></label>
-                <input type="text" id="admin_surname" name="admin_surname" class="form-control"
-                  placeholder="ADMIN SURNAME" value="" required />
-              </div>
-              <div class="col-12 col-md-4">
-                <label class="form-label" for="admin_middlename">MIDDLENAME</label>
-                <input type="text" id="admin_middlename" name="admin_middlename" class="form-control"
-                  placeholder="MIDDLE NAME" />
-              </div>
-              <div class="col-12 col-md-4">
-                <label class="form-label" for="admin_first_name">FIRST NAME <span style="color: red;">*</span></label>
-                <input type="text" id="admin_first_name" name="admin_first_name" class="form-control"
-                  placeholder="ADMIN FIRST NAME" value="" required />
-              </div>
-
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="client_admin_email">EMAIL</label>
-                <input type="email" id="client_admin_email" name="client_admin_email" class="form-control"
-                  placeholder="" value="" />
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label" for="client_admin_phone">PHONE NUMBER</label>
-                <div class="input-group">
-                  <span class="input-group-text">+234</span>
-                  <input type="text" id="client_admin_phone" maxlength="11" name="client_admin_phone"
-                    class="form-control phone-number-mask" placeholder="202 5551 0111"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+              <form id="create_client" class="row g-6" onsubmit="return false">
+                <div class="col-12">
+                  <label class="form-label" for="client_name">ORGAINSATION NAME <span style="color: red;">*</span></label>
+                  <input type="text" id="client_name" name="client_name" class="form-control"
+                    placeholder="ORGAINSATION NAME" value="" required />
                 </div>
-              </div>
-              <div class="col-12 col-md-12">
-                <label class="form-label" for="modalEditUserPhone">CLIENT LOGO</label>
-                <input type="file" id="client_logo" name="client_logo" class="form-control" accept="image/*" required />
-              </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="client_email">ORGAINSATION EMAIL</label>
+                  <input type="email" id="client_email" name="client_email" class="form-control"
+                    placeholder="ORGAINSATION EMAIL ADDRESS" value="" required />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="client_phone">ORGAINSATION PHONE</label>
+                  <input type="text" id="client_phone" name="client_phone" maxlength="11"
+                    class="form-control phone-number-mask" placeholder="ORGAINSATION PHONE"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="" />
+                </div>
 
+                <div class="divider">
+                  <div class="divider-text">ADMIN INFO</div>
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label" for="admin_surname">SURNAME <span style="color: red;">*</span></label>
+                  <input type="text" id="admin_surname" name="admin_surname" class="form-control"
+                    placeholder="ADMIN SURNAME" value="" required />
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label" for="admin_middlename">MIDDLENAME</label>
+                  <input type="text" id="admin_middlename" name="admin_middlename" class="form-control"
+                    placeholder="MIDDLE NAME" />
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label" for="admin_first_name">FIRST NAME <span style="color: red;">*</span></label>
+                  <input type="text" id="admin_first_name" name="admin_first_name" class="form-control"
+                    placeholder="ADMIN FIRST NAME" value="" required />
+                </div>
 
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="client_admin_email">EMAIL</label>
+                  <input type="email" id="client_admin_email" name="client_admin_email" class="form-control"
+                    placeholder="" value="" />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="client_admin_phone">PHONE NUMBER</label>
+                  <div class="input-group">
+                    <span class="input-group-text">+234</span>
+                    <input type="text" id="client_admin_phone" maxlength="11" name="client_admin_phone"
+                      class="form-control phone-number-mask" placeholder="202 5551 0111"
+                      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                  </div>
+                </div>
+                <div class="col-12 col-md-12">
+                  <label class="form-label" for="modalEditUserPhone">CLIENT LOGO</label>
+                  <input type="file" id="client_logo" name="client_logo" class="form-control" accept="image/*" required />
+                </div>
 
-              <p id="status"></p>
+                <p id="status"></p>
+                <div class="col-12 text-center">
+                  <!-- <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp; -->
+                  <button type="submit" id="submit" class="btn btn-primary me-3">Submit</button>
 
-              <!-- <div id="progress">
-                          <p id="progressText">Progress: 0%</p>
-                          <progress id="progressBar" value="0" max="100"></progress>
-                      </div> -->
-              <!-- <div class="col-12">
-                        <div class="form-check form-switch">
-                          <input type="checkbox" class="form-check-input" id="editBillingAddress" />
-                          <label for="editBillingAddress" class="switch-label">Use as a billing address?</label>
-                        </div>
-                      </div> -->
-              <div class="col-12 text-center">
-                <!-- <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp; -->
-                <button type="submit" id="submit" class="btn btn-primary me-3">Submit</button>
+                </div>
+              </form>
 
-              </div>
-            </form>
-
-            <p class="text-center">
-              <span>New on our platform?</span>
-              <a href="javascript:;">
-                <span>Create an account</span>
-              </a>
-            </p>
-
-
+              <p class="text-center">
+                <span>Already have an account?</span>
+                <a href="/login">
+                  <span>login</span>
+                </a>
+              </p>
+            </div>
           </div>
         </div>
         <!-- /Register -->

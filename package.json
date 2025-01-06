@@ -25,7 +25,7 @@
     "express": "^4.19.2",
     "express-messages": "^1.0.1",
     "express-xml-bodyparser": "^0.3.0",
-    "jimp": "^1.6.0",
+    "jimp": "^0.22.12",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.4.0",

@@ -9,9 +9,7 @@ const user = new User();
 const setup = new Setup();
 module.exports = {
   getRevenueItemByYear: async function (req, res) {
-    const response = await revenue.revenueByYear(req.query);
-    // const batchResponse = await revenue.revenueByBatch(req.query);
-    // console.log(batchResponse);
+    const response = await revenue.revenueByYear({...req.query, service_id: req.user.service_id});
     res.status(200).render("./revenue/cooperative/upload_records", {
       ...response,
     });

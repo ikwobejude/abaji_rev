@@ -25,6 +25,9 @@ class Revenue extends Bud_pay {
         ["rate_year", "year"],
         [Sequelize.fn("COUNT", Sequelize.col("*")), "total"],
       ],
+      where: {
+        service_id: data.service_id
+      },
       group: ["rate_year"],
       raw: true,
     });
@@ -34,6 +37,9 @@ class Revenue extends Bud_pay {
         [Sequelize.fn("COUNT", Sequelize.col("*")), "total"],
         [Sequelize.fn("SUM", Sequelize.col("ass_status")), "status_count"],
       ],
+      where: {
+        service_id: data.service_id
+      },
       group: ["batch"],
       raw: true,
     });

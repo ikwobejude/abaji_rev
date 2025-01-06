@@ -25,23 +25,42 @@ class Client {
     return new Date().getTime().toString(36);
   }
 
-  acronyms(name) {
+  acronyms(str) {
+    // console.log({str})
     // Trim any extra spaces
-    name = name.trim();
+    // const name = str.trim();
+    if (!str) return "";  // Handle empty string
 
-    // Check if it's a single word (no spaces)
-    if (name.indexOf(" ") === -1) {
-      // Return the first 4 characters, uppercased
-      return name.substring(0, 4).toUpperCase();
+    if (str.indexOf(" ") === -1) {
+        return str.slice(0, 4).toUpperCase();
     } else {
-      // If more than one word, return the initials
-      let matches = name.match(/\b(\w)/g); // Get the first letter of each word
-      return matches.join("").toUpperCase(); // Join and return in uppercase
+        let matches = str.match(/\b(\w)/g) || [];
+        return matches.join("").toUpperCase();
     }
   }
 
+  async resizeImg(file) {
+    const outputPath = path.join(__dirname, "../../public/uploads/");
+
+    // Get the uploaded image file path
+    const imagePath = file.path;
+    // Read and process the image using Jimp
+    // console.log({ imagePath });
+    const image = await Jimp.read(imagePath);
+    // console.log({ image });
+
+    // Perform image processing, like resizing, converting, etc.
+    image
+      .resize(612, 383) // Resize the image to 250px width
+      .quality(80) // Set image quality to 80
+      // .greyscale()             // Apply greyscale filter
+      .write(path.join(outputPath, file.filename));
+
+    return file.filename;
+  }
+
   async create(value) {
-    console.log({ value });
+    // console.log({ value });
     emitter.emit("beforeCreateClientService", value);
 
     // Check for duplicate email or phone
@@ -66,12 +85,15 @@ class Client {
     }
 
     const adminPss = this.password();
+  console.log(adminPss, "After resize")
     await this.resizeImg(value);
+    // console.log(adminPss, "Before resize")
+
 
     // Proceed with client creation
     await this.client_service.create({
-      client: value.client_name,
-      service_code: this.acronyms(value.client_name),
+      client: value.client,
+      service_code: this.acronyms(value.client),
       client_phone: value.client_phone,
       client_email: value.client_email,
       country: value.country_id,
@@ -85,23 +107,24 @@ class Client {
       service_logo: `/uploads/${value.filename}`,
       client_address: "Address",
       service_authentication_code: this.acronyms(value.client_name),
+      permissions: "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65"
     });
 
-    const details = {
-      client: value.client_name,
-      email: value.client_email.toLowerCase(),
-      client_admin_email:
-        "admin@" + this.acronyms(value.client_name).toLowerCase(),
-      admin_pass: adminPss,
-      url: "",
-      Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
-      Email: "info@authhub.com",
-      Phone: "070 00000 000",
-      template: "client_signup",
-      subject: "Client email registration notification",
-    };
+    // const details = {
+    //   client: value.client_name,
+    //   email: value.client_email.toLowerCase(),
+    //   client_admin_email:
+    //     "admin@" + this.acronyms(value.client_name).toLowerCase(),
+    //   admin_pass: adminPss,
+    //   url: "",
+    //   Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
+    //   Email: "info@authhub.com",
+    //   Phone: "070 00000 000",
+    //   template: "client_signup",
+    //   subject: "Client email registration notification",
+    // };
 
-    emitter.emit("afterCreatingClientService", details);
+    // emitter.emit("afterCreatingClientService", details);
 
     return {
       status: true,
@@ -110,25 +133,7 @@ class Client {
     };
   }
 
-  async resizeImg(file) {
-    const outputPath = path.join(__dirname, "../../public/uploads/");
-
-    // Get the uploaded image file path
-    const imagePath = file.path;
-    // Read and process the image using Jimp
-    console.log({ imagePath });
-    const image = await Jimp.read(imagePath);
-    console.log({ image });
-
-    // Perform image processing, like resizing, converting, etc.
-    image
-      .resize(612, 383) // Resize the image to 250px width
-      .quality(80) // Set image quality to 80
-      // .greyscale()             // Apply greyscale filter
-      .write(path.join(outputPath, file.filename));
-
-    return file.filename;
-  }
+  
 
   async setup(data) {
     // console.log(data)

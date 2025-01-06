@@ -2,7 +2,7 @@
 on:
  push:
     branches:
-      - main
+      - client
 name: Production Deploy
 jobs:
   FTP-Deploy-Action:
@@ -16,7 +16,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@4.3.2
       with:
         server: ftp.abajirevenue.com
-        username: paul@abajirevenue.com
-        password: ${{ secrets.PSW }}
+        username: demo@abajirevenue.com
+        password: ${{ secrets.PSW1 }}
   
         

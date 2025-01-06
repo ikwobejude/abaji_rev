@@ -11,11 +11,9 @@ class Reports {
   async paymentReport(query) {
     let perPage = 20; // number of records per page
     var page = query.page || 1;
-    let offset = perPage * page - perPage;
-    let year = query.current_year
-      ? query.current_year
-      : new Date().getFullYear();
-
+    let offset = perPage * (page - 1);
+    let year = query.current_year ? query.current_year : new Date().getFullYear();
+    
     let sql = `
         SELECT
             api_payments.PaymentLogId,
@@ -26,37 +24,92 @@ class Reports {
             api_payments.PaymentDate,
             api_payments.PaymentCurrency
         FROM api_payments
-        WHERE api_payments.service_id IS NOT NULL`;
-
+        WHERE api_payments.service_id = :service_id`;
+    
+    // Dynamic Filtering
     if (query.assessment_no)
-      sql += ` AND api_payments.CustReference = "${query.assessment_no}"`;
+      sql += ` AND api_payments.CustReference = :assessment_no`;
     if (query.payment_ref)
-      sql += ` AND api_payments.PaymentLogId = "${query.payment_ref}"`;
+      sql += ` AND api_payments.PaymentLogId = :payment_ref`;
     if (query.payment_method)
-      sql += ` AND api_payments.PaymentMethod = "${query.payment_method}"`;
-
+      sql += ` AND api_payments.PaymentMethod = :payment_method`;
+    
+    // Date Filtering
     if (query.payment_date_from && query.payment_date_to) {
-      sql += ` AND Date(api_payments.PaymentDate) BETWEEN '${query.payment_date_from}' AND '${query.payment_date_to}'`;
+      sql += ` AND Date(api_payments.PaymentDate) BETWEEN :payment_date_from AND :payment_date_to`;
     } else if (query.payment_date_from) {
-      sql += ` AND Date(api_payments.PaymentDate) >= '${query.payment_date_from}'`;
+      sql += ` AND Date(api_payments.PaymentDate) >= :payment_date_from`;
     } else if (query.payment_date_to) {
-      sql += ` AND Date(api_payments.PaymentDate) <= '${query.payment_date_to}'`;
+      sql += ` AND Date(api_payments.PaymentDate) <= :payment_date_to`;
     }
-
+    
     if (query.from && query.to) {
-      sql += ` AND Date(api_payments.logged_date) >= '${query.from}'`;
-      sql += ` AND Date(api_payments.logged_date) <= '${query.to}'`;
+      sql += ` AND Date(api_payments.logged_date) BETWEEN :from AND :to`;
+    } else if (query.from) {
+      sql += ` AND Date(api_payments.logged_date) = :from`;
     }
-
-    if (query.from && !query.to) {
-      sql += ` AND Date(api_payments.logged_date) = '${query.from}'`;
-    }
-
-    const result = await db.query(sql, { type: Sequelize.QueryTypes.SELECT });
-    sql += ` LIMIT ${perPage} OFFSET ${offset}`;
-    const totalRecords = await db.query(sql, {
+    
+    // Ordering (optional, for consistent pagination)
+    sql += ` ORDER BY api_payments.PaymentDate DESC`;
+    
+    // Main Query with Pagination
+    let paginatedSQL = sql + ` LIMIT ${perPage} OFFSET ${offset}`;
+    
+    const result = await db.query(paginatedSQL, {
+      replacements: {
+        assessment_no: query.assessment_no,
+        payment_ref: query.payment_ref,
+        payment_method: query.payment_method,
+        payment_date_from: query.payment_date_from,
+        payment_date_to: query.payment_date_to,
+        from: query.from,
+        to: query.to,
+        service_id: query.service_id
+      },
       type: Sequelize.QueryTypes.SELECT,
     });
+    
+    // Total Record Count (without LIMIT and OFFSET)
+    let countSQL = `
+        SELECT COUNT(*) as total
+        FROM api_payments
+        WHERE api_payments.service_id = :service_id`;
+    
+    if (query.assessment_no)
+      countSQL += ` AND api_payments.CustReference = :assessment_no`;
+    if (query.payment_ref)
+      countSQL += ` AND api_payments.PaymentLogId = :payment_ref`;
+    if (query.payment_method)
+      countSQL += ` AND api_payments.PaymentMethod = :payment_method`;
+    
+    if (query.payment_date_from && query.payment_date_to) {
+      countSQL += ` AND Date(api_payments.PaymentDate) BETWEEN :payment_date_from AND :payment_date_to`;
+    } else if (query.payment_date_from) {
+      countSQL += ` AND Date(api_payments.PaymentDate) >= :payment_date_from`;
+    } else if (query.payment_date_to) {
+      countSQL += ` AND Date(api_payments.PaymentDate) <= :payment_date_to`;
+    }
+    
+    if (query.from && query.to) {
+      countSQL += ` AND Date(api_payments.logged_date) BETWEEN :from AND :to`;
+    } else if (query.from) {
+      countSQL += ` AND Date(api_payments.logged_date) = :from`;
+    }
+    
+    const totalRecords = await db.query(countSQL, {
+      replacements: {
+        assessment_no: query.assessment_no,
+        payment_ref: query.payment_ref,
+        payment_method: query.payment_method,
+        payment_date_from: query.payment_date_from,
+        payment_date_to: query.payment_date_to,
+        from: query.from,
+        to: query.to,
+        service_id: query.service_id
+      },
+      type: Sequelize.QueryTypes.SELECT,
+    });
+    
     const count = totalRecords.length;
 
     return {
@@ -163,7 +216,7 @@ class Reports {
     FROM revenue_invoices
     LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
     LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
-    WHERE 1 = 1
+    WHERE revenue_invoices.service_id = ${query.service_id}
 `;
 
    if (query.from && query.to) {

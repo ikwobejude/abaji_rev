@@ -2,7 +2,24 @@ const jwt = require("jsonwebtoken");
 const { Sequelize, QueryTypes } = require("sequelize");
 const db = require('../db/connection')
 const Users = require('../model/Users');
+const clientService = require("../model/Client");
 const Op = Sequelize.Op;
+// getClientDetails
+// class AuthMiddleware {
+//     async getClientDetails (serviceId) {
+//         return await client_service.findOne({
+//             attributes: ['client', 'service_id', 'service_logo', 'service_status'],
+//             where: { service_id: serviceId },
+//             raw: true
+//         });
+//     }
+    
+//     static async requireAuth() {
+
+//     }
+// }
+
+
 
 module.exports =  {
     requireAuth: async (req, res, next) => {
@@ -53,19 +70,20 @@ module.exports =  {
                         }
             
                         if(user[0].inactive == 2) {
-                            console.log("account is inactive")
+                            // console.log("account is inactive")
                             req.flash("danger", "Your account has been deactivated, contact admin for more detail");
                             return res.redirect('/login')
                         }
     
+                        // console.log(user)
                         // if(user.inactive == 0 ){
                         //     req.flash("Please change reset your password");
                         //     return res.redirect('/user/change_password')
                         // }
     
-                       
-                        res.locals.user = user[0];
-                        req.user = user[0];
+                        const client = await getClientDetails(user[0]?.service_id);
+                        res.locals.user = { ...user[0], ...client } ;
+                        req.user = { ...user[0], ...client };
             
                         next()
                         // }
@@ -184,6 +202,12 @@ module.exports =  {
     }
 }
 
-
+const getClientDetails = async (serviceId) => {
+    return await clientService.findOne({
+        attributes: ['client', 'service_id', 'service_logo', 'service_status'],
+        where: { service_id: serviceId },
+        raw: true
+    });
+};
 
 // chck current user

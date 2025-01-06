@@ -4,7 +4,7 @@ const reports = new Reports();
 
 module.exports = {
   paymentsReports: async function (req, res) {
-    const response = await reports.paymentReport(req.query);
+    const response = await reports.paymentReport({ service_id:req.user.service_id, ...req.query });
     // res.status(200).json({...response})
     res.status(200).render("./report/payment_report", { ...response });
   },
@@ -23,7 +23,7 @@ module.exports = {
   },
   ticketReports: async function (req, res) {
     try {
-      const response = await reports.ticketReport(req.query);
+      const response = await reports.ticketReport({ service_id:req.user.service_id, ...req.query });
         // console.log(response)
       res.status(200).render("./report/ticket_report", { ...response });
     } catch (error) {

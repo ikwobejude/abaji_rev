@@ -2,9 +2,13 @@ const Ticketing = require("../classes/ticket.service")
 const Wallet = require("../classes/wallet.service")
 const buildingService = require("../classes/building.service")
 const businessService = require("../classes/business.service")
+const setupService = require("../classes/setup.service")
 const { validateTickets } = require("../lib/input_validation")
+
+// Contructors
 const Ticket = new Ticketing()
 const wallet = new Wallet()
+const setups = new setupService()
 
 class apiController {
     static async apiResetPassword() {}
@@ -163,6 +167,45 @@ class apiController {
             });
         }
     }
+
+    // Locations
+
+    static async state(req, res) {
+        const response = await setups.state()
+        res.status(200).json({
+          status: true,
+          data: response
+        })
+      }
+
+    static async lga(req, res) {
+        const response = await setups.lga(req.params.state_id)
+        res.status(200).json({
+          status: true,
+          data: response
+        })
+      }
+      
+      static async fetchArea(req, res) {
+        try {
+          const { lga } = req.params;
+          if (!lga) {
+            throw new Error('LGA is required');
+          }
+    
+          const response = await Setups.fetchAreas(lga); // Fetch areas from service
+          res.status(200).json({
+            status: true,
+            data: response
+          });
+        } catch (error) {
+          console.error("Error in fetchArea:", error.message);
+          res.status(400).json({
+            status: false,
+            message: error.message
+          });
+        }
+      }
 
 }
 module.exports = apiController

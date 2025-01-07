@@ -1,11 +1,14 @@
 const express = require('express');
 const middleware = require('../middleware/middleware');
 const apiController = require('../controller/api.controller');
+const authController = require('../controller/auth.controller');
 const { interSwitchControllers } = require('../controller/interswitch.controller');
 
 
 const router = express.Router();
 
+
+router.post('/login', authController.mobileLogin);
 
 router.route('/reset_password')
 .post(middleware.mobileMiddleware, apiController.apiResetPassword);
@@ -29,6 +32,12 @@ router.post('/inter/switch/collection_service/:service_id', interSwitchControlle
 // Building meta data
 router.get('/building_categories', middleware.mobileMiddleware, apiController.buildingCategories);
 router.get('/building_type', middleware.mobileMiddleware, apiController.buildingTypes);
+
+// location
+router.get('/state', middleware.mobileMiddleware, apiController.state)
+router.get('/lga/:state_id', middleware.mobileMiddleware, apiController.lga)
+// router.get('/area/:lga',  middleware.mobileMiddleware, api.settings.fetchArea)
+// router.get('/streets/:area',  middleware.mobileMiddleware, api.settings.streets)
 
 // Business meta data 
 router.get('/business_categories', middleware.mobileMiddleware, apiController.businessCategories);

@@ -4,25 +4,19 @@ const db = require('../db/connection')
 const Users = require('../model/Users');
 const clientService = require("../model/Client");
 const Op = Sequelize.Op;
-// getClientDetails
-// class AuthMiddleware {
-//     async getClientDetails (serviceId) {
-//         return await client_service.findOne({
-//             attributes: ['client', 'service_id', 'service_logo', 'service_status'],
-//             where: { service_id: serviceId },
-//             raw: true
-//         });
-//     }
-    
-//     static async requireAuth() {
-
-//     }
-// }
 
 
+class AuthMiddleware {
 
-module.exports =  {
-    requireAuth: async (req, res, next) => {
+    async getClientDetails(serviceId) {
+        return await clientService.findOne({
+            attributes: ['client', 'service_id', 'service_logo', 'service_status'],
+            where: { service_id: serviceId },
+            raw: true
+        });
+    }
+
+    static async requireAuth(req, res, next){
         // console.log(req.cookies)
         // return
         try {
@@ -34,7 +28,7 @@ module.exports =  {
         
             if (token) {
                 try {
-                    const decodedToken = await  jwt.verify(token, process.env.JWT_SECRET);
+                    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
                     // console.log({userId: decodedToken.userId})
                     if(decodedToken.userId) {
                         let user = await db.query(
@@ -81,7 +75,7 @@ module.exports =  {
                         //     return res.redirect('/user/change_password')
                         // }
     
-                        const client = await getClientDetails(user[0]?.service_id);
+                        const client = await this.getClientDetails(user[0]?.service_id);
                         res.locals.user = { ...user[0], ...client } ;
                         req.user = { ...user[0], ...client };
             
@@ -108,12 +102,9 @@ module.exports =  {
             console.error(error)
         }
         
-    },
-    
-    
-    
-    
-    checkUser: async (req, res, next) => {
+    }
+
+    static async checkUser(req, res, next) {
         // console.log(req.cookies.jwt)
         // return
         const token = req.cookies.jwt;
@@ -146,10 +137,9 @@ module.exports =  {
             res.locals.user = null;
             next()
         }
-    },
-    
-    
-    checkChangePassword: async(req, res, next) => {
+    }
+
+    static async checkChangePassword(req, res, next) {
         if(req.user.inactive == 0 ){
             req.flash("Please change reset your password");
             res.redirect('/user/change_password')
@@ -157,10 +147,10 @@ module.exports =  {
             next()
         }
     
-    },
+    }
 
 
-    mobileMiddleware: async(req, res, next) => {
+    static async mobileMiddleware(req, res, next) {
         try {
             if(!req.headers.authorization) throw Error('Invalid authorization token');
     
@@ -200,14 +190,12 @@ module.exports =  {
         }
        
     }
+
 }
 
-const getClientDetails = async (serviceId) => {
-    return await clientService.findOne({
-        attributes: ['client', 'service_id', 'service_logo', 'service_status'],
-        where: { service_id: serviceId },
-        raw: true
-    });
-};
+
+
+module.exports = AuthMiddleware
+
 
 // chck current user

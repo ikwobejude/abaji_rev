@@ -81,12 +81,15 @@ class Setup {
   }
 
   // State method
-  async state(query) {
+  async state() {
     return await this.states.findAll({ raw: true });
   }
 
-  async lga(query) {
-    return await this.lgas.findAll({ raw: true });
+  async lga(id) {
+    return await this.lgas.findAll({ 
+      where: { state_id: id },
+      raw: true 
+    });
   }
 
   async ward(query) {

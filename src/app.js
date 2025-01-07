@@ -61,6 +61,7 @@ const setupRouter = require("./router/setup.routes");
 const walletRouter = require("./router/wallet.routes");
 const reportRouter = require("./router/report.routes");
 const budRouter = require("./router/budpay.routes");
+
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
 

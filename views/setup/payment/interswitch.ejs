@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+    data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+
+<head>
+    <%- include('../../layout/head') %>
+</head>
+
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <%- include('../../layout/aside') %>
+                <!-- / Menu -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Navbar -->
+                    <%- include('../../layout/side') %>
+                        <!-- / Navbar -->
+
+                        <!-- Content wrapper -->
+                        <div class="content-wrapper">
+                            <!-- Content -->
+                            <div class="container-xxl flex-grow-1 container-p-y">
+                                <!-- DataTable with Buttons -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-6"></div>
+                                            <div class="col-6" style="text-align: end">
+                                                <button class="create-new btn btn-primary waves-effect waves-light"
+                                                    data-bs-toggle="offcanvas" data-bs-target="#add-new-record">
+                                                    <i class="ti ti-plus me-sm-1"></i>
+                                                    <span class="d-none d-sm-inline-block">Add New Record</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-datatable table-responsive pt-0">
+                                        <table id="" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>MID</th>
+                                                    <th>Service ID</th>
+                                                    <th style="width: 20%">created by</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% data.forEach((inter_switch)=> { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= inter_switch.mid %>
+                                                        </td>
+                                                        <td>
+                                                            <%= inter_switch.service_id %>
+                                                        </td>
+                                                        <td>
+                                                            <%= inter_switch.user.name %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- / DataTable with Buttons -->
+
+                                <!-- Modal to add new record -->
+                                <div class="offcanvas offcanvas-end" id="add-new-record">
+                                    <div class="offcanvas-header border-bottom">
+                                        <h5 class="offcanvas-title" id="exampleModalLabel">
+                                            New Record
+                                        </h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body flex-grow-1">
+                                        <form class="add-new-record pt-0 row g-2" id="form-interswitch-post"
+                                            onsubmit="submitInterswitchPost(event)">
+                                            <!-- MID -->
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="mid">MID</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span id="mid-icon" class="input-group-text"><i
+                                                            class="ti ti-briefcase"></i></span>
+                                                    <input type="number" id="mid" name="mid"
+                                                        class="form-control dt-name" placeholder="Enter MID" required />
+                                                </div>
+                                            </div>
+
+                                            <!-- Service ID -->
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="service_id">Service ID</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span id="service-id-icon" class="input-group-text"><i
+                                                            class="ti ti-id-badge"></i></span>
+                                                    <input type="text" id="service_id" name="service_id"
+                                                        class="form-control dt-name" placeholder="Enter Service ID"
+                                                        required />
+                                                </div>
+                                            </div>
+
+                                            <!-- Created By -->
+                                            <!-- <div class="col-sm-12">
+                                                <label class="form-label" for="created_by">Created By</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span id="created-by-icon" class="input-group-text"><i
+                                                            class="ti ti-user"></i></span>
+                                                    <input type="text" id="created_by" name="created_by"
+                                                        class="form-control dt-name" placeholder="Enter Created By"
+                                                        required />
+                                                </div>
+                                            </div> -->
+
+                                            <!-- Submit and Cancel Buttons -->
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                                                    <span class="spinner-border d-none" role="status"
+                                                        aria-hidden="true"></span>&nbsp; Submit
+                                                </button>
+                                                <button type="reset" class="btn btn-outline-secondary"
+                                                    data-bs-dismiss="offcanvas">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                                <!-- / Modal to add new record -->
+
+                                <!-- Modal to edit record -->
+                                <div class="offcanvas offcanvas-end" id="edit-record">
+                                    <div class="offcanvas-header border-bottom">
+                                        <h5 class="offcanvas-title" id="exampleModalLabel">
+                                            Edit Record
+                                        </h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body flex-grow-1">
+                                        <form class="edit-record pt-0 row g-2" id="form-edit-record"
+                                            onsubmit="return false">
+                                            <input type="hidden" id="edit-id" name="id" />
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="edit-lga">LOCAL GOVERNMENT</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span id="edit-lga2" class="input-group-text"><i
+                                                            class="ti ti-briefcase"></i></span>
+                                                    <select name="lga" id="edit-lga" class="form-control dt-full-name"
+                                                        required>
+                                                        <option value="">Select LGa</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="edit-ward">Ward</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input type="text" id="edit-ward" name="ward"
+                                                        class="form-control dt-name" placeholder="Ward" aria-label=""
+                                                        required />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                                                    <span class="spinner-border" role="status"
+                                                        aria-hidden="true"></span>&nbsp; Submit
+                                                </button>
+                                                <button type="reset" class="btn btn-outline-secondary"
+                                                    data-bs-dismiss="offcanvas">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / Content -->
+                            <!-- Delete Confirmation -->
+                            <div class="modal fade" id="delete-confirmation-modal" tabindex="-1"
+                                aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteConfirmationLabel">
+                                                Confirm Deletion
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this item?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <%- include('../../layout/footer') %>
+
+                                <!-- Page JS -->
+                                <script src="/assets/js/tables-datatables-basic.js"></script>
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#DataTables_Table_0").DataTable();
+                                    });
+                                    if (document.getElementById("form-interswitch-post")) {
+                                        $(".spinner-border").hide();
+                                        const addForm = document.getElementById("form-interswitch-post");
+
+                                        addForm.addEventListener("submit", async function (e) {
+                                            e.preventDefault();
+                                            $(".spinner-border").show(); 
+
+                                            // Collect form data
+                                            const data = new FormData(addForm);
+                                            const payload = {
+                                                mid: data.get("mid"),
+                                                service_id: data.get("service_id"),
+                                                // created_by: data.get("created_by"),
+                                            };
+
+                                            try {
+                                                const response = await fetch("/setup/inter_switch", {
+                                                    method: "POST",
+                                                    body: JSON.stringify(payload),
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                    },
+                                                });
+
+                                                const result = await response.json();
+                                                $(".spinner-border").hide();
+
+                                                if (response.ok && result.success) {
+                                                    toastr.success(result.message || "Payment setup successful!");
+                                                    setTimeout(() => {
+                                                        location.reload();
+                                                    }, 3000);
+                                                } else {
+                                                    toastr.error(result.message || "Failed to set up payment.");
+                                                }
+                                            } catch (error) {
+                                                $(".spinner-border").hide();
+                                                toastr.error(error.message || "An unexpected error occurred.");
+                                            }
+                                        });
+                                    }
+
+
+                                    // Handle edit button click
+                                 
+                                    // Handle delete confirmation
+                                  
+                                    
+                                </script>
+                        </div>
+                </div>
+        </div>
+    </div>
+</body>
+
+</html>

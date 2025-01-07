@@ -18,4 +18,7 @@ Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);
 
 Router.route("/street").get(setup.getStreets).post(setup.postStreet);
 
+Router.route("/inter_switch")
+  .post(setup.postInterSwitch)
+  .get(setup.fetchInterSwitch);
 module.exports = Router;

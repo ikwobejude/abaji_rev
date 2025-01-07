@@ -4,7 +4,9 @@
       <!-- <span class="app-brand-logo demo"> -->
       <img src="/logo.png" alt="" style="width: 50px; height: 50px;">
       <!-- </span> -->
-      <span class="app-brand-text fw-bold"><%= user.client %></span>
+      <span class="app-brand-text fw-bold">
+        <%= user.client %>
+      </span>
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -50,6 +52,18 @@
               </li>
               <% } %>
 
+                <li class="menu-item">
+                  <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <div data-i18n="Payment Setup">Payment Setup</div>
+                  </a>
+                  <ul class="menu-sub">
+                    <li class="menu-item <%= link == " /setup/ticket_item" ? "active" : "" %>">
+                      <a href="/setup/inter_switch" class="menu-link">
+                        <div data-i18n="Interswitch">Interswitch</div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
 
                 <% let location=link=="/setup/state" ? "active open" : link=="/setup/ward" ? "active open" :
                   link=="/setup/street" ? "active open" : "" %>
@@ -63,11 +77,7 @@
                           <div data-i18n="State">State</div>
                         </a>
                       </li>
-                      <!-- <li class="menu-item">
-                <a href="/setup/lga" class="menu-link">
-                  <div data-i18n="Lga">Lga</div>
-                </a>
-              </li> -->
+
                       <li class="menu-item <%= link == " /setup/ward" ? "active" : "" %>">
                         <a href="/setup/ward" class="menu-link">
                           <div data-i18n="Ward">Ward</div>
@@ -81,13 +91,14 @@
                     </ul>
                   </li>
 
+
         </ul>
       </li>
 
 
       <% let ass=link=="/admin/revenue_upload" ? "active open" : link=="/admin/revenue_upload/view/" +new
         Date().getFullYear() ? "active open" : "" %>
-               <li class="menu-item <%= ass %>">
+        <li class="menu-item <%= ass %>">
           <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons ti ti-file"></i>
             <div data-i18n="Assessment Revenue">Assessment Revenue</div>

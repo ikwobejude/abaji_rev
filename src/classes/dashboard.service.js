@@ -26,7 +26,7 @@ class Admin {
             raw: true
         })
 
-        console.log(expected)
+        // console.log(expected)
         return {
             users,expected: expected[0]
         }

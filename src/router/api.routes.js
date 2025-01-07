@@ -18,18 +18,30 @@ router.route('/generate')
 router.route('/ticket/view_generated_ticket_batch/:batch')
 .get(middleware.mobileMiddleware, apiController.getAllTickets)
 
-
-
 router.route('/ticket/view_ticket/:id')
 .get(middleware.mobileMiddleware, apiController.getTicket)
 
-// router.post('/make/wallet_payment', middleware.mobileMiddleware, apiController.makeBulkPayment)
 router.get('/wallet_balance', middleware.mobileMiddleware, apiController.walletBalance )
-
-router.get('/ticket_types', middleware.mobileMiddleware, apiController.TicketType )
-
-
+router.get('/ticket_types', middleware.mobileMiddleware, apiController.TicketType)
+// inter-switch collection endpoint
 router.post('/inter/switch/collection_service/:service_id', interSwitchControllers)
+
+// Building meta data
+router.get('/building_categories', middleware.mobileMiddleware, apiController.buildingCategories);
+router.get('/building_type', middleware.mobileMiddleware, apiController.buildingTypes);
+
+// Business meta data 
+router.get('/business_categories', middleware.mobileMiddleware, apiController.businessCategories);
+router.get('/business_operation', middleware.mobileMiddleware, apiController.businessOpera);
+router.get('/business_type', middleware.mobileMiddleware, apiController.businessTypes);
+router.get('/business_sizes', middleware.mobileMiddleware, apiController.businessSize);
+router.get('/business_sector', middleware.mobileMiddleware, apiController.businessSector);
+
+router.post('/buildings', middleware.mobileMiddleware, apiController.createBuildings);
+router.post('/business', middleware.mobileMiddleware, apiController.createBusinesses);
+
+
+
 
 
 module.exports= router

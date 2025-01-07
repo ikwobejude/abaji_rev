@@ -1,33 +1,32 @@
 const Ticketing = require("../classes/ticket.service")
 const Wallet = require("../classes/wallet.service")
+const buildingService = require("../classes/building.service")
+const businessService = require("../classes/business.service")
 const { validateTickets } = require("../lib/input_validation")
 const Ticket = new Ticketing()
 const wallet = new Wallet()
-module.exports = {
-    apiResetPassword: async function(req, res) {
-        
-    },
 
-    ticketsBatch: async function (req, res) {
-        // console.log(req.mobileUser.id)
+class apiController {
+    static async apiResetPassword() {}
+    // ticket 
+    static async ticketsBatch(req, res) {
         const response = await Ticket.findByBatch(req.user.id)
         
         res.status(200).json({
             response,
             // rate_year: helper.currentYear
         })
-    },
-    
-    getAllTickets: async function(req, res) {
-        
+    }
+
+    static async getAllTickets() {
         const response =  await Ticket.findALLTickets(req.params.batch, req.user.id)
         res.status(200).json({
             response,
             // rate_year: helper.currentYear
         })
-    },
+    }
 
-    initGenerateTicketMandate: async function(req, res) {
+    static async initGenerateTicketMandate(req, res) {
         try {
             const {value, error} = validateTickets.validate(req.body) 
             // console.log(value)
@@ -46,9 +45,9 @@ module.exports = {
                 message: error.message
             })
         }
-    },
+    }
 
-    getTicket: async function(req, res) {
+    static async getTicket(req, res) {
         const response = await Ticket.findById(req.params.id)
         // console.log(response)
         if (response) {
@@ -62,10 +61,9 @@ module.exports = {
                 ticket_id: req.params.id
             })
         }
-    },
-    
+    }
 
-    TicketType: async function(req, res) {
+    static async TicketType(req, res) {
         try{
             console.log("ticket_type")
             const data = await Ticket.getTicketTypes()
@@ -74,17 +72,15 @@ module.exports = {
                 data
             })
         } catch(error) {
-    
             res.status(500).json({
                 status: false,
                 message: error.message
             })
         }
-        
-    },
+    }
 
-    walletBalance: async function(req, res) {
-        try{
+    static async walletBalance(req, res) {
+        try {
             const balance = await wallet.walletBalance(req.user.id)
            
             res.status(200).json(balance)
@@ -98,5 +94,75 @@ module.exports = {
         
     }
 
-    
+    // Enumeration starts 
+    // Buildings meta data controller
+    static async buildingCategories(req, res) {
+        const response = await buildingService._building_categories(req.query)
+        res.status(200).json({ 
+            status: true,
+            data: response
+        })
+    }
+    static async buildingTypes(req, res) {
+        const response = await buildingService.allBuildingType(req.query)
+        res.status(200).json({ 
+            status: true,
+            data: response 
+        })
+    }
+
+    // Businesses meta data controller
+    static async businessCategories(req, res) {
+        const response = await businessService._business_categories(req.query)
+        res.status(200).json({ status: true, data: response })
+    }
+    static async businessOpera(req, res) {
+        const response = await businessService._business_operation(req.query)
+        res.status(200).json({ status: true, data: response })
+    }
+    static async businessTypes(req, res) {
+        const response = await businessService._business_type(req.query)
+        res.status(200).json({ status: true, data: response })
+        
+    }
+    static async businessSize(req, res) {
+        const response = await businessService._business_sizes(req.query)
+        res.status(200).json({ status: true, data: response })
+    }
+    static async businessSector(req, res) {
+        const response = await businessService._business_sector(req.query)
+        res.status(200).json({ status: true, data: response })
+    }
+
+    // sync buildings from mobile 
+    static async createBuildings(req, res) {
+        try {
+            const result = await buildingService.createBuildings(req.body, req.user);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log({ error });
+      
+            res.status(400).json({
+              status: false,
+              message: error.message,
+            });
+        }
+    }
+
+    // sync business from mobile
+    static async createBusinesses(req, res) {
+        try {
+            const result = await businessService.createBusiness(req.body, req.user);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log({ error });
+        
+            res.status(400).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
+
 }
+module.exports = apiController

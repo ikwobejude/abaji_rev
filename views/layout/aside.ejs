@@ -5,7 +5,7 @@
       <img src="/logo.png" alt="" style="width: 50px; height: 50px;">
       <!-- </span> -->
       <span class="app-brand-text fw-bold">
-        <%= user.client %>
+        <%= user.service_code %>
       </span>
     </a>
 
@@ -37,6 +37,37 @@
         <ul class="menu-sub">
 
           <% let setupItem=link=="/setup/ticket_item" ? "active open" : "" %>
+
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <div data-i18n="Roles & Permission">Roles & Permission</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item <%= link == " /admin/user_group" ? "active" : "" %>">
+                <a href="/admin/user_group" class="menu-link">
+                  <div data-i18n="User Roles">User Roles</div>
+                </a>
+              </li>
+              <li class="menu-item <%= link == " /admin/permission" ? "active" : "" %>">
+                <a href="/admin/permission" class="menu-link">
+                  <div data-i18n="Permission">Permission</div>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <div data-i18n="Payment Setup">Payment Setup</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item <%= link == " /setup/ticket_item" ? "active" : "" %>">
+                <a href="/setup/inter_switch" class="menu-link">
+                  <div data-i18n="Interswitch">Interswitch</div>
+                </a>
+              </li>
+            </ul>
+          </li>
+
             <% if (user?.permissions?.includes('59')) { %>
               <li class="menu-item <%= setupItem %>">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -52,18 +83,7 @@
               </li>
               <% } %>
 
-                <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <div data-i18n="Payment Setup">Payment Setup</div>
-                  </a>
-                  <ul class="menu-sub">
-                    <li class="menu-item <%= link == " /setup/ticket_item" ? "active" : "" %>">
-                      <a href="/setup/inter_switch" class="menu-link">
-                        <div data-i18n="Interswitch">Interswitch</div>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
+                
 
                 <% let location=link=="/setup/state" ? "active open" : link=="/setup/ward" ? "active open" :
                   link=="/setup/street" ? "active open" : "" %>
@@ -182,16 +202,7 @@
                         <div data-i18n="Users">Users</div>
                       </a>
                       <ul class="menu-sub">
-                        <li class="menu-item <%= link == " /admin/user_group" ? "active" : "" %>">
-                          <a href="/admin/user_group" class="menu-link">
-                            <div data-i18n="User Roles">User Roles</div>
-                          </a>
-                        </li>
-                        <li class="menu-item <%= link == " /admin/permission" ? "active" : "" %>">
-                          <a href="/admin/permission" class="menu-link">
-                            <div data-i18n="Permission">Permission</div>
-                          </a>
-                        </li>
+                        
                         <li class="menu-item <%= link == " /admin/user" ? "active" : "" %>">
                           <a href="/admin/user" class="menu-link">
                             <div data-i18n="Users">Users</div>

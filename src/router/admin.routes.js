@@ -73,4 +73,9 @@ Router.route('/enumerated_buildings')
 Router.route('/enumerated_business')
 .get(enumerationController.businesses)
 
+
+// Generate mandate
+Router.route('/generate_mandate')
+.get(enumerationController.generateMandate)
+
 module.exports = Router;

@@ -6,6 +6,7 @@ const { business_categories, business_operations, business_sectors, business_siz
 const sequelize = require('../db/connection');
 const { QueryTypes } = require('sequelize');
 const { query } = require("express");
+const Areas = require("../model/location.model");
 
 const emitter = new eventEmitter();
 
@@ -438,6 +439,16 @@ class Business {
         } catch (error) {
             console.error("Error fetching businesses:", error);
             throw Error(error.message);
+        }
+    }
+
+    async mandateMetaData(query) {
+        const [areas] = await Promise.all([
+            Areas.findAll({ where: { service_id: query.service_id }, raw: true})
+        ])
+
+        return {
+            areas
         }
     }
     

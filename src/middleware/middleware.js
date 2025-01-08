@@ -8,102 +8,84 @@ const Op = Sequelize.Op;
 
 class AuthMiddleware {
 
-    async getClientDetails(serviceId) {
-        return await clientService.findOne({
-            attributes: ['client', 'service_id', 'service_logo', 'service_status'],
-            where: { service_id: serviceId },
-            raw: true
-        });
+    static async getClientDetails(serviceId) {
+        try {
+            return await clientService.findOne({
+                attributes: ['client', 'service_id', 'service_logo', 'service_status'],
+                where: { service_id: serviceId },
+                raw: true
+            });
+        } catch (error) {
+            console.error("Error fetching client details:", error);
+            throw new Error("Unable to fetch client details.");
+        }
     }
-
-    static async requireAuth(req, res, next){
-        // console.log(req.cookies)
-        // return
+    
+    static requireAuth = async (req, res, next) => {
         try {
             const token = req.cookies.jwt;
-
-            // console.log(token)
     
-            // check json web token exists & verified
-        
-            if (token) {
-                try {
-                    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-                    // console.log({userId: decodedToken.userId})
-                    if(decodedToken.userId) {
-                        let user = await db.query(
-                          `
-                            SELECT 
-                                users.id,
-                                users.group_id,
-                                g.group_name,
-                                users.username,
-                                users.email,
-                                users.surname,
-                                users.firstname,
-                                users.user_phone,
-                                users.service_id,
-                                users.service_code,
-                                users.inactive,
-                                users.name,
-                                users.user_code,
-                                users.permissions
-                            from users 
-                            INNER JOIN user_groups AS g ON g.group_id = users.group_id
-                            WHERE users.id = ${decodedToken.userId} LIMIT 1
-                        `,
-                          { type: QueryTypes.SELECT }
-                        );
-                        
-                        // console.log("user active status: ", user[0].group_id)
-                        // console.log(user)
-                        
-                        if (!user || user.length === 0) {
-                            req.flash("danger", "The User with the ID doesn't exist");
-                            return res.redirect('/login');
-                        }
-            
-                        if(user[0].inactive == 2) {
-                            // console.log("account is inactive")
-                            req.flash("danger", "Your account has been deactivated, contact admin for more detail");
-                            return res.redirect('/login')
-                        }
+            if (!token) {
+                req.flash("danger", "You're not logged in! Please login to get access");
+                return res.redirect('/login');
+            }
     
-                        // console.log(user)
-                        // if(user.inactive == 0 ){
-                        //     req.flash("Please change reset your password");
-                        //     return res.redirect('/user/change_password')
-                        // }
+            const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
     
-                        const client = await this.getClientDetails(user[0]?.service_id);
-                        res.locals.user = { ...user[0], ...client } ;
-                        req.user = { ...user[0], ...client };
-            
-                        next()
-                        // }
-                    } else {
-                        throw Error("Your session has expired please login and continue");
-                    }
-
-                } catch (error) {
-                    // req.session.returnUrl = req.originalUrl;
-                    req.flash("danger", error.message)
-                    return res.redirect('/login')
+            if (!decodedToken.userId) {
+                throw new Error("Your session has expired. Please login and continue.");
+            }
+    
+            const user = await db.query(
+                `
+                SELECT 
+                    users.id,
+                    users.group_id,
+                    g.group_name,
+                    users.username,
+                    users.email,
+                    users.surname,
+                    users.firstname,
+                    users.user_phone,
+                    users.service_id,
+                    users.service_code,
+                    users.inactive,
+                    users.name,
+                    users.user_code,
+                    users.permissions
+                FROM users 
+                INNER JOIN user_groups AS g ON g.group_id = users.group_id
+                WHERE users.id = :userId LIMIT 1
+                `,
+                {
+                    replacements: { userId: decodedToken.userId },
+                    type: QueryTypes.SELECT
                 }
-              
-            } 
-        
-            if(!token){
-                // req.session.returnUrl = req.originalUrl;
-                req.flash("danger", "You're not logged in! Please login to get access")
-                return res.redirect('/login')
-            }   
+            );
+    
+            if (!user || user.length === 0) {
+                req.flash("danger", "The User with the ID doesn't exist");
+                return res.redirect('/login');
+            }
+    
+            if (user[0].inactive == 2) {
+                req.flash("danger", "Your account has been deactivated, contact admin for more detail");
+                return res.redirect('/login');
+            }
+    
+            const client = await this.getClientDetails(user[0]?.service_id); // `this` works correctly now.
+            res.locals.user = { ...user[0], ...client };
+            req.user = { ...user[0], ...client };
+    
+            next();
         } catch (error) {
-            console.error(error)
+            console.error("Authentication error:", error);
+            req.flash("danger", error.message);
+            return res.redirect('/login');
         }
-        
-    }
-
+    };
+    
+    
     static async checkUser(req, res, next) {
         // console.log(req.cookies.jwt)
         // return

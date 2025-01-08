@@ -43,7 +43,7 @@ Router.route("/user_group")
 .delete(revenue.deleteUserRole);
 Router.delete("/user/:userId", revenue.deleteUser);
 Router.put("/user/:userId", revenue.updateUser);
-Router.route("/profile").get(adminController.getprofile);
+Router.route("/profile").get(adminController.getProfile);
 Router.route("/security").get(adminController.security);
 
 

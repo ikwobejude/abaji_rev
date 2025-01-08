@@ -4,7 +4,35 @@
   <head>
     <%- include('./layout/head') %>
   </head>
+  <% 
+  // Helper function to handle NaN values
+                                          
+                                          
+  const safeParseFloat = (value) => {
+      if (value === null || isNaN(value)) {
+          return 0;
+      }
+      return parseFloat(value);
+  };
 
+  function formatNumber(value) {
+      const number = safeParseFloat(value);
+  
+      if (number < 0) {
+          return `(${Math.abs(number).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          })})`;
+      }
+  
+      return number.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+      });
+  }
+
+  
+%>
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
@@ -58,7 +86,7 @@
                   <div class="card h-100">
                     <div class="card-header d-flex justify-content-between">
                       <h5 class="card-title mb-0">Statistics</h5>
-                      <small class="text-muted">Updated 2024</small>
+                      <small class="text-muted">Updated <%= new Date().getFullYear() %></small>
                     </div>
                     <div class="card-body d-flex align-items-end">
                       <div class="w-100">
@@ -78,7 +106,7 @@
                                 <i class="ti ti-chart-pie-2 ti-lg"></i>
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= parseFloat(expected.grand_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></h5>
+                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(expected.grand_total)) %></h5>
                                 <small>Expected</small>
                               </div>
                             </div>
@@ -90,7 +118,7 @@
                                 <i class="ti ti-shopping-cart ti-lg"></i>
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0">0</h5>
+                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(0)) %></h5>
                                 <small>Paid</small>
                               </div>
                             </div>
@@ -101,7 +129,7 @@
                                 ₦
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= parseFloat(expected.grand_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></h5>
+                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(expected.grand_total)) %></h5>
                                 <small>Outstanding</small>
                               </div>
                             </div>

@@ -7,19 +7,15 @@ const permission = require("../classes/permission.service");
 const revenue = new Revenue();
 const user = new User();
 const setup = new Setup();
-
-class RevenueController {
-  static async getRevenueItemByYear(req, res) {
-    const response = await revenue.revenueByYear({
-      ...req.query,
-      service_id: req.user.service_id,
-    });
+module.exports = {
+  getRevenueItemByYear: async function (req, res) {
+    const response = await revenue.revenueByYear({...req.query, service_id: req.user.service_id});
     res.status(200).render("./revenue/cooperative/upload_records", {
       ...response,
     });
-  }
+  },
 
-  static async createAssessments(req, res) {
+  createAssessments: async function (req, res) {
     try {
       const response = await revenue.uploadCooperateBusinessData({
         ...req.body,
@@ -32,9 +28,8 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
-
-  static async viewAssessmentInvoice(req, res) {
+  },
+  viewAssessmentInvoice: async function (req, res) {
     try {
       const query = {
         year: req.query.year || req.params.year,
@@ -57,9 +52,9 @@ class RevenueController {
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
-  }
+  },
 
-  static async viewBatchAssessmentInvoice(req, res) {
+  viewBatchAssessmentInvoice: async function (req, res) {
     try {
       const query = {
         batch: req.query.batch || req.params.batch,
@@ -82,9 +77,10 @@ class RevenueController {
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
-  }
+  },
 
-  static async deleteYearly(req, res) {
+
+  deleteYearly: async function (req, res) {
     try {
       const response = await revenue.truncateYearlyRecord(req.query);
       res.status(200).json(response);
@@ -92,9 +88,10 @@ class RevenueController {
       console.log(error);
       res.status(500).send({ error: error.message });
     }
-  }
+  },
 
-  static async generatePayCode(req, res) {
+
+  generate_pay_code: async function (req, res) {
     try {
       const response = await revenue.generate_pay_code_bud_pay(req.query);
       res.status(200).json(response);
@@ -105,31 +102,29 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async demandNotice(req, res) {
+
+  demandNotice: async function (req, res) {
     const response = await revenue.demandNotice(req.params);
-    res.status(200).render("./revenue/cooperative/demand_notice", {
-      ...response,
-    });
-  }
+    res
+      .status(200)
+      .render("./revenue/cooperative/demand_notice", { ...response });
+  },
 
-  static async getWalletBalance(req, res) {
+  getWalletBalance: async function (req, res) {
     const balance = await wallet.walletBalance(req.user.id);
     res.status(200).json(balance);
-  }
+  },
 
-  static async walletPayment(req, res) {
-    // Implement wallet payment logic
-  }
+  walletPayment: async function (req, res) {},
 
-  // User-related methods
-  static async getUserRoles(req, res) {
+  // users
+  getUserRoles: async function (req, res) {
     const request = await user.userGroup();
     res.status(200).render("./users/user_role", { ...request });
-  }
-
-  static async postUserRoles(req, res) {
+  },
+  postUserRoles: async function (req, res) {
     try {
       const response = await user.createUserGroup(req.body);
       res.status(200).json(response);
@@ -139,10 +134,11 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async editUserRole(req, res) {
+  editUserRole: async function (req, res) {
     try {
+      // console.log(req.body)
       const response = await user.editUserGroup(req.body);
       res.status(200).json(response);
     } catch (error) {
@@ -151,9 +147,9 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async deleteUserRole(req, res) {
+  deleteUserRole: async function (req, res) {
     try {
       const response = await user.deleteUserRole(req.query.id);
       res.status(200).json(response);
@@ -163,9 +159,10 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async postUser(req, res) {
+
+  postUser: async function (req, res) {
     try {
       const response = await user.createUser({
         ...req.body,
@@ -179,28 +176,27 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async getUser(req, res) {
+  getUser: async function (req, res) {
     const usergroup = await user.userGroup();
     const users = await user.getUser(req.user.service_id);
     const perm = await permission.retrieve();
-    res.status(200).render("./users/users", { ...usergroup, ...users, ...perm });
-  }
+    res
+      .status(200)
+      .render("./users/users", { ...usergroup, ...users, ...perm });
+  },
 
-  static async addPermissionsToUser(req, res) {
+  addPermissionsToUser: async function (req, res) {
     try {
       const data = req.body;
       const permissions = data.permissions.toString();
-      const updatedUser = await user.addPermissionToUser(
-        data.userId,
-        permissions
-      );
+      const updatedUser = await user.addPermissionToUser(data.userId, permissions);
 
       res.status(201).json({
         success: true,
         message: "Permissions added successfully",
-        user: updatedUser,
+        user: updatedUser
       });
     } catch (error) {
       console.error("Error adding permissions:", error);
@@ -209,9 +205,9 @@ class RevenueController {
         message: "Failed to add permissions: " + error.message,
       });
     }
-  }
-
-  static async deleteUser(req, res) {
+  },
+  
+  deleteUser: async function (req, res) {
     const { userId } = req.params;
 
     try {
@@ -223,9 +219,9 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async updateUser(req, res) {
+  updateUser: async function (req, res) {
     const { userId } = req.params;
     const data = req.body;
 
@@ -238,22 +234,28 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async addDiscount(req, res) {
+  addDiscount: async function (req, res) {
     const { invoice } = req.params;
     const response = await revenue.initiateDiscount(invoice, req.body);
     res.status(200).json(response);
-  }
+  },
 
-  static async uploadPaymentBatch(req, res) {
+  addDiscount: async function (req, res) {
+    const { invoice } = req.params;
+    const response = await revenue.initiateDiscount(invoice, req.body);
+    res.status(200).render();
+  },
+
+  upload_payment_batch: async function (req, res) {
     const response = await revenue.viewUploadedPaymentbATCH(req.query);
     res
       .status(200)
       .render("./revenue/cooperative/upload_payments_batch", { ...response });
-  }
+  },
 
-  static async uploadPaymentRec(req, res) {
+  upload_payment_rec: async function (req, res) {
     const response = await revenue.viewUploadedPayment({
       ...req.query,
       ...req.params,
@@ -261,9 +263,9 @@ class RevenueController {
     res
       .status(200)
       .render("./revenue/cooperative/upload_payments", { ...response });
-  }
+  },
 
-  static async uploadPaymentDel(req, res) {
+  upload_payment_del: async function (req, res) {
     try {
       const response = await revenue.deleteBatchUpload(req.params.batch);
       res.status(200).json(response);
@@ -273,10 +275,11 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async uploadPayment(req, res) {
+  upload_payment: async function (req, res) {
     try {
+      // console.log(req.body)
       const response = await revenue.upload_payments({
         ...req.body,
         ...req.user,
@@ -288,8 +291,5 @@ class RevenueController {
         message: error.message,
       });
     }
-  }
-}
-
-module.exports = RevenueController;
-
+  },
+};

@@ -138,6 +138,112 @@ class Buildings {
       
           return res1;
     }
+
+    async getAllBuildings(query) {
+        try {
+            const perPage = 20; // Number of records per page
+            const page = parseInt(query.page, 10) || 1; // Current page (default to 1 if not provided)
+            const offset = perPage * (page - 1);
+        
+            // Fetch wards for the current service
+            const wards = await otherTableModels.cities.findAll({
+                where: { service_id: query.service_id },
+            });
+        
+            // Base SQL query
+            let sql = `
+            SELECT 
+                _buildings.building_number, 
+                _buildings.building_id,
+                _buildings.building_name, 
+                _buildings.owner_name, 
+                _buildings.owner_email, 
+                _buildings.owner_mobile_no,
+                _building_categories.building_category,  
+                _building_types.building_type, 
+                _streets.street, 
+                _cities.city  
+            FROM _buildings 
+            LEFT JOIN _building_categories ON _building_categories.idbuilding_category = _buildings.building_category_id
+            LEFT JOIN _building_types ON _building_types.idbuilding_types = _buildings.apartment_type
+            LEFT JOIN _streets ON _streets.idstreet = _buildings.ward
+            LEFT JOIN _cities ON _cities.city_id = _buildings.street_id
+            WHERE _buildings.service_id = :service_id
+            `;
+        
+            // Apply filters based on query parameters
+            if (query.ward) {
+              sql += ` AND _buildings.ward = :ward`;
+            }
+        
+            if (query.street) {
+              sql += ` AND _buildings.street_id = :street`;
+            }
+        
+            if (query.from && query.to) {
+                sql += ` AND DATE(_buildings.registered_on) BETWEEN :from AND :to`;
+            } else if (query.from) {
+                sql += ` AND DATE(_buildings.registered_on) = :from`;
+            }
+        
+            if (query.searchValue) {
+            sql += `
+                AND (
+                _buildings.building_name LIKE :searchValue
+                OR _buildings.owner_email LIKE :searchValue
+                OR _buildings.owner_mobile_no LIKE :searchValue
+                )
+            `;
+            }
+        
+            // Apply ordering and pagination
+            sql += ` ORDER BY _buildings.idbuilding DESC`;
+            if (query.search !== "1") {
+            sql += ` LIMIT :limit OFFSET :offset`;
+            }
+        
+            // Execute the query with replacements
+            const result = await this.db.query(sql, {
+                replacements: {
+                    service_id: query.service_id,
+                    ward: query.ward,
+                    street: query.street,
+                    from: query.from,
+                    to: query.to,
+                    limit: perPage,
+                    offset,
+                    searchValue: `%${query.searchValue || ""}%`,
+                },
+                type: QueryTypes.SELECT,
+            });
+        
+            // Count total records for pagination if not in search mode
+            const count =
+            query.search === "1"
+                ? result.length
+                : await building.count({
+                    where: { service_id: query.service_id },
+                });
+        
+            // Render the view with results
+            res.status(200).render("./buildings/view_buildings", {
+                current: page,
+                pages: Math.ceil(count / perPage),
+                buildings: result,
+                page_title: "Buildings",
+                wards,
+                search: query.search || 0,
+            });
+        } catch (error) {
+            console.error("Error fetching buildings:", error);
+            res.status(500).json({
+                status: false,
+                message: "An error occurred while fetching buildings.",
+            });
+        }
+    }
+          
+    
 }
 
 module.exports = new Buildings()

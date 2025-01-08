@@ -2,9 +2,10 @@ const { Worker } = require("worker_threads");
 const path = require("path");
 const fs = require("fs");
 const eventEmitter = require('events');
-const { business_categories, business_operations, business_sectors, business_sizes, business_types } = require('../model/business.model')
+const { business_categories, business_operations, business_sectors, business_sizes, business_types, businesses } = require('../model/business.model')
 const sequelize = require('../db/connection');
 const { QueryTypes } = require('sequelize');
+const { query } = require("express");
 
 const emitter = new eventEmitter();
 
@@ -167,7 +168,6 @@ class Business {
         }
     }
 
-
     // Business sector
     async _business_sizes(query) {
         return await business_sizes.findAll({
@@ -217,7 +217,6 @@ class Business {
         }
     }
 
-
     // Business Sizes
     async _business_sizes(query) {
         return await business_sizes.findAll({
@@ -266,7 +265,6 @@ class Business {
             message: "Deleted"
         }
     }
-
 
     // Business Sizes
     async _business_type(query) {
@@ -349,10 +347,111 @@ class Business {
               });
           
               return res1;
+    }
+
+
+    async getAllBusiness(query) {
+        try {
+            const perPage = 10; // Number of records per page
+            const page = parseInt(query.page, 10) || 1; // Current page (default to 1 if not provided)
+            const offset = perPage * (page - 1);
+        
+            // Base SQL query
+            let sql = `
+            SELECT 
+                businesses.business_name, 
+                businesses.business_address,  
+                businesses.businessnumber,  
+                businesses.contact_person,  
+                businesses.business_tag,
+                _business_categories.business_category, 
+                _business_operations.business_operation, 
+                _business_sectors.business_sector, 
+                _business_sizes.business_size, 
+                _business_types.business_type,
+                _buildings.building_name, 
+                _buildings.street_id, 
+                businesses.created_at
+            FROM businesses 
+            LEFT JOIN _business_categories ON businesses.business_category = _business_categories.business_category_id
+            LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id
+            LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id
+            LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id
+            LEFT JOIN _business_types ON businesses.business_size = _business_types.idbusiness_type
+            LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
+            WHERE businesses.service_id = :service_id
+            `;
+        
+            // Apply filters
+            if (query.business_name) {
+            sql += `
+                AND (businesses.business_name LIKE :business_name 
+                    OR businesses.businessnumber LIKE :business_name)
+            `;
+            }
+        
+            if (query.business_size) {
+                sql += ` AND businesses.business_size LIKE :business_size`;
+            }
+        
+            if (query.business_category) {
+                sql += ` AND businesses.business_category LIKE :business_category`;
+            }
+        
+            if (query.from && query.to) {
+                sql += ` AND DATE(businesses.created_at) BETWEEN :from AND :to`;
+            } else if (query.from) {
+                sql += ` AND DATE(businesses.created_at) = :from`;
+            }
+        
+            // Apply sorting and pagination
+            sql += ` ORDER BY businesses.business_id DESC`;
+            sql += ` LIMIT :limit OFFSET :offset`;
+            
+        
+            // Execute query with replacements to prevent SQL injection
+            const [business, businessCount, businessTypes, businessCategories, businessOperations, businessSectors, businessSizes, cities] = await Promise.all([
+                await this.db.query(sql, {
+                    replacements: {
+                        service_id: req.user.service_id,
+                        business_name: `%${queryParams.business_name || ""}%`,
+                        business_size: `%${queryParams.business_size || ""}%`,
+                        business_category: `%${queryParams.business_category || ""}%`,
+                        from: queryParams.from || null,
+                        to: queryParams.to || null,
+                        limit: perPage,
+                        offset,
+                    },
+                    type: QueryTypes.SELECT,
+                }),
+                await businesses.count({ where: {service_id: query.service_id}, raw: true }),
+                await business_types.findAll({ raw: true }),
+                await business_categories.findAll({ raw: true }),
+                await business_operations.findAll({ raw: true }),
+                await business_sectors.findAll({ raw: true }),
+                await business_sizes.findAll({ raw: true }),
+            ])
+            
+            // Render the result
+            return {
+                business,
+                businessCategories,
+                businessTypes,
+                businessOperations,
+                businessSectors,
+                businessSizes,
+                current: page,
+                pages: Math.ceil(businessCount / perPage),
+            }
+
+        } catch (error) {
+            console.error("Error fetching businesses:", error);
+            res.status(500).json({
+                status: false,
+                message: "An error occurred while fetching businesses.",
+            });
         }
-
-
-
+    };
    
 }
 

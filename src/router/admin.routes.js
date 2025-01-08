@@ -2,6 +2,7 @@ const express = require("express");
 const admin = require("../controller/admin.controller");
 const revenue = require("../controller/revenue.controller");
 const adminController = require("../controller/admin.controller");
+const enumerationController = require("../controller/enumeration.controller");
 const wallet = require("../controller/wallet.controller");
 const permission = require("../controller/permission.controller");
 const Router = express.Router();
@@ -18,7 +19,7 @@ Router.route("/revenue_upload")
 // .put(revenue.deleteYearly)
 .delete(revenue.deleteYearly);
 
-Router.get("/generate_budpay_pay_code", revenue.generate_pay_code)
+Router.get("/generate_budpay_pay_code", revenue.generatePayCode)
 
 Router.route("/revenue_upload/view/:year")
 .get(revenue.viewAssessmentInvoice);
@@ -49,20 +50,23 @@ Router.route("/security").get(adminController.security);
 Router.get('/revenue_uploads', admin.getRevenueUGraph);
 
 Router.route('/payment_reconciliation')
-.get(revenue.upload_payment_batch)
-.post(revenue.upload_payment)
+.get(revenue.uploadPaymentBatch)
+.post(revenue.uploadPayment)
 
 Router.route('/ticket_payment/:batch')
-.get(revenue.upload_payment_rec)
-.delete(revenue.upload_payment_del)
+.get(revenue.uploadPaymentRec)
+.delete(revenue.uploadPaymentDel)
 
 Router.route('/permission')
 .get(permission.permission)
 .post(permission.new_permission)
 .put(permission.edit_permission)
 .delete(permission.delete_permission)
-
-
 // Router.get('/get_permissions', permission.get_permissions)
+
+
+
+Router.route('/building')
+.get(enumerationController.buildings)
 
 module.exports = Router;

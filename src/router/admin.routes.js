@@ -66,7 +66,11 @@ Router.route('/permission')
 
 
 
-Router.route('/building')
+// Enumerate revenue
+Router.get('/enumerated_panel', enumerationController.panel)
+Router.route('/enumerated_buildings')
 .get(enumerationController.buildings)
+Router.route('/enumerated_business')
+.get(enumerationController.businesses)
 
 module.exports = Router;

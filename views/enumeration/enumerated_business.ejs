@@ -28,11 +28,11 @@
 
             <div class="container-xxl flex-grow-1 container-p-y">
                 <!-- Search Form -->
-                <div class="card mb-4">
-                  <div class="card-header">
+                <div class=" mb-4">
+                  <!-- <div class="card-header">
                     <h5 class="mb-0">Search Payments</h5>
-                  </div>
-                  <div class="card-body">
+                  </div> -->
+                  <div class="">
                     <form method="GET" action="">
                       <div class="row">
                         <div class="col-md-3">
@@ -77,7 +77,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-6">Payment Report</div>
+                            <div class="col-6">Enumerated Businesses</div>
                         </div>
                     </div>
                     
@@ -85,27 +85,38 @@
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
-                          <th>Payment Ref</th>
-                          <th>Invoice </th>
-                          <th>Payment Method</th>
-                          <th>Bank Name</th>
-                          <th>Payment Date</th>
-                          <th>Currency</th>
-                          <th>Amount Yearly</th>
+                          <th>Action</th>
+                          <th>Business name</th>
+                          <th>Size</th>
+                          <th>Type</th>
+                          <th>Category</th>
+                          <th>Operation</th>
+                          <th>Sector</th>
+                          <th>LGA/Ward</th>
+                          <th>Street</th>
+                          <th>Owner.Name</th>
+                          <th>Owner.Email</th>
+                          <th>Owner.Phone</th>
+                          
                         </tr>
                       </thead>
                       <tbody>
-                        <% result.forEach(item => { %>
-                            <tr>
-                                <td><%= item.PaymentLogId %></td>
-                                <td><%= item.CustReference %></td>
-                                <td><%= item.PaymentMethod %></td>
-                                <td><%= item.BankName %></td>
-                                <td><%= item.PaymentDate.toLocaleDateString() %></td>
-                                <td><%= item.PaymentCurrency %></td>
-                                <td><%= item.Amount %></td>
-                            </tr>
-                        <% }) %>
+                        <% businesses.map(building => { %>
+                          <tr>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                      <% }) %>
                       </tbody>
                     </table>
                   </div>
@@ -115,8 +126,5 @@
               <!-- / Content -->
 
         <%- include('../layout/footer') %>
-         <!-- Page JS -->
-    <script src="/assets/js/tables-datatables-basic.js"></script>
-   
   </body>
 </html>

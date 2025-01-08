@@ -352,11 +352,10 @@ class Business {
 
     async getAllBusiness(query) {
         try {
-            const perPage = 10; // Number of records per page
-            const page = parseInt(query.page, 10) || 1; // Current page (default to 1 if not provided)
+            const perPage = 10;
+            const page = parseInt(query.page, 10) || 1;
             const offset = perPage * (page - 1);
-        
-            // Base SQL query
+    
             let sql = `
             SELECT 
                 businesses.business_name, 
@@ -377,81 +376,71 @@ class Business {
             LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id
             LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id
             LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id
-            LEFT JOIN _business_types ON businesses.business_size = _business_types.idbusiness_type
+            LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type
             LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
             WHERE businesses.service_id = :service_id
             `;
-        
-            // Apply filters
+    
             if (query.business_name) {
-            sql += `
-                AND (businesses.business_name LIKE :business_name 
-                    OR businesses.businessnumber LIKE :business_name)
-            `;
+                sql += ` AND (businesses.business_name LIKE :business_name OR businesses.businessnumber LIKE :business_name)`;
             }
-        
             if (query.business_size) {
                 sql += ` AND businesses.business_size LIKE :business_size`;
             }
-        
             if (query.business_category) {
                 sql += ` AND businesses.business_category LIKE :business_category`;
             }
-        
             if (query.from && query.to) {
                 sql += ` AND DATE(businesses.created_at) BETWEEN :from AND :to`;
             } else if (query.from) {
                 sql += ` AND DATE(businesses.created_at) = :from`;
             }
-        
-            // Apply sorting and pagination
-            sql += ` ORDER BY businesses.business_id DESC`;
-            sql += ` LIMIT :limit OFFSET :offset`;
-            
-        
-            // Execute query with replacements to prevent SQL injection
-            const [business, businessCount, businessTypes, businessCategories, businessOperations, businessSectors, businessSizes, cities] = await Promise.all([
-                await this.db.query(sql, {
+    
+            sql += ` ORDER BY businesses.business_id DESC LIMIT :limit OFFSET :offset`;
+    
+            const [businesses, businessCount] = await Promise.all([
+                this.db.query(sql, {
                     replacements: {
-                        service_id: req.user.service_id,
-                        business_name: `%${queryParams.business_name || ""}%`,
-                        business_size: `%${queryParams.business_size || ""}%`,
-                        business_category: `%${queryParams.business_category || ""}%`,
-                        from: queryParams.from || null,
-                        to: queryParams.to || null,
+                        service_id: query.service_id,
+                        business_name: `%${query.business_name || ""}%`,
+                        business_size: `%${query.business_size || ""}%`,
+                        business_category: `%${query.business_category || ""}%`,
+                        from: query.from || null,
+                        to: query.to || null,
                         limit: perPage,
                         offset,
                     },
                     type: QueryTypes.SELECT,
                 }),
-                await businesses.count({ where: {service_id: query.service_id}, raw: true }),
-                await business_types.findAll({ raw: true }),
-                await business_categories.findAll({ raw: true }),
-                await business_operations.findAll({ raw: true }),
-                await business_sectors.findAll({ raw: true }),
-                await business_sizes.findAll({ raw: true }),
-            ])
-            
-            // Render the result
+                this.db.query(
+                    `SELECT COUNT(*) AS count FROM businesses WHERE service_id = :service_id`,
+                    { replacements: { service_id: query.service_id }, type: QueryTypes.SELECT }
+                ),
+            ]);
+    
+            const businessTypes = await business_types.findAll({ raw: true });
+            const businessCategories = await business_categories.findAll({ raw: true });
+            const businessOperations = await business_operations.findAll({ raw: true });
+            const businessSectors = await business_sectors.findAll({ raw: true });
+            const businessSizes = await business_sizes.findAll({ raw: true });
+    
             return {
-                business,
+                businesses,
                 businessCategories,
                 businessTypes,
                 businessOperations,
                 businessSectors,
                 businessSizes,
                 current: page,
-                pages: Math.ceil(businessCount / perPage),
-            }
-
+                pages: Math.ceil(businessCount[0].count / perPage),
+            };
+    
         } catch (error) {
             console.error("Error fetching businesses:", error);
-            res.status(500).json({
-                status: false,
-                message: "An error occurred while fetching businesses.",
-            });
+            throw Error(error.message);
         }
-    };
+    }
+    
    
 }
 

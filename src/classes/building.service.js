@@ -1,7 +1,8 @@
 const eventEmitter = require('events');
 const sequelize = require('../db/connection');
 const { QueryTypes } = require('sequelize');
-const { building, building_categories, building_types } = require('../model/Buildings')
+const { building, building_categories, building_types } = require('../model/Buildings');
+const Areas = require('../model/location.model');
 const emitter = new eventEmitter();
 
 require('../events/validation/schema')(emitter)
@@ -145,10 +146,6 @@ class Buildings {
             const page = parseInt(query.page, 10) || 1; // Current page (default to 1 if not provided)
             const offset = perPage * (page - 1);
         
-            // Fetch wards for the current service
-            const wards = await otherTableModels.cities.findAll({
-                where: { service_id: query.service_id },
-            });
         
             // Base SQL query
             let sql = `
@@ -203,43 +200,41 @@ class Buildings {
             }
         
             // Execute the query with replacements
-            const result = await this.db.query(sql, {
-                replacements: {
-                    service_id: query.service_id,
-                    ward: query.ward,
-                    street: query.street,
-                    from: query.from,
-                    to: query.to,
-                    limit: perPage,
-                    offset,
-                    searchValue: `%${query.searchValue || ""}%`,
-                },
-                type: QueryTypes.SELECT,
-            });
-        
-            // Count total records for pagination if not in search mode
-            const count =
-            query.search === "1"
-                ? result.length
-                : await building.count({
+            const [ result, count, wards] = await Promise.all([
+                await this.db.query(sql, {
+                    replacements: {
+                        service_id: query.service_id,
+                        ward: query.ward,
+                        street: query.street,
+                        from: query.from,
+                        to: query.to,
+                        limit: perPage,
+                        offset,
+                        searchValue: `%${query.searchValue || ""}%`,
+                    },
+                    type: QueryTypes.SELECT,
+                }),
+                await building.count({
                     where: { service_id: query.service_id },
-                });
-        
+                }),
+
+                await Areas.findAll({
+                    where: { service_id: query.service_id },
+                })
+            ])
+            
             // Render the view with results
-            res.status(200).render("./buildings/view_buildings", {
+            return {
                 current: page,
                 pages: Math.ceil(count / perPage),
                 buildings: result,
                 page_title: "Buildings",
                 wards,
                 search: query.search || 0,
-            });
+            }
         } catch (error) {
-            console.error("Error fetching buildings:", error);
-            res.status(500).json({
-                status: false,
-                message: "An error occurred while fetching buildings.",
-            });
+            console.error(error)
+            throw new Error(error)
         }
     }
           

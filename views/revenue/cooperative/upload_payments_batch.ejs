@@ -45,7 +45,7 @@
                       <thead>
                         <tr>
                           <!-- <th></th> -->
-                          <th>Batch No</th>
+                          <th>Batch Name</th>
                           <th>Payment Date</th>
                           <th>Number</th>
                           <th>Total Amount</th>
@@ -55,7 +55,7 @@
                       <tbody>
                         <% data.forEach(a => { %>
                           <tr>
-                            <td><%= a.batch %></td>
+                            <td><%= a.session_id %></td>
                             <td><%= a.payment_date %></td>
                             <td><%= a.count %></td>
                             <td><%= a.amount %></td>
@@ -79,8 +79,12 @@
                   </div>
                   <div class="offcanvas-body flex-grow-1">
                     <form class="add-new-record pt-0 row g-2" id="form-upload-new-record" onsubmit="return false">
-                      
-                      
+                      <div class="col-sm-12">
+                        <label class="form-label" for="basicEmail">Batch Name</label>
+                        <div class="input-group input-group-merge">
+                          <input type="text" id="batch_name" name="batch_name" class="form-control">
+                        </div>
+                      </div>
                       <div class="col-sm-12">
                         <label class="form-label" for="basicEmail">Upload Assessments</label>
                         <div class="input-group input-group-merge">
@@ -125,6 +129,7 @@
                 const data = new FormData(dt);
                 const payload = {
                   base64url: data.get("base64url"),
+                  batch_name: data.get("bach_name")
                 }
 
                 console.log(payload)

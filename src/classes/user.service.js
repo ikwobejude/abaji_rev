@@ -189,6 +189,24 @@ class User {
     await user.save();
     return { status: true, message: "User updated successfully." };
   }
+
+  async validateUserEmail(email, service_id) {
+    const user = await this.users.findOne({ where: { email, service_id }, raw: true})
+    if(user) {
+      return {
+        status: true,
+        name: user.name,
+        id: user.id,
+        phoneNumber: user.user_phone
+      }
+    } else {
+      return {
+        status: false,
+        message: "User with the email not found"
+      }
+    }
+      
+  }
 }
 
 module.exports = User;

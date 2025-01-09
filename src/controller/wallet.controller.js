@@ -31,14 +31,22 @@ module.exports = {
 
 
     walletTransactions: async function(req, res) {
-        const data = await fund_wallet.wallets();
+        const data = await fund_wallet.wallets(req.user.service_id);
         res.status(200).render('./wallet/wallet', {data})
     },
 
     validateUser: async function(req, res) {
-        const data = await user.validateUserEmail(req.query.email);
-        // console.log(data)
-        res.status(200).json(data)
+        try {
+            const data = await user.validateUserEmail(req.query.email, req.user.service_id);
+            // console.log(data)
+            res.status(200).json(data)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({
+                status: true,
+                message: error.message
+            })
+        }
     },
 
     viewWallets: async function(req, res) {

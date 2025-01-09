@@ -185,99 +185,108 @@
         <%- include('../layout/footer') %>
 
         <script>
-          //setup before functions
-          var typingTimer;                //timer identifier
-          var doneTypingInterval = 5000;  //time in ms, 5 second for example
-
-          // tin verification
-          if(document.getElementById("email")){
-            
-          // const tin_verification_message = document.getElementById('tin_verification_message');
-          document.getElementById("email").addEventListener('input', validateTin)
-          async function validateTin(){
-              clearTimeout(typingTimer);
-              const parameter = this.value
-              console.log("Inside if statement", parameter)
-              
-              // if(parameter.length === 10 || parameter.length === 11 ){
-                  // console.log(parameter)
-                  const message = document.getElementById('msg');
-                  typingTimer = setTimeout(async function(){
-                      $('#cover-spin').show(0)
-                      
-                      
-                      message.textContent = '';
-                      const res = await fetch('/wallet/validate_email?email='+parameter);
-                      const data = await res.json();
-
-                      $('#cover-spin').hide(0)
-          
-                      if(data.status == true) {
-                          const dt = data.data;
-                          message.textContent = 'Unique email found';
-                          message.style = "color: green" 
-                          // $('#form_session').show()
-                          $('#owner_name').val(`${dt.name}`)
-                          $('#userId').val(dt.id)
-                          $('#owner_mobile_no').val(dt.phoneNumber)
-                            
-                      
+          // Setup before functions
+          const typingTimerDelay = 3000; // Delay for done typing in ms
+          let typingTimer; // Timer identifier
+      
+          // Email Validation and TIN Verification
+          const emailInput = document.getElementById("email");
+          const message = document.getElementById("msg");
+      
+          if (emailInput) {
+              emailInput.addEventListener("input", handleEmailValidation);
+      
+              async function handleEmailValidation() {
+                  clearTimeout(typingTimer);
+                  const email = this.value.trim();
+      
+                  if (!validateEmailFormat(email)) {
+                      message.textContent = "Invalid email format!";
+                      message.style.color = "red";
+                      return;
+                  }
+      
+                  // Delayed validation after typing stops
+                  typingTimer = setTimeout(async () => {
+                      try {
+                          $('#cover-spin').show(0); // Show spinner
+                          message.textContent = ""; // Reset message
+      
+                          const response = await fetch(`/wallet/validate_email?email=${email}`);
+                          const data = await response.json();
+                          $('#cover-spin').hide(0); // Hide spinner
+      
+                          if (data.status) {
+                              message.textContent = "Unique email found";
+                              message.style.color = "green";
+      
+                              // Populate form fields
+                              document.getElementById("owner_name").value = data.name || "";
+                              document.getElementById("userId").value = data.id || "";
+                              document.getElementById("owner_mobile_no").value = data.phoneNumber || "";
                           } else {
-                            tin.textContent = 'Not found!';
-                            tin.style = "color: red" 
+                              message.textContent = "Email not found!";
+                              message.style.color = "red";
                           }
-                  }, doneTypingInterval)
-              // }
-            }
-        } 
-
-
-        if(document.getElementById("upgradePlanForm")){
-          const upgradePlanForm = document.getElementById("upgradePlanForm");
-          $(".spinner-border").hide()
-          upgradePlanForm.addEventListener("submit", async function(e) {
-            e.preventDefault()
-
-            $(".spinner-border").show()
-            const py = {
-              email: document.getElementById("email").value,
-              owner_name: document.getElementById("owner_name").value,
-              userId: document.getElementById("userId").value,
-              owner_mobile_no: document.getElementById("owner_mobile_no").value,
-              amount: document.getElementById("amount").value,
-              transactionId: new Date().getTime().toString(36)
-            }
-
-            // console.log(py)
-            try {
-              const response = await fetch('/wallet', {
-                method: "post",
-                body: JSON.stringify(py),
-                headers: {
-                  "Content-Type": "application/json"
-                }
-              })
-
-              const result = await response.json()
-              console.log(result)
-              $(".spinner-border").hide()
-
-              if(result.status == true) {
-                toastr.success("Wallet funded");
-                setTimeout(() => {
-                  location.reload()
-                }, "3000");
-              } else {
-                toastr.error(result.message);
+                      } catch (error) {
+                          $('#cover-spin').hide(0);
+                          message.textContent = "Error validating email. Try again.";
+                          message.style.color = "red";
+                          console.error("Validation Error:", error);
+                      }
+                  }, typingTimerDelay);
               }
-            } catch (error) {
-              $(".spinner-border").hide()
-              toastr.error(error.message);
-            }
-          })
-        }
-
-
-        </script>
+      
+              // Utility to validate email format
+              function validateEmailFormat(email) {
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  return emailRegex.test(email);
+              }
+          }
+      
+          // Form Submission for Upgrade Plan
+          const upgradePlanForm = document.getElementById("upgradePlanForm");
+      
+          if (upgradePlanForm) {
+              $(".spinner-border").hide(); // Hide spinner by default
+      
+              upgradePlanForm.addEventListener("submit", async function (e) {
+                  e.preventDefault(); // Prevent form submission
+      
+                  $(".spinner-border").show(); // Show spinner
+                  const formData = {
+                      email: document.getElementById("email").value,
+                      owner_name: document.getElementById("owner_name").value,
+                      userId: document.getElementById("userId").value,
+                      owner_mobile_no: document.getElementById("owner_mobile_no").value,
+                      amount: document.getElementById("amount").value,
+                      transactionId: new Date().getTime().toString(36) // Unique transaction ID
+                  };
+      
+                  try {
+                      const response = await fetch("/wallet", {
+                          method: "POST",
+                          body: JSON.stringify(formData),
+                          headers: { "Content-Type": "application/json" }
+                      });
+      
+                      const result = await response.json();
+                      $(".spinner-border").hide(); // Hide spinner
+      
+                      if (result.status) {
+                          toastr.success("Wallet funded successfully!");
+                          setTimeout(() => location.reload(), 3000); // Reload after success
+                      } else {
+                          toastr.error(result.message || "Failed to fund wallet!");
+                      }
+                  } catch (error) {
+                      $(".spinner-border").hide(); // Hide spinner
+                      toastr.error("An error occurred: " + error.message);
+                      console.error("Form Submission Error:", error);
+                  }
+              });
+          }
+      </script>
+      
   </body>
 </html>

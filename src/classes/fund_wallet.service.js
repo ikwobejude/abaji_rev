@@ -428,18 +428,20 @@ class FundWallet {
         }}, {new: true}, {transaction: t})
       }
 
-      async wallets() {
+      async wallets(service_id) {
         return await this.db.query(`
             SELECT 
                 w.*,
                 u.name
             FROM wallet AS w
-            INNER JOIN users AS u ON u.id = w.userId
-            `, {type: Sequelize.QueryTypes.SELECT})
-
-        // return {
-        //     wallets
-        // }
+            INNER JOIN  users AS u ON u.id = w.userId
+            WHERE w.service_id = :service_id
+            `, {
+              replacements: {
+                service_id
+              },
+              type: Sequelize.QueryTypes.SELECT
+            })
       }
 
       async userWalletTransaction(query) {

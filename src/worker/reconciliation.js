@@ -69,6 +69,7 @@ const run = async () => {
       amount_paid: data.Amount,
       entered_by: workerData.username,
       invoice_number: InvoiceNumber,
+      session_id: workerData.batch_name,
       paid: 1,
       batch: batchNumber,
       RevenueHeadName: data.FeeType,

@@ -12,6 +12,11 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
+<style>
+  .offcanvas-backdrop {
+    opacity: 0.5 !important;
+  }
+</style>
 
 <body>
   <!-- Layout wrapper -->
@@ -338,6 +343,8 @@
   <!-- Include Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
   //
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.x/dist/js/bootstrap.bundle.min.js"></script>
+
   <script src="/assets/js/tables-datatables-basic.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -357,6 +364,17 @@
       $("#userTable").DataTable({
         ordering: false,
       });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!event.target.closest('.offcanvas') && document.querySelector('.offcanvas.show')) {
+        const offcanvas = bootstrap.Offcanvas.getInstance(document.querySelector('.offcanvas.show'));
+        offcanvas.hide();
+      }
+    });
+    document.addEventListener('hidden.bs.offcanvas', function () {
+      const backdrops = document.querySelectorAll('.offcanvas-backdrop');
+      backdrops.forEach((backdrop) => backdrop.remove());
     });
 
     document.addEventListener("DOMContentLoaded", () => {

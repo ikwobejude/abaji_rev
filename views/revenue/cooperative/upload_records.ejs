@@ -26,91 +26,49 @@
           <div class="content-wrapper" id="body_holder">
             <!-- Content -->
 
+            
             <div class="container-xxl flex-grow-1 container-p-y">
-                <!-- DataTable with Buttons -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-6"></div>
-                            <div class="col-6" style="text-align: end;">
-                                <button class="create-new btn btn-primary waves-effect waves-light">
-                                    <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>
-                                </button>
-                              <a href="/assets/templates/revenue_template.xlsx" class="btn btn-success waves-effect waves-light ms-2" download>
-                                <i class="ti ti-download me-sm-1"></i>
-                                <span class="d-none d-sm-inline-block">Download Excel Template</span>
-                              </a>
 
-                            </div>
-                        </div>
-                    </div>
-                    
-                <div class="row">
-                  <!-- Revenue by Year -->
-                  <div class="col-md-5">
-                    <div class="card-datatable table-responsive pt-0">
-                      <table class="datatables-basic table">
-                        <h5 class="p-7">REVENUES BY YEAR</h5>
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th>Year</th>
-                            <th>Total Assessments</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% revenue.forEach(item=> { %>
-                            <tr>
-                              <td></td>
-                              <td>
-                                <%= item.year %>
-                              </td>
-                              <td>
-                                <%= item.total %>
-                              </td>
-                              <td>
-                                <div class="dropdown">
-                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="ti ti-dots-vertical"></i>
-                                  </button>
-                                  <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>">
-                                      <i class="ti ti-eye me-1"></i>View more
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= item.year %>')">
-                                      <i class="ti ti-trash me-1"></i>Delete
-                                    </a>
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                
-                  <!-- Revenue by Batch -->
-                  <div class="col-md-7">
-                    <div class="card-datatable table-responsive pt-0">
-                      <!-- <div class="table-responsive"> -->
+              <div class="row g-6">
+               
+                <div class="nav-align-top">
+                  <ul class="nav nav-pills flex-column flex-md-row mb-6 row-gap-2">
+                    <li class="nav-item">
+                      <button class="create-new btn btn-primary waves-effect waves-light">
+                        <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Upload Assessments</span>
+                    </button>
+                    </li>
+                  
+                    <li class="nav-item">
+                      <a href="/assets/templates/REVENUE ENUMERATION TEMPLATE.xlsx" onclick="return confirm('Are you sure you want to download?')" class="btn btn-success waves-effect waves-light ms-2" download>
+                        <i class="ti ti-download me-sm-1"></i>
+                        <span class="d-none d-sm-inline-block">Download Excel Template</span>
+                      </a>
+                    </li>
+                   
+                  </ul>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                  <div class="card">
+                   
+                    <div class="card-body">
+                      <div class="card-datatable table-responsive pt-0">
                         <table class="datatables-basic table">
-                          <h5 class="p-7">REVENUES BY BATCHES</h5>
+                          <h5>YEAR</h5>
                           <thead>
                             <tr>
                               <th></th>
-                              <th>Batch</th>
+                              <th>Year</th>
                               <th>Total Assessments</th>
                               <th>Action</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <% batchRevenue.forEach(item=> { %>
+                            <% revenue.forEach(item=> { %>
                               <tr>
                                 <td></td>
                                 <td>
-                                  <%= item.batch.slice(0, 20) %>
+                                  <%= item.year %>
                                 </td>
                                 <td>
                                   <%= item.total %>
@@ -121,20 +79,12 @@
                                       <i class="ti ti-dots-vertical"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
+                                      <a class="dropdown-item" href="/admin/revenue_upload/view/<%= item.year %>">
                                         <i class="ti ti-eye me-1"></i>View more
                                       </a>
-                                      <% if(item.status_count != item.total ) {%>
-                                      <a class="dropdown-item" href="javascript:;"
-                                        onclick="generatePay_code('<%= item.batch %>')">
-                                        <i class="ti ti-reload me-1"></i>Generate Pay code 
-                                      </a>
-                                      <% } %>
-                                      <a class="dropdown-item" href="javascript:void(0);"
-                                        onclick="deleteRecords('<%= item.batch %>')">
+                                      <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= item.year %>')">
                                         <i class="ti ti-trash me-1"></i>Delete
                                       </a>
-                                      
                                     </div>
                                   </div>
                                 </td>
@@ -142,12 +92,69 @@
                               <% }) %>
                           </tbody>
                         </table>
-                      <!-- </div> -->
+                      </div>
                     </div>
                   </div>
                 </div>
-
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="card-datatable table-responsive pt-0">
+                        <!-- <div class="table-responsive"> -->
+                          <table class="datatables-basic table">
+                            <h5 class="">BATCHES</h5>
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th>Batch</th>
+                                <th>Total Assessments</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% batchRevenue.forEach(item=> { %>
+                                <tr>
+                                  <td></td>
+                                  <td>
+                                    <%= item.batch.slice(0, 20) %>
+                                  </td>
+                                  <td>
+                                    <%= item.total %>
+                                  </td>
+                                  <td>
+                                    <div class="dropdown">
+                                      <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="ti ti-dots-vertical"></i>
+                                      </button>
+                                      <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/admin/revenue_upload/view/batch/<%= item.batch %>">
+                                          <i class="ti ti-eye me-1"></i>View more
+                                        </a>
+                                        <% if(item.status_count != item.total ) {%>
+                                        <a class="dropdown-item" href="javascript:;"
+                                          onclick="generatePay_code('<%= item.batch %>')">
+                                          <i class="ti ti-reload me-1"></i>Generate Pay code 
+                                        </a>
+                                        <% } %>
+                                        <a class="dropdown-item" href="javascript:void(0);"
+                                          onclick="deleteRecords('<%= item.batch %>')">
+                                          <i class="ti ti-trash me-1"></i>Delete
+                                        </a>
+                                        
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                          </table>
+                        <!-- </div> -->
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+                
                 <!-- Modal to add new record -->
                 <div class="offcanvas offcanvas-end" id="add-new-record">
                   <div class="offcanvas-header border-bottom">

@@ -55,7 +55,7 @@
                         <div class="col-md-3">
                           <div class="mb-3">
                             <label for="paymentDateFrom" class="form-label">Ward/Area</label>
-                            <select name="" class="form-control" id="">
+                            <select name="ward" class="form-control" id="ward">
                               <option value="All">All</option>
                               <% areas.map(area => { %>
                                 <option value="<%= area.Id %>"><%= area.areaname %></option>
@@ -91,6 +91,16 @@
           const currentYear = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
           $("#current_year").val(currentYear);
           $("#_year").val(currentYear);
+
+
+          const ward = document.getElementById('ward').addEventListener('change', findStreets)
+
+          async function findStreets() {
+            const wardId = this.value()
+
+            
+          }
+
         </script>
   </body>
 </html>

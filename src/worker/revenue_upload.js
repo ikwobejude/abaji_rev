@@ -21,6 +21,20 @@ const Op = Sequelize.Op;
 // return
 const date = new Date();
 
+// SN
+// Business Name 1
+// Name Of Rate Payers 2
+// Address Of Business 3
+// Ward 4
+// Street 5
+// Business Operation	6
+// Revenue Item Name(s)	7
+// Revenue Item Code(s)	8
+// Item Prices	9
+// Payer Phone Number	10
+// Email 11
+
+
 const run = async () => {
   const rows = await readXlsxFile(path.join(__dirname, "../../uploads/" + workerData.file));
   rows.shift();
@@ -37,7 +51,6 @@ const run = async () => {
   for (const row of rows) {
     let invNum = await Invoice_number_count.findOne({ raw: true });
     
-
     const wd = await Ward.findOne({ where: { city: row[4] }, raw: true });
     if(!wd) {
       await Ward.create({
@@ -47,27 +60,28 @@ const run = async () => {
       })
     }
     const strt = await Streets.findOne({
-      where: { street: row[7] },
+      where: { street: row[5] },
       raw: true,
     });
 
     if(!strt) {
       const ward = await Ward.findOne({ where: { city: row[4] }, raw: true });
       await Streets.create({
-        street: row[7],
+        street: row[5],
         city_id: ward.city_id
       })
     }
 
     const ward = wd ? wd : await Ward.findOne({ where: { city: row[4] }, raw: true });
-    const street = strt ? strt  : await Streets.findOne({ where: { street: row[7] }, raw: true,});
+    const street = strt ? strt  : await Streets.findOne({ where: { street: row[5] }, raw: true,});
 
 
     const payerId = randomNum(10) + parseInt(invNum.invoice_number);
     
     // let revenueCodes = typeof row[2] === "string" ? row[2].split("/") : [row[2]];
-    const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
-    const amt = typeof row[6] === "string" ? row[6].split('/') : [row[6]];
+    const rv = typeof row[7] === "string" ? row[7].split('/') : [row[7]];
+    const rc = typeof row[8] === "string" ? row[8].split('/') : [row[9]];
+    const amt = typeof row[9] === "string" ? row[9].split('/') : [row[9]];
     const sum = amt.reduce((accumulator, currentValue) => {
       return accumulator + parseFloat(currentValue);
     }, 0);
@@ -105,23 +119,24 @@ const run = async () => {
     let payload = {
       biller_accountid: invNum.invoice_number, //data.success == true ? data.data.paycode : new Date().getTime().toString(36),
       assessment_no: payerId,
-      revenue_code: row[1],
+      revenue_code: row[8],
       bill_ref_no:  InvoiceNumber, // invoice number
-      name_of_business: row[2], // Name Of Rate Payers
-      revenue_type: row[1], // Revenue Name
+      name_of_business: row[1], // Name Of Rate Payers
+      revenue_type: row[7], // Revenue Name
       address_of_property: row[3] /* Address Of Business */,
-      type_of_property: row[5] /* Business Operation */,
+      type_of_property: row[6] /* Business Operation */,
       annaul_value: sum,
       rate_payable: sum, // item price
       grand_total: sum,
       rate_year: new Date().getFullYear(),
-      rate_district: ward == null ? row[7] : ward.city_id,
-      street: street == null ? row[4] : street.idstreet,
+      rate_district: ward == null ? row[4] : ward.city_id,
+      street: street == null ? row[5] : street.idstreet,
       batch: batchNumber,
       invoice_number: InvoiceNumber,  // data.success == true ? data.data.ref_id : InvoiceNumber,
       state_tin: InvoiceNumber, //data.success == true ? data.data.invoice_id : InvoiceNumber,
-      phone_number: "0910009900",
-      generated_phone: "0910009900",
+      phone_number: row[10] || "0910009900",
+      generated_phone: row[10] || "0910009900",
+      email: row[11] || "",
       ass_status: 0, // data.success == true ? 1: 0,
       tax_office_id: 8477,
       service_id: workerData.service_id
@@ -136,9 +151,9 @@ const run = async () => {
         amount: amt[i],
         business_tag: payerId,
         taxyear: new Date().getFullYear(),
-        revenue_code: itemName, // Revenue Name,
+        revenue_code: rc[i], // Revenue Name,
         invoice_number: InvoiceNumber,
-        type: itemName, // Revenue Name,
+        type: rv[i], // Revenue Name,
         service_id: workerData.service_id,
         batch: batchNumber,
       };

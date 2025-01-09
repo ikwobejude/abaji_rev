@@ -316,9 +316,7 @@ class Revenue extends Bud_pay {
       const res1 = new Promise((resolve, reject) => {
         const file = res.fileName;
         console.log(file);
-        const worker = new Worker(
-          path.join(__dirname, `../worker/revenue_upload.js`),
-          {
+        const worker = new Worker(path.join(__dirname, `../worker/revenue_upload.js`),{
             workerData: {
               file,
               service_id: data.service_id,

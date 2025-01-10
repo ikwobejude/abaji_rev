@@ -2,9 +2,9 @@ const path = require("path");
 const { workerData, parentPort } = require("worker_threads");
 const { v4: uuidv4 } = require("uuid");
 const Sequelize = require("sequelize");
-const googleDrive = require("../lib/googleDrive.util");
+const googleDrive = require("../src/lib/googleDrive.util");
 
-const { businesses } = require("../model/business.model");
+const { businesses } = require("../src/model/business.model");
 
 const Op = Sequelize.Op;
 const data = workerData.data;

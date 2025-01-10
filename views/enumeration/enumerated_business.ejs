@@ -92,29 +92,29 @@
                           <th>Category</th>
                           <th>Operation</th>
                           <th>Sector</th>
-                          <th>LGA/Ward</th>
-                          <th>Street</th>
+                          <!-- <th>LGA/Ward</th>
+                          <th>Street</th> -->
                           <th>Owner.Name</th>
-                          <th>Owner.Email</th>
+                          <!-- <th>Owner.Email</th> -->
                           <th>Owner.Phone</th>
                           
                         </tr>
                       </thead>
                       <tbody>
-                        <% businesses.map(building => { %>
+                        <% businesses.map(business => { %>
                           <tr>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
+                              <td</td>
+                              <td><%= business.business_name %></td>
+                              <td><%= business.business_size %></td>
+                              <td><%= business.business_type %></td>
+                              <td><%= business.business_category %></td>
+                              <td><%= business.business_operation %></td>
+                              <td><%= business.business_sector %></td>
+                              <!-- <td></td>
+                              <td></td> -->
+                              <td><%= business.contact_person %></td>
+                              <!-- <td></td> -->
+                              <td><%= business.businessnumber %></td>
                           </tr>
                       <% }) %>
                       </tbody>

@@ -88,6 +88,8 @@
                           <th>Action</th>
                           <th>Building No.</th>
                           <th>Building Name </th>
+                          <th>Category </th>
+                          <th>Type </th>
                           <th>State</th>
                           <th>LGA/Ward</th>
                           <th>Street</th>
@@ -101,15 +103,17 @@
                         <% buildings.map(building => { %>
                             <tr>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><%= building.building_number %></td>
+                                <td><%= building.building_name %></td>
+                                <td><%= building.building_category %></td>
+                                <td><%= building.building_type %></td>
+                                <td><%= building.state %></td>
+                                <td><%= building.lga %><%= building.city %></td>
+                                <td><%= building.street %></td>
+                                <td><%= building.owner_name %></td>
+                                <td><%= building.owner_email %></td>
+                                <td><%= building.owner_mobile_no %></td>
+                                <td><%= building.latitude %>/<%= building.longitude %></td>
                             </tr>
                         <% }) %>
                       </tbody>

@@ -1,9 +1,12 @@
+const adminService = require('../classes/admin.service')
 const buildingService = require('../classes/building.service')
 const businessService = require('../classes/business.service')
 
 class enumerationController {
     static async panel(req, res) {
-        res.status(200).render('./enumeration/panel')
+        const response = await adminService.revenuePanel(req.user)
+        console.log(response)
+        res.status(200).render('./enumeration/panel', response)
     }
 
     static async buildings(req, res) {

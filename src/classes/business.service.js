@@ -321,7 +321,7 @@ class Business {
             const res1 = new Promise((resolve, reject) => {
                 //worker begins here
                 const worker = new Worker(
-                  path.join(__dirname, `../worker/sync_business.worker.js`),
+                  path.join(__dirname, `../../worker/sync_business.worker.js`),
                   {
                     workerData: {
                       data,
@@ -373,11 +373,11 @@ class Business {
                 _buildings.street_id, 
                 businesses.created_at
             FROM businesses 
-            LEFT JOIN _business_categories ON businesses.business_category = _business_categories.business_category_id
-            LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id
-            LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id
-            LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id
-            LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type
+            LEFT JOIN _business_categories ON businesses.business_category = _business_categories.business_category_id OR businesses.business_category = _business_categories.business_category
+            LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id OR businesses.business_operation = _business_operations.business_operation
+            LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id OR businesses.business_sector = _business_sectors.business_sector
+            LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id OR businesses.business_size = _business_sizes.business_size
+            LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type OR businesses.business_type = _business_types.business_type
             LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
             WHERE businesses.service_id = :service_id
             `;

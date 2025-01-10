@@ -25,6 +25,7 @@
     "express": "^4.19.2",
     "express-messages": "^1.0.1",
     "express-xml-bodyparser": "^0.3.0",
+    "googleapis": "^144.0.0",
     "jimp": "^0.22.12",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
@@ -35,6 +36,7 @@
     "pm2": "^5.4.2",
     "read-excel-file": "^5.8.4",
     "sequelize": "^6.37.3",
+    "streamifier": "^0.1.1",
     "uuid": "^10.0.0",
     "xml2js": "^0.6.2"
   }

@@ -1,4 +1,6 @@
 const eventEmitter = require('events');
+const { Worker } = require("worker_threads");
+const path = require("path");
 const sequelize = require('../db/connection');
 const { QueryTypes } = require('sequelize');
 const { building, building_categories, building_types } = require('../model/Buildings');
@@ -111,7 +113,7 @@ class Buildings {
         const res1 = new Promise((resolve, reject) => {
             //worker begins here
             const worker = new Worker(
-              path.join(__dirname, `../worker/sync_buildings.worker.js`),
+              path.join(__dirname, `../../worker/sync_buildings.worker.js`),
               {
                 workerData: {
                   data,
@@ -157,14 +159,18 @@ class Buildings {
                 _buildings.owner_email, 
                 _buildings.owner_mobile_no,
                 _building_categories.building_category,  
-                _building_types.building_type, 
+                _building_types.building_type,
+                _states.state,
+                _lga.lga, 
                 _streets.street, 
-                _cities.city  
+                areas.areaname AS city  
             FROM _buildings 
             LEFT JOIN _building_categories ON _building_categories.idbuilding_category = _buildings.building_category_id
             LEFT JOIN _building_types ON _building_types.idbuilding_types = _buildings.apartment_type
             LEFT JOIN _streets ON _streets.idstreet = _buildings.ward
-            LEFT JOIN _cities ON _cities.city_id = _buildings.street_id
+             LEFT JOIN areas ON areas.Id = _buildings.ward
+            LEFT JOIN _lga ON _lga.lga_id = _buildings.lga
+            LEFT JOIN _states ON _states.state_id = _buildings.state_id
             WHERE _buildings.service_id = :service_id
             `;
         

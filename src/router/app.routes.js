@@ -46,4 +46,8 @@ Router.route('/clients')
   }, app.addClient);
 
 
+
+Router.post('/initialize_payments', app.pushPayment)
+
+
 module.exports = Router

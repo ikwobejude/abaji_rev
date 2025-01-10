@@ -1,4 +1,5 @@
 const client = require('../classes/client.service');
+const pay = require('../lib/pay_demo.payment');
 const helper = require('../helper/helper')
 
 module.exports = {
@@ -27,4 +28,18 @@ module.exports = {
             })
         }
     },
+
+    pushPayment: async (req, res) => {
+        console.log(req.body)
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const payload = {
+            payer_email: process.env.MAIL_FROM_ADDRESS,
+            amount: parseFloat(req.body.amount_paid, 10),
+            callback_url: baseUrl,
+            invoice: req.body.bill_ref_no,
+        }
+        const response = await pay.initialize(payload)
+        res.status(200).json(response)
+        
+    }
 }

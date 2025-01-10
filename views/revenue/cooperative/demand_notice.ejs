@@ -624,6 +624,7 @@ Dear Queen Consolidated,
                           <option value="Debit Card">Debit Card</option>
                           <option value="Credit Card">Credit Card</option>
                           <option value="Paypal">Paypal</option>
+                          <option value="Demo Pay">Demo Pay</option>
                         </select>
                       </div>
                       <div class="mb-6">
@@ -683,12 +684,14 @@ Dear Queen Consolidated,
                           grand_total: '<%= revenue.grand_total %>',
                           customerName: '<%= revenue.name_of_business %>',
                           assessment_type: '<%= revenue.type_of_property %>',
+                          bill_ref_no: '<%= revenue.bill_ref_no %>',
                         }
 
                         console.log(payload)
                         // return
                         try {
-                          const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
+                          const url = data.get("payment_method") == "Demo Pay" ? '/initialize_payments' : `/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`
+                          const req = await fetch(url, {
                             method: "post",
                             body: JSON.stringify(payload),
                             headers: {
@@ -702,7 +705,11 @@ Dear Queen Consolidated,
                           if (response.status == true) {
                             toastr.success(response.message);
                             setTimeout(() => {
-                              location.reload()
+                              if(data.get("payment_method") == "Demo Pay") {
+                                location.assign(response.payment_url)
+                              } else {
+                                location.reload()
+                              }
                             }, "3000");
                           } else {
                             // for errors - red box

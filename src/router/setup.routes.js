@@ -21,4 +21,6 @@ Router.route("/street").get(setup.getStreets).post(setup.postStreet);
 Router.route("/inter_switch")
   .post(setup.postInterSwitch)
   .get(setup.fetchInterSwitch);
+
+
 module.exports = Router;

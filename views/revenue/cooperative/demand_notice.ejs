@@ -687,10 +687,11 @@ Dear Queen Consolidated,
                           bill_ref_no: '<%= revenue.bill_ref_no %>',
                         }
 
-                        console.log(payload)
+                        // console.log(payload)
                         // return
                         try {
-                          const url = data.get("payment_method") == "Demo Pay" ? '/initialize_payments' : `/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`
+                          const url = data.get("payment_method") == "Demo Pay" ? '/initialize_payments' : `/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`;
+                          // console.log(url)
                           const req = await fetch(url, {
                             method: "post",
                             body: JSON.stringify(payload),
@@ -702,7 +703,7 @@ Dear Queen Consolidated,
                           const response = await req.json();
                           $(".spinner-border").hide()
 
-                          if (response.status == true) {
+                          if (response.status == true || response.success == true) {
                             toastr.success(response.message);
                             setTimeout(() => {
                               if(data.get("payment_method") == "Demo Pay") {

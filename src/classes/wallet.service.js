@@ -288,7 +288,9 @@ class Wallet {
         } else {
             return {
                 status: false,
-                message: "No wallet found, contact the system admin for help"
+                message: "No wallet found, contact the system admin for help",
+                balance: 0,
+                walletId: '',
             }
         }
         
@@ -311,7 +313,12 @@ class Wallet {
                 walletId: result.idwallent,
             }
         } else {
-            throw Error("No wallet found, contact the system admin for help")
+            return {
+                status: false,
+                balance: 0,
+                walletId: '',
+            }
+            // throw Error("No wallet found, contact the system admin for help")
         }
         
     }

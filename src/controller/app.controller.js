@@ -39,6 +39,7 @@ module.exports = {
             invoice: req.body.bill_ref_no,
         }
         const response = await pay.initialize(payload)
+        console.log(response)
         res.status(200).json(response)
         
     }

@@ -1,5 +1,6 @@
 const express = require("express");
 const setup = require("../controller/setup.controller");
+
 const Router = express.Router();
 
 Router.route("/ticket_item")
@@ -22,5 +23,25 @@ Router.route("/inter_switch")
   .post(setup.postInterSwitch)
   .get(setup.fetchInterSwitch);
 
+Router.get("/building_categories", setup.building_categories);
+Router.post("/building_categories", setup.create_building_category);
+Router.get("/building_types", setup.building_types);
+Router.post("/building_types", setup.createBuildingType);
+// Router.get("/business_types", setup.)
+Router.route("/business_types")
+  .get(setup.getBusinessTypes)
+  .post(setup.addBusinessTypes);
+Router.route("/business_categories")
+  .get(setup.getBusinessCategory)
+  .post(setup.addBusinessCategory);
 
+Router.route("/business_sizes")
+  .get(setup.getBusinessSizes)
+  .post(setup.addBusinessSizes);
+Router.route("/business_sector")
+  .get(setup.getBusinessSector)
+  .post(setup.addBusinessSector);
+Router.route("/business_operations")
+  .get(setup.getBusinessOperations)
+  .post(setup.addBusinessOperations);
 module.exports = Router;

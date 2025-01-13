@@ -46,12 +46,8 @@
 
                     <div class="card p-3">
                       <div class="row">
-                        <div class="col-md-12 text-center" style="top: -50%;">
-                          <img src="/logo.jpeg" alt="logo" style="text-align: center;"> <br>
-                          <span
-                            style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
-                            class="mt-2">ABAJI AREA COUNCIL</span><br>
-                          <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
+                        <div class="col-md-12 text-center" style="top: -50%; height: 30vh;">
+                          
                         </div>
                       </div>
                       <table width="100%" class="tbl">
@@ -81,14 +77,14 @@
                             width="20%">Payer’s Name </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.name_of_business %>
+                            <%= revenue?.name_of_business %>
                           </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
                             width="20%">RRR</td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.rrr %>
+                            <%= revenue?.rrr %>
                           </td>
                         </tr>
                         <tr>
@@ -97,14 +93,14 @@
                             width="20%">Phone Number </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.phone_number %>
+                            <%= revenue?.phone_number %>
                           </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
                             width="20%">Date of issue</td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                            <%= revenue?.date_uploaded?.toLocaleDateString('en-US') %>
                           </td>
                         </tr>
                         <tr>
@@ -113,15 +109,15 @@
                             width="20%">Address </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
-                              revenue.address_of_property %>
+                            <%= revenue?.rate_district=="MARKET" ? `${revenue?.address_of_property} ${revenue?.market}` :
+                              revenue?.address_of_property %>
                           </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
                             width="20%">Year of Billing</td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.rate_year %>
+                            <%= revenue?.rate_year %>
                           </td>
                         </tr>
 
@@ -188,8 +184,8 @@
                                     </td>
                                   </tr>
                                   <% }) %>
-                                    <% let gtotal=total + parseFloat(revenue.arrears==0 || revenue.arrears==null ? 0
-                                      :revenue.arrears); %>
+                                    <% let gtotal=total + parseFloat(revenue?.arrears==0 || revenue?.arrears==null ? 0
+                                      :revenue?.arrears); %>
 
 
                                       <tr>
@@ -208,13 +204,13 @@
                                         </td>
                                         <td class="td sess"
                                           style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                          &#8358; <%= revenue.arrears==0 || revenue.arrears==null ? "0.00" :
-                                            parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                          &#8358; <%= revenue?.arrears==0 || revenue?.arrears==null ? "0.00" :
+                                            parseFloat(revenue?.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
                                             ) %>
 
                                         </td>
                                       </tr>
-                                      <% if(revenue.goodwill> 0){%>
+                                      <% if(revenue?.goodwill> 0){%>
                                         <tr>
                                           <td
                                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
@@ -230,8 +226,8 @@
                                             <strong>Discount</strong>
                                           </td>
                                           <td class="td sess" style="font-weight: bold !important;">
-                                            &#8358;<%= revenue.goodwill ?
-                                              parseFloat(revenue.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                            &#8358;<%= revenue?.goodwill ?
+                                              parseFloat(revenue?.goodwill).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
                                               ) : "0.00" %>
                                           </td>
                                         </tr>
@@ -296,7 +292,7 @@
                           Kindly make payment(s) to Abaji Area Council, First Bank Plc <strong> 2000318051 </strong>or
                           make payment with your
                           Bill No. <span class="invo_no">
-                            <%= revenue.bill_ref_no %>
+                            <%= revenue?.bill_ref_no %>
                           </span> through the POS at the Council Office and obtain E-receipt<br>
                           <span style="font-weight: bold !important;">If payment is not made
                             within 14 days of the demand notice, LEGAL PROCEEDINGS
@@ -312,7 +308,7 @@
                           <td>
 
                             <div>
-                              <% const dtff='/invoice_rocessing/' +revenue.invoice_number %>
+                              <% const dtff='/invoice_rocessing/' +revenue?.invoice_number %>
                                 <img src="https://quickchart.io/qr?text=<%= dtff %>"
                                   style="width: 30% !important; height: 30% !important; border: 1px solid black !important;" />
                             </div>
@@ -339,11 +335,11 @@
                         </tr>
                         <tr>
                           <td width="70%">
-                            Rate Payer’s Name: <b><%= revenue.name_of_business %>
+                            Rate Payer’s Name: <b><%= revenue?.name_of_business %>
                             </b>
                             <br>Address: <b>
-                              <%= revenue.rate_district=="MARKET" ? `${revenue.address_of_property} ${revenue.market}` :
-                                revenue.address_of_property %>
+                              <%= revenue?.rate_district=="MARKET" ? `${revenue?.address_of_property} ${revenue?.market}` :
+                                revenue?.address_of_property %>
                             </b>
                             <br>
                             <table width="100%" style="padding: 20px;" class="tbl pb-2">
@@ -400,8 +396,8 @@
                                       </td>
                                       <td class="td sess"
                                         style="font-weight: bold !important; padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important">
-                                        &#8358;<%= revenue.arrears==0 || revenue.arrears==null ? "0.00" :
-                                          parseFloat(revenue.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
+                                        &#8358;<%= revenue?.arrears==0 || revenue?.arrears==null ? "0.00" :
+                                          parseFloat(revenue?.arrears).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","
                                           ) %>
 
                                       </td>
@@ -435,16 +431,16 @@
                           <td>
                             <span class="sess">
                               Date: <b>
-                                <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                                <%= revenue?.date_uploaded?.toLocaleDateString('en-US') %>
                               </b> <br>
                               Year of Billing: <b>
-                                <%= revenue.rate_year %>
+                                <%= revenue?.rate_year %>
                               </b> <br>
                               Payer ID: <b> <span>
-                                  <%= revenue.biller_accountid %>
+                                  <%= revenue?.biller_accountid %>
                                 </span></b><br>
                               BILL NO: <b>
-                                <%= revenue.bill_ref_no %>
+                                <%= revenue?.bill_ref_no %>
                               </b>
                             </span>
 
@@ -452,7 +448,7 @@
                               <tr>
                                 <td
                                   style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                                  DATE ISSUES: <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                                  DATE ISSUES: <%= revenue?.date_uploaded?.toLocaleDateString('en-US') %>
                                 </td>
                               </tr>
                               <tr>
@@ -489,7 +485,7 @@
                           </a>
                           <a href="./app-invoice-edit.html" class="btn btn-label-secondary d-grid w-100"> Edit </a>
                         </div>
-                        <% if (revenue.payment_status==0) { %>
+                        <% if (revenue?.payment_status==0) { %>
                           <button class="btn btn-success d-grid w-100" data-bs-toggle="offcanvas"
                             data-bs-target="#addPaymentOffcanvas">
                             <span class="d-flex align-items-center justify-content-center text-nowrap">Make
@@ -607,7 +603,7 @@ Dear Queen Consolidated,
                         <div class="input-group">
                           <span class="input-group-text">₦</span>
                           <input type="text" id="invoiceAmount"
-                            value="<%= parseFloat(revenue.grand_total).toFixed(2) %>" name="invoiceAmount"
+                            value="<%= parseFloat(revenue?.grand_total).toFixed(2) %>" name="invoiceAmount"
                             class="form-control invoice-amount" placeholder="100" />
                         </div>
                       </div>
@@ -661,8 +657,7 @@ Dear Queen Consolidated,
                       const balance = await request.json();
                       wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
 
-                      // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
-                      if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
+                      if (parseFloat(balance.balance) < parseFloat('<%= revenue?.grand_total %>')) {
                         document.getElementById("wallet_payment").disabled = true;
                       }
                     });
@@ -678,17 +673,17 @@ Dear Queen Consolidated,
                           payment_date: data.get("payment_date"),
                           payment_method: data.get("payment_method"),
                           payment_note: data.get("payment_note"),
-                          assessment_no: '<%= revenue.assessment_no %>',
-                          rate_year: '<%= revenue.rate_year %>',
-                          grand_total: '<%= revenue.grand_total %>',
-                          customerName: '<%= revenue.name_of_business %>',
-                          assessment_type: '<%= revenue.type_of_property %>',
+                          assessment_no: '<%= revenue?.assessment_no %>',
+                          rate_year: '<%= revenue?.rate_year %>',
+                          grand_total: '<%= revenue?.grand_total %>',
+                          customerName: '<%= revenue?.name_of_business %>',
+                          assessment_type: '<%= revenue?.type_of_property %>',
                         }
 
                         console.log(payload)
                         // return
                         try {
-                          const req = await fetch(`/admin/demand_notice/<%= revenue.rate_year %>/<%= revenue.bill_ref_no %>`, {
+                          const req = await fetch(`/admin/demand_notice/<%= revenue?.rate_year %>/<%= revenue?.bill_ref_no %>`, {
                             method: "post",
                             body: JSON.stringify(payload),
                             headers: {

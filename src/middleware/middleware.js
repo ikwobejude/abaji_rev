@@ -20,7 +20,8 @@ module.exports =  {
                     const decodedToken = await  jwt.verify(token, process.env.JWT_SECRET);
                     // console.log({userId: decodedToken.userId})
                     if(decodedToken.userId) {
-                        let user = await db.query(`
+                        let user = await db.query(
+                          `
                             SELECT 
                                 users.id,
                                 users.group_id,
@@ -34,11 +35,14 @@ module.exports =  {
                                 users.service_code,
                                 users.inactive,
                                 users.name,
-                                users.user_code
+                                users.user_code,
+                                users.permissions
                             from users 
                             INNER JOIN user_groups AS g ON g.group_id = users.group_id
                             WHERE users.id = ${decodedToken.userId} LIMIT 1
-                        `, {type: QueryTypes.SELECT})
+                        `,
+                          { type: QueryTypes.SELECT }
+                        );
                         
                         // console.log("user active status: ", user[0].group_id)
                         // console.log(user)

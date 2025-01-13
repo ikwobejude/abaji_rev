@@ -138,13 +138,58 @@ class Reports {
       year: year,
       current: page,
       // count,
-      // pages: Math.ceil(count / perPage)
     };
   }
 
   async revenueReports(query) {}
 
-  async ticketReport(query) {}
+  async ticketReport(query) {
+    // console.log({ query });
+   let sql = `
+    SELECT
+      revenue_invoices.ref_no,
+      revenue_invoices.tin,
+      revenue_invoices.taxpayer_name,
+      revenue_invoices.revenue_id,
+      revenue_invoices.description,
+      revenue_invoices.amount,
+      revenue_invoices.day,
+      revenue_invoices.month,
+      revenue_invoices.year,
+      revenue_invoices.payment_date,
+      revenue_invoices.RevenueHeadName,
+      _cities.city,
+      _streets.street
+    FROM revenue_invoices
+    LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
+    LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
+    WHERE 1 = 1
+`;
+
+   if (query.from && query.to) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') BETWEEN '${query.from}' AND '${query.to}'`;
+   } else if (query.from) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') >= '${query.from}'`;
+   } else if (query.to) {
+     sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') <= '${query.to}'`;
+   }
+
+
+    if (query.assessment_item) sql += ` AND revenue_invoices.taxpayer_name = '${query.assessment_item}'`;
+    const totalRecordsQuery = await db.query(sql, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
+    // console.log("Final SQL Query:", sql);
+
+    const count = totalRecordsQuery.length;
+    // console.log({ count });
+    const result = await db.query(sql, { type: Sequelize.QueryTypes.SELECT });
+
+    return {
+      count,
+      result,
+    };
+  }
 }
 
 module.exports = Reports;

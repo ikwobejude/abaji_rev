@@ -46,9 +46,7 @@
                         <tr>
                           <!-- <th></th> -->
                           <th>Batch No</th>
-                          <th>Day</th>
-                          <th>Month</th>
-                          <th>Year</th>
+                          <th>Payment Date</th>
                           <th>Number</th>
                           <th>Total Amount</th>
                           <th>Action</th>
@@ -58,9 +56,7 @@
                         <% data.forEach(a => { %>
                           <tr>
                             <td><%= a.batch %></td>
-                            <td><%= a.day %></td>
-                            <td><%= a.month %></td>
-                            <td><%= a.year %></td>
+                            <td><%= a.payment_date %></td>
                             <td><%= a.count %></td>
                             <td><%= a.amount %></td>
                             <td class="d-flex align-items-center">

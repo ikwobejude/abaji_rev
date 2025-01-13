@@ -488,7 +488,7 @@ class FundWallet {
           const transaction = await this.db.query(sql, {type: Sequelize.QueryTypes.SELECT});
           const count = cnt.length;
 
-          console.log(transaction)
+          // console.log(transaction)
           return {
             current: page,
             pages: Math.ceil(count / perPage),

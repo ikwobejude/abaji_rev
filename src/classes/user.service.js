@@ -4,6 +4,7 @@ const User_groups = require("../model/User_group");
 const Users = require("../model/Users");
 const bcrypt = require("bcryptjs");
 const Sequelize = require("sequelize");
+const db = require("../db/connection");
 const Op = Sequelize.Op;
 const Permissions = require("../model/Permission");
 class User {
@@ -90,87 +91,56 @@ class User {
 
     return { status: true, message: "User created successfully." };
   }
-  async getUser() {
-    const users = await this.users.findAll();
-
-    const usersWithPermissions = await Promise.all(
-      users.map(async (user) => {
-        const userPermissionsIds = user.permissions;
-        // console.log(userPermissionsIds);
-        const userPermissions = await Promise.all(
-          userPermissionsIds.map(async (permissionId) => {
-            const permission = await this.permissions.findOne({
-              where: { permission_id: permissionId },
-            });
-
-            return permission ? permission.permission_name : null;
-          })
-        );
-        return {
-          ...user.get(),
-          permissions: userPermissions.filter(Boolean),
-        };
-      })
+  async getUser(service_id) {
+    const users = await db.query(
+      `SELECT
+          users.id AS uid,
+          users.name,
+          users.email,
+          users.user_phone,
+          users.firstname,
+          users.middlename,
+          users.surname,
+          users.tax_office_id,
+          users.group_id,
+          user_groups.group_name,
+          GROUP_CONCAT(TRIM(p.permission_name) ORDER BY p.permission_name SEPARATOR ', ') AS permissions
+        FROM users
+        LEFT JOIN user_groups ON users.group_id = user_groups.group_id
+        LEFT JOIN permissions p ON FIND_IN_SET(p.permission_id, users.permissions) > 0
+        WHERE users.service_id = :serviceId
+        GROUP BY users.id, users.name, users.email, users.user_phone, users.firstname, 
+               users.middlename, users.surname, users.tax_office_id, users.group_id, 
+               user_groups.group_name
+  `,
+      {
+        replacements: {
+          serviceId: service_id,
+        },
+        type: Sequelize.QueryTypes.SELECT,
+      }
     );
 
-    // Return the result
-    return { users: usersWithPermissions };
+    // console.log(users);
+    return { users };
   }
 
-  async addPermissionToUser(data) {
-    const id = data.userId;
-
-    const user = await this.users.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (!user.permissions) {
-      user.permissions = [];
-    }
-
-    // manage unique permissions
-    const currentPermissions = new Set(user.permissions);
-
-    // Add new permissions to the Set
-    data.permissions.forEach((permission) => {
-      if (!currentPermissions.has(permission)) {
-        currentPermissions.add(permission);
-      } else {
-        console.warn(`Permission "${permission}" already exists for this user`);
+  async addPermissionToUser(userId, permissions) {
+    try {
+      const user = await this.users.findByPk(userId);
+      if (!user) {
+        throw Error("User not found");
       }
-    });
 
-    user.permissions = Array.from(currentPermissions);
+      // console.log("Current user:", user);
+      user.permissions = permissions; // Ensure permissions is valid
+      await user.save();
 
-    await user.save();
-    return user;
-  }
-
-  async validateUserEmail(email) {
-    const user = await Users.findOne({
-      attributes: ["name", "user_phone", "id"],
-      where: {
-        [Op.or]: [{ username: email }, { email: email }],
-      },
-      raw: true,
-    });
-
-    if (user) {
-      return {
-        status: true,
-        data: user,
-      };
-    } else {
-      return {
-        status: false,
-        error: "User with the email address does not exist",
-      };
+      // console.log("Permissions saved:", user.permissions);
+      return user; // Optionally return the updated user
+    } catch (error) {
+      throw error;
+      // console.error("Error saving permissions:", error);
     }
   }
 

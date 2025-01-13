@@ -55,6 +55,7 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
+
   viewBatchAssessmentInvoice: async function (req, res) {
     try {
       const query = {
@@ -79,6 +80,8 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
+
+
   deleteYearly: async function (req, res) {
     try {
       const response = await revenue.truncateYearlyRecord(req.query);
@@ -88,6 +91,8 @@ module.exports = {
       res.status(500).send({ error: error.message });
     }
   },
+
+
   generate_pay_code: async function (req, res) {
     try {
       const response = await revenue.generate_pay_code_bud_pay(req.query);
@@ -100,6 +105,8 @@ module.exports = {
       });
     }
   },
+
+
   demandNotice: async function (req, res) {
     const response = await revenue.demandNotice(req.params);
     res
@@ -130,6 +137,7 @@ module.exports = {
       });
     }
   },
+
   editUserRole: async function (req, res) {
     try {
       // console.log(req.body)
@@ -142,6 +150,7 @@ module.exports = {
       });
     }
   },
+
   deleteUserRole: async function (req, res) {
     try {
       const response = await user.deleteUserRole(req.query.id);
@@ -153,6 +162,8 @@ module.exports = {
       });
     }
   },
+
+
   postUser: async function (req, res) {
     try {
       const response = await user.createUser({
@@ -168,34 +179,36 @@ module.exports = {
       });
     }
   },
+
   getUser: async function (req, res) {
     const usergroup = await user.userGroup();
-    const users = await user.getUser();
+    const users = await user.getUser(req.user.service_id);
     const perm = await permission.retrieve();
-    // console.log(perm)
-    // console.log({ users });
     res
       .status(200)
       .render("./users/users", { ...usergroup, ...users, ...perm });
   },
-addPermissionsToUser: async function (req, res) {
-  try {
-    const updatedUser = await user.addPermissionToUser(req.body)
 
-    res.status(201).json({ 
-      success: true, 
-      message: "Permissions added successfully", 
-      user: updatedUser
-    });
-  } catch (error) {
-    console.error("Error adding permissions:", error); 
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to add permissions: " + error.message 
-    });
-  }
-}
-,
+  addPermissionsToUser: async function (req, res) {
+    try {
+      const data = req.body;
+      const permissions = data.permissions.toString();
+      const updatedUser = await user.addPermissionToUser(data.userId, permissions);
+
+      res.status(201).json({
+        success: true,
+        message: "Permissions added successfully",
+        user: updatedUser
+      });
+    } catch (error) {
+      console.error("Error adding permissions:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to add permissions: " + error.message,
+      });
+    }
+  },
+  
   deleteUser: async function (req, res) {
     const { userId } = req.params;
 

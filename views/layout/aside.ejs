@@ -1,114 +1,111 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo">
-      <a href="/" class="app-brand-link">
-        <!-- <span class="app-brand-logo demo"> -->
-          <img src="/logo.png" alt="" style="width: 50px; height: 50px;">
-        <!-- </span> -->
-        <span class="app-brand-text fw-bold">Abaji Area Council</span>
+  <div class="app-brand demo">
+    <a href="/" class="app-brand-link">
+      <!-- <span class="app-brand-logo demo"> -->
+      <img src="/logo.png" alt="" style="width: 50px; height: 50px;">
+      <!-- </span> -->
+      <span class="app-brand-text fw-bold">Abaji Area Council</span>
+    </a>
+
+    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+      <i class="ti menu-toggle-icon d-none d-xl-block align-middle"></i>
+      <i class="ti ti-x d-block d-xl-none ti-md align-middle"></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow"></div>
+
+  <ul class="menu-inner py-1">
+    <!-- Dashboards -->
+    <li class="menu-item <%= link == " /admin/dashboard" ? "active" : "" %>">
+      <a href="/admin/dashboard" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-smart-home"></i>
+        <div data-i18n="Dashboard">Dashboard </div>
       </a>
+    </li>
 
-      <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-        <i class="ti menu-toggle-icon d-none d-xl-block align-middle"></i>
-        <i class="ti ti-x d-block d-xl-none ti-md align-middle"></i>
-      </a>
-    </div>
-
-    <div class="menu-inner-shadow"></div>
-
-    <ul class="menu-inner py-1">
-      <!-- Dashboards -->
-      <li class="menu-item <%= link == "/admin/dashboard" ? "active" : "" %>">
-        <a href="/admin/dashboard" class="menu-link">
-          <i class="menu-icon tf-icons ti ti-smart-home"></i>
-          <div data-i18n="Dashboard">Dashboard</div>
-        </a>
-      </li>
-
-       <!-- Extended components -->
-        <% let set = link == "/setup/ticket_item" ? "active open" : 
-                    link == "/setup/state" ? "active open" : 
-                    link == "/setup/ward" ? "active open" :  "" %>
-       <li class="menu-item <%= set %>">
+    <!-- Extended components -->
+    <% let set=link=="/setup/ticket_item" ? "active open" : link=="/setup/state" ? "active open" : link=="/setup/ward"
+      ? "active open" : "" %>
+      <li class="menu-item <%= set %>">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-components"></i>
           <div data-i18n="Settings">Settings</div>
         </a>
         <ul class="menu-sub">
-         
-          <% let setupItem = link == "/setup/ticket_item" ? "active open" : "" %>
-          <li class="menu-item <%= setupItem %>">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <div data-i18n="Revenue Items">Revenue Items</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item <%= link == "/setup/ticket_item" ? "active" : "" %>">
-                <a href="/setup/ticket_item" class="menu-link">
-                  <div data-i18n="Ticket Items">Revenue Items</div>
-                </a>
-              </li>
-              <!-- <li class="menu-item">
-                <a href="extended-ui-timeline-fullscreen.html" class="menu-link">
+
+          <% let setupItem=link=="/setup/ticket_item" ? "active open" : "" %>
+            <% if (user?.permissions?.includes('59')) { %>
+              <li class="menu-item <%= setupItem %>">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <div data-i18n="Revenue Items">Revenue Items</div>
                 </a>
-              </li> -->
-            </ul>
-          </li>
-
-          <% let location = link == "/setup/state" ? "active open" : 
-                            link == "/setup/ward" ? "active open" : 
-                            link == "/setup/street" ? "active open" : "" %>
-          <li class="menu-item <%= location %>">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <div data-i18n="Location Setup">Location Setup</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item <%= link == "/setup/state" ? "active" : "" %>">
-                <a href="/setup/state" class="menu-link">
-                  <div data-i18n="State">State</div>
-                </a>
+                <ul class="menu-sub">
+                  <li class="menu-item <%= link == " /setup/ticket_item" ? "active" : "" %>">
+                    <a href="/setup/ticket_item" class="menu-link">
+                      <div data-i18n="Ticket Items">Revenue Items</div>
+                    </a>
+                  </li>
+                </ul>
               </li>
-              <!-- <li class="menu-item">
+              <% } %>
+
+
+                <% let location=link=="/setup/state" ? "active open" : link=="/setup/ward" ? "active open" :
+                  link=="/setup/street" ? "active open" : "" %>
+                  <li class="menu-item <%= location %>">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                      <div data-i18n="Location Setup">Location Setup</div>
+                    </a>
+                    <ul class="menu-sub">
+                      <li class="menu-item <%= link == " /setup/state" ? "active" : "" %>">
+                        <a href="/setup/state" class="menu-link">
+                          <div data-i18n="State">State</div>
+                        </a>
+                      </li>
+                      <!-- <li class="menu-item">
                 <a href="/setup/lga" class="menu-link">
                   <div data-i18n="Lga">Lga</div>
                 </a>
               </li> -->
-              <li class="menu-item <%= link == "/setup/ward" ? "active" : "" %>">
-                <a href="/setup/ward" class="menu-link">
-                  <div data-i18n="Ward">Ward</div>
-                </a>
-              </li>
-              <li class="menu-item <%= link == "/setup/street" ? "active" : "" %>">
-                <a href="/setup/street" class="menu-link">
-                  <div data-i18n="Street">Street</div>
-                </a>
-              </li>
-            </ul>
-          </li>
-          
+                      <li class="menu-item <%= link == " /setup/ward" ? "active" : "" %>">
+                        <a href="/setup/ward" class="menu-link">
+                          <div data-i18n="Ward">Ward</div>
+                        </a>
+                      </li>
+                      <li class="menu-item <%= link == " /setup/street" ? "active" : "" %>">
+                        <a href="/setup/street" class="menu-link">
+                          <div data-i18n="Street">Street</div>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+
         </ul>
-       </li>
+      </li>
 
 
-       <% let ass = link == "/admin/revenue_upload" ? "active open" : link == "/admin/revenue_upload/view/"+new Date().getFullYear() ? "active open" :  ""  %>
+      <% let ass=link=="/admin/revenue_upload" ? "active open" : link=="/admin/revenue_upload/view/" +new
+        Date().getFullYear() ? "active open" : "" %>
+               <li class="menu-item <%= ass %>">
+          <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons ti ti-file"></i>
+            <div data-i18n="Assessment Revenue">Assessment Revenue</div>
+          </a>
+          <ul class="menu-sub">
+            <li class="menu-item <%= link == " /admin/revenue_upload" ? 'active' : link=="/admin/revenue_upload/view/"
+              +new Date().getFullYear() ? 'active' : "" %>">
 
-      <li class="menu-item <%= ass %>">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons ti ti-file"></i>
-          <div data-i18n="Assessment Revenue">Assessment Revenue</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item <%= link == "/admin/revenue_upload" ? 'active' : link == "/admin/revenue_upload/view/"+new Date().getFullYear() ? 'active' : ""  %>">
-            
-            <a href="/admin/revenue_upload" class="menu-link">
-              <div data-i18n="Revenue">Revenue</div>
-            </a>
-          </li>
-          <!-- <li class="menu-item">
+              <a href="/admin/revenue_upload" class="menu-link">
+                <div data-i18n="Revenue">Revenue</div>
+              </a>
+            </li>
+            <!-- <li class="menu-item">
             <a href="/admin/revenue_upload" class="menu-link">
               <div data-i18n="Security">Security</div>
             </a>
           </li> -->
-          <!--<li class="menu-item">
+            <!--<li class="menu-item">
             <a href="app-ecommerce-customer-details-billing.html" class="menu-link">
               <div data-i18n="Address & Billing">Address & Billing</div>
             </a>
@@ -118,93 +115,104 @@
               <div data-i18n="Notifications">Notifications</div>
             </a>
           </li> -->
-        </ul>
-      </li>
+          </ul>
+        </li>
 
-      <% let tPayment = link == "/admin/payment_reconciliation" ? "active open" : ""  %>
-      <li class="menu-item <%= tPayment %>">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons ti ti-credit-card"></i>
-          <div data-i18n="Ticket Payment">Ticket Payment</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item <%= link == '/admin/payment_reconciliation' ? 'active' : '' %>">
-            <a href="/admin/payment_reconciliation" class="menu-link">
-              <div data-i18n="Upload ticket payments">Upload ticket payments</div>
+        <% let tPayment=link=="/admin/payment_reconciliation" ? "active open" : "" %>
+          <li class="menu-item <%= tPayment %>">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons ti ti-credit-card"></i>
+              <div data-i18n="Ticket Payment">Ticket Payment</div>
             </a>
+            <ul class="menu-sub">
+              <li class="menu-item <%= link == '/admin/payment_reconciliation' ? 'active' : '' %>">
+                <a href="/admin/payment_reconciliation" class="menu-link">
+                  <div data-i18n="Upload ticket payments">Upload ticket payments</div>
+                </a>
+              </li>
+            </ul>
           </li>
-        </ul>
-      </li>
 
 
-      <% let reports = link == "/report/payment_reports" ? "active open" : link == "/report/revenue_assessments_reports" ? "active open" : "" %>
-      <li class="menu-item <%= reports %>">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons ti ti-chart-pie"></i>
-          <div data-i18n="Report">Report</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item <%= link == '/report/payment_reports' ? 'active' : '' %>">
-            <a href="/report/payment_reports" class="menu-link">
-              <div data-i18n="Payment Report">Payment Report</div>
-            </a>
-          </li>
-          <li class="menu-item <%= link == '/report/revenue_assessments_reports' ? 'active' : '' %>">
-            <a href="/report/revenue_assessments_reports" class="menu-link">
-              <div data-i18n="Assessment report">Assessment report</div>
-            </a>
-          </li>
-        </ul>
-      </li>
+          <% let reports=link=="/report/payment_reports" ? "active open" : link=="/report/revenue_assessments_reports"
+            ? "active open" : "" %>
+            <% if (user?.permissions?.includes('51')) { %>
+              <li class="menu-item <%= reports %>">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                  <i class="menu-icon tf-icons ti ti-chart-pie"></i>
+                  <div data-i18n="Report">Report</div>
+                </a>
+                <ul class="menu-sub">
+                  <li class="menu-item <%= link == '/report/payment_reports' ? 'active' : '' %>">
+                    <a href="/report/payment_reports" class="menu-link">
+                      <div data-i18n="Payment Report">Payment Report</div>
+                    </a>
+                  </li>
+                  <li class="menu-item <%= link == '/report/revenue_assessments_reports' ? 'active' : '' %>">
+                    <a href="/report/revenue_assessments_reports" class="menu-link">
+                      <div data-i18n="Assessment report">Assessment report</div>
+                    </a>
+                  </li>
+                  <li class="menu-item <%= link == '/report/ticket_report' ? 'active' : '' %>">
+                    <a href="/report/ticket_report" class="menu-link">
+                      <div data-i18n="Ticket report">Ticket report</div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <% } %>
 
-      <% let users = 
-      link == "/admin/user_group" ? "active open" : 
-      link == "/admin/user" ? "active open" : 
-      link == "/admin/permission" ? "active open" : "" %>
-      <li class="menu-item <%= users %>">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons ti ti-users"></i>
-          <div data-i18n="Users">Users</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item <%= link == "/admin/user_group" ? "active" : "" %>">
-            <a href="/admin/user_group" class="menu-link">
-              <div data-i18n="User Roles">User Roles</div>
-            </a>
-          </li>
-          <li class="menu-item <%= link == "/admin/permission" ? "active" : "" %>">
-            <a href="/admin/permission" class="menu-link">
-              <div data-i18n="Permission">Permission</div>
-            </a>
-          </li>
-          <li class="menu-item <%= link == "/admin/user" ? "active" : "" %>">
-            <a href="/admin/user" class="menu-link">
-              <div data-i18n="Users">Users</div>
-            </a>
-          </li>
-        </ul>
-      </li>
+                <% let users=link=="/admin/user_group" ? "active open" : link=="/admin/user" ? "active open" :
+                  link=="/admin/permission" ? "active open" : "" %>
+                  <% if (user?.permissions?.includes('60')) { %>
+                    <li class="menu-item <%= users %>">
+                      <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons ti ti-users"></i>
+                        <div data-i18n="Users">Users</div>
+                      </a>
+                      <ul class="menu-sub">
+                        <li class="menu-item <%= link == " /admin/user_group" ? "active" : "" %>">
+                          <a href="/admin/user_group" class="menu-link">
+                            <div data-i18n="User Roles">User Roles</div>
+                          </a>
+                        </li>
+                        <li class="menu-item <%= link == " /admin/permission" ? "active" : "" %>">
+                          <a href="/admin/permission" class="menu-link">
+                            <div data-i18n="Permission">Permission</div>
+                          </a>
+                        </li>
+                        <li class="menu-item <%= link == " /admin/user" ? "active" : "" %>">
+                          <a href="/admin/user" class="menu-link">
+                            <div data-i18n="Users">Users</div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <% }%>
 
-      <% let wallet = link == "/wallet" ? "active open" : link == "/wallet/reports" ? "active open" : ""  %>
-      <li class="menu-item <%= wallet %>">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons ti ti-credit-card"></i>
-          <div data-i18n="Wallet">Wallet</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item <%= link == "/wallet" ? "active" : "" %>">
-            <a href="/wallet" class="menu-link">
-              <div data-i18n="Wallet">Wallet</div>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <!-- Misc -->
-      
-      
-      
+                      <% let wallet=link=="/wallet" ? "active open" : link=="/wallet/reports" ? "active open" : "" %>
+                        <% if (user?.permissions?.includes('48')) { %>
+                          <li class="menu-item <%= wallet %>">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                              <i class="menu-icon tf-icons ti ti-credit-card"></i>
+                              <div data-i18n="Wallet">Wallet</div>
+                            </a>
+                            <ul class="menu-sub">
+                              <li class="menu-item <%= link == " /wallet" ? "active" : "" %>">
+                                <a href="/wallet" class="menu-link">
+                                  <div data-i18n="Wallet">Wallet</div>
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                          <% } %>
 
-    </ul>
-  </aside>
+                            <!-- Misc -->
 
-  <div id="cover-spin"></div>
+
+
+
+  </ul>
+</aside>
+
+<div id="cover-spin"></div>

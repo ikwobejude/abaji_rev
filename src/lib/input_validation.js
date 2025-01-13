@@ -2,6 +2,40 @@ const Joi = require("joi");
 
 module.exports = {
 
+  clientServiceSchema: Joi.object({
+    client_name: Joi.string().required().messages({
+      "any.required": `Client is required`,
+      "string.empty": `Client cannot be empty`,
+    }),
+    client_phone: Joi.string().required().messages({
+      "any.required": `Client phone number is required`,
+      "string.empty": `Client phone number cannot be empty`,
+    }),
+    client_email: Joi.string().required().messages({
+      "any.required": `Client email is required`,
+      "string.empty": `Client email cannot be empty`,
+    }),
+    admin_surname: Joi.string().required().messages({
+      "any.required": `Admin surname is required`,
+      "string.empty": `Admin surname cannot be empty`,
+    }),
+    admin_first_name: Joi.string().required().messages({
+      "any.required": `Admin firstname is required`,
+      "string.empty": `Admin firstname cannot be empty`,
+    }),
+    admin_middlename: Joi.string().allow("").optional(),
+    client_admin_phone: Joi.string().required().messages({
+      "any.required": `Client admin phone is required`,
+      "string.empty": `Client admin phone cannot be empty`,
+    }),
+    client_admin_email: Joi.string().required().messages({
+      "any.required": `Client admin email is required`,
+      "string.empty": `Client admin email cannot be empty`,
+    }),
+    client_address: Joi.string().allow("").optional(),
+  }).unknown(),
+  
+
     login: Joi.object({
         username: Joi.string().required().messages({
             "any.required": `Username is required`,

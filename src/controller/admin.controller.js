@@ -9,6 +9,21 @@ module.exports = {
         res.status(200).render('./dashboard', {...data})
     },
 
+    revenueStreet: async function(req, res) {
+        const data = await admin.streetExpectedGraph(req.user.service_id)
+        res.status(200).json(data)
+    },
+
+    paymentsStreet: async function(req, res) {
+        const data = await admin.streetPaymentGraph(req.user.service_id)
+        res.status(200).json(data)
+    },
+
+    walletPayment: async function(req, res) {
+        const data = await admin.walletPayment(req.user.service_id)
+        res.status(200).json(data)
+    },
+
   getAllUsers: async function (req, res) {},
 
   // User group

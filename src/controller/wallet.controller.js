@@ -7,72 +7,93 @@ const user = new User();
 const fund_wallet = new FundWallet()
 const wallet = new Wallet()
 
-module.exports = {
-    creditWallet: async function(req, res) {
-        // console.log(req.body)
-        // return
+class WalletController {
+    static async creditWallet(req, res) {
         try {
-            const {value, error} = walletToitValidation.validate(req.body)
-            if(error) {
-                throw Error(error.message)
+            const { value, error } = walletToitValidation.validate(req.body);
+            if (error) {
+                throw new Error(error.message);
             } else {
-                
                 const data = await fund_wallet.creditWallet(value, req.user);
-                res.status(200).json(data)
+                res.status(200).json(data);
             }
         } catch (error) {
-            console.log(error)
+            console.error(error);
             res.status(200).json({
                 status: false,
-                message: error.message
-            })
+                message: error.message,
+            });
         }
-    },
+    }
 
+    static async walletTransactions(req, res) {
+        try {
+            const data = await fund_wallet.wallets(req.user.service_id);
+            res.status(200).render('./wallet/wallet', { data });
+        } catch (error) {
+            console.error(error);
+            res.status(400).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
 
-    walletTransactions: async function(req, res) {
-        const data = await fund_wallet.wallets(req.user.service_id);
-        res.status(200).render('./wallet/wallet', {data})
-    },
-
-    validateUser: async function(req, res) {
+    static async validateUser(req, res) {
         try {
             const data = await user.validateUserEmail(req.query.email, req.user.service_id);
-            // console.log(data)
-            res.status(200).json(data)
+            res.status(200).json(data);
         } catch (error) {
-            console.log(error)
+            console.error(error);
             res.status(400).json({
-                status: true,
-                message: error.message
-            })
+                status: false,
+                message: error.message,
+            });
         }
-    },
+    }
 
-    viewWallets: async function(req, res) {
-        const data = await fund_wallet.wallets();
-        // console.log(data)
-        res.status(200).json(data)
-    },
-
-    viewWalletTransactions: async function(req, res) {
-        const data = await fund_wallet.userWalletTransaction({...req.query, id: req.params.id});
-        // console.log(data)
-        res.status(200).render('./wallet/user_wallet_transactions', {...data})
-    },
-
-    makeAssessmentPayment: async function(req, res) {
+    static async viewWallets(req, res) {
         try {
-            const request = await wallet.makeWalletAssessmentPayment({...req.body, ...req.params, ...req.user})
-            console.log(request)
-            res.status(200).json(request)
+            const data = await fund_wallet.wallets();
+            res.status(200).json(data);
         } catch (error) {
-            console.log(error)
+            console.error(error);
+            res.status(400).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
+
+    static async viewWalletTransactions(req, res) {
+        try {
+            const data = await fund_wallet.userWalletTransaction({ ...req.query, id: req.params.id });
+            res.status(200).render('./wallet/user_wallet_transactions', { ...data });
+        } catch (error) {
+            console.error(error);
+            res.status(400).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
+
+    static async makeAssessmentPayment(req, res) {
+        try {
+            const request = await wallet.makeWalletAssessmentPayment({
+                ...req.body,
+                ...req.params,
+                ...req.user,
+            });
+            res.status(200).json(request);
+        } catch (error) {
+            console.error(error);
             res.status(200).json({
                 status: false,
-                message: error.message
-            })
-            
+                message: error.message,
+            });
         }
     }
 }
+
+module.exports = WalletController;

@@ -24,13 +24,33 @@ class enumerationController {
         res.status(200).render('./enumeration/enumerated_business', response)
     }
 
-
     // generate mandates
 
     static async generateMandate(req, res) {
         const response = await businessService.mandateMetaData({service_id: req.user.service_id, ...req.query})
         console.log(response)
         res.status(200).render('./enumeration/generate_mandate', response)
+    }
+
+    static async getBuilding(req, res) {
+        try {
+            const response = await buildingService.getBuilding({service_id:req.user.service_id, ...req.query, ...req.params})
+            console.log(response)
+            res.status(200).render('./enumeration/view_building', response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    static async getBusiness(req, res) {
+        try {
+            const response = await businessService.findBusiness({service_id:req.user.service_id, ...req.params})
+            console.log(response)
+            res.status(200).render('./enumeration/view_business', response)
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

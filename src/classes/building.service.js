@@ -243,6 +243,115 @@ class Buildings {
             throw new Error(error)
         }
     }
+
+    async getBuilding(query) {
+        // Base SQL query
+
+      const perPage = 10;
+      const page = parseInt(query.page, 10) || 1;
+      const offset = perPage * (page - 1);
+
+
+        let sql = `
+        SELECT 
+            _buildings.building_number, 
+            _buildings.building_id,
+            _buildings.building_name, 
+            _buildings.owner_name, 
+            _buildings.owner_email, 
+            _buildings.owner_mobile_no,
+            _building_categories.building_category,  
+            _building_types.building_type,
+            _buildings.registered_on,
+            _buildings.status,
+            _states.state,
+            _lga.lga, 
+            _streets.street, 
+            areas.areaname AS city  
+        FROM _buildings 
+        LEFT JOIN _building_categories ON _building_categories.idbuilding_category = _buildings.building_category_id
+        LEFT JOIN _building_types ON _building_types.idbuilding_types = _buildings.apartment_type
+        LEFT JOIN _streets ON _streets.idstreet = _buildings.ward
+         LEFT JOIN areas ON areas.Id = _buildings.ward
+        LEFT JOIN _lga ON _lga.lga_id = _buildings.lga
+        LEFT JOIN _states ON _states.state_id = _buildings.state_id
+        WHERE _buildings.service_id = :service_id AND  _buildings.building_number = :building_number
+        `;
+    
+        let sql1 = `
+        SELECT 
+            businesses.business_name, 
+            businesses.business_address,  
+            businesses.businessnumber,  
+            businesses.contact_person,  
+            businesses.business_tag,
+            _business_categories.business_category, 
+            _business_operations.business_operation, 
+            _business_sectors.business_sector, 
+            _business_sizes.business_size, 
+            _business_types.business_type,
+            _buildings.building_name, 
+            _buildings.street_id, 
+            businesses.created_at
+        FROM businesses 
+        LEFT JOIN _business_categories ON businesses.business_category = _business_categories.business_category_id OR businesses.business_category = _business_categories.business_category
+        LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id OR businesses.business_operation = _business_operations.business_operation
+        LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id OR businesses.business_sector = _business_sectors.business_sector
+        LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id OR businesses.business_size = _business_sizes.business_size
+        LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type OR businesses.business_type = _business_types.business_type
+        LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
+        WHERE businesses.service_id = :service_id AND businesses.building_id = :building_number
+        ORDER BY businesses.business_id DESC LIMIT :limit OFFSET :offset`;
+
+       
+    
+        // Execute the query with replacements
+        const [ viewBuilding, viewBusiness, count ] = await Promise.all([
+            this.db.query(sql, {
+                replacements: {
+                    service_id: query.service_id,
+                    building_number: query.building_id,
+                },
+                type: QueryTypes.SELECT,
+            }),
+
+            this.db.query(sql1, {
+                replacements: {
+                  service_id: query.service_id,
+                  building_number: query.building_id,
+                  from: query.from || null,
+                  to: query.to || null,
+                  limit: perPage,
+                  offset,
+                },
+                type: QueryTypes.SELECT,
+            }),
+
+            this.db.query(
+                `SELECT COUNT(*) AS count FROM businesses WHERE service_id = :service_id AND building_id = :building_number`,
+                {
+                  replacements: { 
+                    service_id: query.service_id,
+                    building_number: query.building_id,
+                  },
+                  type: QueryTypes.SELECT,
+                }
+            ),
+        ])
+
+        console.log(count)
+        const bCount = count[0]?.count
+
+        return {
+            viewBuilding: viewBuilding[0], 
+            viewBusiness,
+            current: page,
+            bCount,
+            pages: parseInt(Math.ceil(bCount / perPage), 10),
+        };
+
+
+    }
           
     
 }

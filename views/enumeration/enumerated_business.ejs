@@ -109,7 +109,7 @@
                                     <i class="ti ti-dots-vertical"></i>
                                   </button>
                                   <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/admin/enumerated_business/view/<%= business.Profile_ref %>">
+                                    <a class="dropdown-item" href="/admin/enumerated_business/view/<%= business.Profile_ref %>/<%= business.building_id %>">
                                       <i class="ti ti-eye me-1"></i>View more
                                     </a>
                                     <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= business.Profile_ref %>')">

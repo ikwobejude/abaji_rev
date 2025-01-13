@@ -164,7 +164,7 @@ const businesses = sequelize.define('businesses',{
         allowNull: true   
     },
     building_id:{
-        type: DataTypes.STRING(110)  
+        type: DataTypes.STRING  
     },
     organization_id:{
         type: DataTypes.STRING(110) 

@@ -22,7 +22,7 @@ class FundWallet {
     }
 
     async creditWallet(value, user) {
-        console.log(value)
+        // console.log(value)
         const transactionExist = await this.transaction.findOne({
           where: { transactionId: value.transactionId },
         });
@@ -33,7 +33,7 @@ class FundWallet {
         }
     
         const walletUser = await this.users.findOne({
-          attributes: ["id"],
+          attributes: ["id", "service_id"],
           where: {
             [this.Op.or]: [
               { username: value.email },
@@ -44,7 +44,7 @@ class FundWallet {
         });
     
         // check if user have a wallet, else create wallet
-        const wallet = await this.validateUserWallet(walletUser.id);
+        const wallet = await this.validateUserWallet(walletUser.id, walletUser.service_id);
     
         // console.log(wallet)
     
@@ -61,7 +61,7 @@ class FundWallet {
     
           await this.createTransaction(walletUser.id, value.transactionId, "successful", "transaction", value.amount, customer, "TOPIT", "successful", t);
     
-          await this.updateWallet(walletUser.id, value.amount, t);
+          await this.updateWallet(walletUser.id, value.amount, walletUser.service_id, t);
           await t.commit();
     
           return {
@@ -85,6 +85,7 @@ class FundWallet {
         } else {
           const nUser = {
             userId: id,
+            service_id,
             idwallent: uuidv4(),
           };
           const newWallet = await this.wallet.create(nUser);
@@ -136,7 +137,7 @@ class FundWallet {
       }
     
       // Update wallet
-      async updateWallet(userId, amount, t) {
+      async updateWallet(userId, amount, service_id, t) {
         let wallet = await this.wallet.findOne({
           where: { userId: userId },
         });
@@ -146,7 +147,7 @@ class FundWallet {
     
         const newAmount = prevAmount + topUpAmount;
         // console.log(newAmount)
-        wallet.update({ balance: newAmount }, { new: true }, { transaction: t });
+        wallet.update({ balance: newAmount, service_id }, { new: true }, { transaction: t });
         return;
       }
     

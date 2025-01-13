@@ -9,7 +9,7 @@ Router.route('/')
 Router.get('/validate_email', wallet.validateUser)
 Router.get('/records', wallet.viewWallets)
 Router.get('/transactions/:id', wallet.viewWalletTransactions)
-Router.post('/make_payment')
+// Router.post('/make_payment')
 
 // Router
 

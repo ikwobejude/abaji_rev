@@ -109,18 +109,19 @@
                           <!-- <input type="text" id="" class="form-control dt-full-name" name="" placeholder="John Doe" aria-label="John Doe" aria-describedby="basicFullname2" /> -->
                         </div>
                       </div>
-                      <div class="col-sm-12">
+
+                      <div class="col-sm-12" id="timeline-field">
                         <label class="form-label" for="basicPost">Timeline</label>
                         <div class="input-group input-group-merge">
                           <span id="basicPost2" class="input-group-text"><i class="fa fa-time"></i></span>
                           <select name="timeline" id="timeline" class="form-control dt-full-name">
-                            <option value="">Select Revenue line</option>
+                            <option value="">Select Timeline</option>
                             <option value="1">Daily</option>
                             <option value="4">Every 4 Days</option>
                           </select>
-                          <!-- <input type="text" id="timeline" name="timeline" class="form-control dt-post" placeholder="Time line" aria-label="Web Developer" /> -->
                         </div>
                       </div>
+
                       <div class="col-sm-12">
                         <label class="form-label" for="basicEmail">Revenue</label>
                         <div class="input-group input-group-merge">
@@ -333,14 +334,30 @@
                           method: 'DELETE'
                         });
                         const data = await response.json();
-                          toastr.success('Record deleted successfully!');
-                          location.reload();
+                        toastr.success('Record deleted successfully!');
+                        location.reload();
                       } catch (error) {
                         toastr.error('An error occurred. Please try again.');
                       }
                     });
                   });
 
+                  document.addEventListener('DOMContentLoaded', () => {
+                    const revenueLineSelect = document.getElementById('revenue_line');
+                    const timelineField = document.getElementById('timeline-field');
+
+                    // Function to toggle the visibility of the timeline field
+                    const toggleTimelineField = () => {
+                      const selectedValue = revenueLineSelect.value;
+                      if (selectedValue === 'Tax Item') {
+                        timelineField.style.display = 'none'; 
+                      } else {
+                        timelineField.style.display = 'block';
+                      }
+                    };
+                    revenueLineSelect.addEventListener('change', toggleTimelineField);
+                    toggleTimelineField();
+                  });
 
                 </script>
 </body>

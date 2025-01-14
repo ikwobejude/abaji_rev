@@ -47,7 +47,8 @@ app.use(function (req, res, next) {
 });
 
 app.route("*").get(function (req, res, next) {
-  res.locals.link = req.originalUrl.split("?")[0];
+  // console.log(req.path)
+    res.locals.link = req.path;
   res.locals.copyright = new Date().getFullYear();
   next();
 });

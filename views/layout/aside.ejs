@@ -19,7 +19,6 @@
 
   <ul class="menu-inner py-1">
     <!-- Dashboards -->
-  <% var link='/admin/dashboard' ; %>
     <li class="menu-item <%= link === '/admin/dashboard' ? 'active' : '' %>">
       <a href="/admin/dashboard" class="menu-link">
         <i class="menu-icon tf-icons ti ti-smart-home"></i>
@@ -50,14 +49,15 @@
             return urlsSet.has(link) ? "active open" : "";
         };
     %>
+   
+
   
       <li class="menu-item <%= isActive(settings) %>">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-components"></i>
-          <div data-i18n="Settings <%= isActive(settings) %>">Settings </div>
+          <div data-i18n="Settings ">Settings </div>
         </a>
         <ul class="menu-sub">
-      
           <!-- Roles & Permissions -->
           <li class="menu-item <%= isActive(rolesPermissions) %>">
             <a href="javascript:void(0);" class="menu-link menu-toggle">

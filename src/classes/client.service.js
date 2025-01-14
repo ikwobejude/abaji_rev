@@ -9,7 +9,7 @@ const clientService = require("../model/Client");
 const Setups = require("../model/Client");
 const Users = require("../model/Users");
 const State = require("../model/State");
-const Lga = require("../model/Lga");
+const Lga = require("../model/LGA");
 const emitter = new eventEmitter();
 
 // register events

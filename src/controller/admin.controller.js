@@ -12,12 +12,12 @@ class DashboardController {
       const stateId = req.query.state_id; 
       const lgas = stateId ? await setup.lga(stateId) : []; 
       const userDetails = await Client.getClientDetails(req.user.service_id);
-
+     
       const datatoPass = {
         ...userDetails,
         ...req.user,
       };
-      const data = await admin.adminDashboard(req.user);
+      const data = await admin.adminDashboard(req.user.service_id);
       res
         .status(200)
         .render("./dashboard", { states, lgas, ...data, datatoPass });
@@ -40,6 +40,17 @@ class DashboardController {
   static async paymentsStreet(req, res) {
     try {
       const data = await admin.streetPaymentGraph(req.user.service_id);
+      res.status(200).json(data);
+    } catch (error) {
+      console.error("Error in paymentsStreet:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+
+
+  static async revenueGenerated(req, res) {
+    try {
+      const data = await admin.generatedEnumerationGraph({service_id: req.user.service_id, status: req.params.status});
       res.status(200).json(data);
     } catch (error) {
       console.error("Error in paymentsStreet:", error);

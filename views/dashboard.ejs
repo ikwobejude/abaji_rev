@@ -106,7 +106,11 @@
                                 <i class="ti ti-chart-pie-2 ti-lg"></i>
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(expected.grand_total)) %></h5>
+                                <% 
+                                  let totalExpected = safeParseFloat(expected.grand_total) + safeParseFloat(revExpectations.grand_total)
+                                  let totalPaid = safeParseFloat(expected.amount_paid) - safeParseFloat(revExpectations.amount_paid) 
+                                %>
+                                <h5 class="mb-0"><%= formatNumber(totalExpected) %></h5>
                                 <small>Expected</small>
                               </div>
                             </div>
@@ -118,7 +122,7 @@
                                 <i class="ti ti-shopping-cart ti-lg"></i>
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(0)) %></h5>
+                                <h5 class="mb-0"><%= formatNumber(totalPaid) %></h5>
                                 <small>Paid</small>
                               </div>
                             </div>
@@ -129,7 +133,7 @@
                                 ₦
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= formatNumber(safeParseFloat(expected.grand_total)) %></h5>
+                                <h5 class="mb-0"><%= formatNumber(totalExpected - totalPaid) %></h5>
                                 <small>Outstanding</small>
                               </div>
                             </div>
@@ -176,6 +180,26 @@
                 <!--/ Revenue Report -->
 
                 <!-- Earning Reports -->
+                
+
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card h-100">
+                   
+                    <div class="card-body pb-0">
+                      <div id="generated_mandate" style="height: 370px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div> 
+
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card h-100">
+                   
+                    <div class="card-body pb-0">
+                      <div id="paid_generated_mandate" style="height: 370px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div> 
+
                 <div class="col-xxl-6 col-md-6">
                   <div class="card h-100">
                    
@@ -183,7 +207,7 @@
                       <div id="walletUpload" style="height: 370px; width: 100%;"></div>
                     </div>
                   </div>
-                </div> 
+                </div>
                 <!--/ Earning Reports -->
 
                 <!-- Popular Product -->
@@ -641,6 +665,7 @@
         
           <%- include('./dashboardJS.ejs') %>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/canvasjs.min.js"></script>
         <script src="/custom_chart.js"></script>
   </body>

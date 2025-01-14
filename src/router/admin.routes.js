@@ -7,9 +7,12 @@ const wallet = require("../controller/wallet.controller");
 const permission = require("../controller/permission.controller");
 const Router = express.Router();
 
-Router.get("/dashboard", admin.adminDashboard);
-Router.put("/dashboard", admin.updateClientDetails);
+Router.route("/dashboard")
+.get(admin.adminDashboard)
+.put(admin.updateClientDetails);
+// Router.put("/dashboard", );
 Router.get('/payment/street_graph', admin.paymentsStreet)
+Router.get('/generated_mandate/:status', admin.revenueGenerated)
 Router.get('/revenue/street_graph', admin.revenueStreet)
 Router.get('/wallet_payment', admin.walletPayment)
 

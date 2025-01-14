@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 const DB = process.env.DATABASE
 const USER =  process.env.NAME
 
-// console.log(USER)
+// console.log(USER, DB, process.env.DB_HOST)
 const PASSWORD = process.env.DB_PASSWORD
 const HOST = process.env.DB_HOST
 const DIALECT = 'mysql'

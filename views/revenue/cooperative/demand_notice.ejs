@@ -618,8 +618,8 @@ Dear Queen Consolidated,
                       <div class="mb-6">
                         <label class="form-label" for="payment-method">Payment Method</label>
                         <select class="form-select" id="payment-method" name="payment_method">
-                          <option value="" selected disabled>Select payment method</option>
-                          <option value="Wallet" selected>Wallet</option>
+                          <option value="" >Select payment method</option>
+                          <option value="Wallet" >Wallet</option>
                           <option value="Bank Transfer">Bank Transfer</option>
                           <option value="Debit Card">Debit Card</option>
                           <option value="Credit Card">Credit Card</option>
@@ -657,16 +657,28 @@ Dear Queen Consolidated,
                     }
 
                     addEventListener("DOMContentLoaded", async (event) => {
-                      const wal = document.getElementById("wal")
-                      const request = await fetch('/admin/wallet_balance')
-                      const balance = await request.json();
-                      wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
-
-                      // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
-                      if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
-                        document.getElementById("wallet_payment").disabled = true;
-                      }
+                      
                     });
+
+                    document.getElementById("payment-method").addEventListener("change", paymentTypeListener)
+
+                    async function paymentTypeListener() {
+                      const value = this.value
+
+                      if(value == "Wallet") {
+                        const wal = document.getElementById("wal")
+                        const request = await fetch('/admin/wallet_balance')
+                        const balance = await request.json();
+                        wal.textContent = balance.status == true ? parseFloat(balance.balance).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00";
+
+                        // console.log(parseFloat(balance.balance) > parseFloat('<%= revenue.grand_total %>'))
+                        if (parseFloat(balance.balance) < parseFloat('<%= revenue.grand_total %>')) {
+                          document.getElementById("wallet_payment").disabled = true;
+                        }
+                      } else {
+                        document.getElementById("wallet_payment").disabled = false;
+                      }
+                    }
 
                     if (document.getElementById("make_payment")) {
                       const make_payment = document.getElementById("make_payment");

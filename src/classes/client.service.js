@@ -8,7 +8,8 @@ const eventEmitter = require("events");
 const clientService = require("../model/Client");
 const Setups = require("../model/Client");
 const Users = require("../model/Users");
-
+const State = require("../model/State");
+const Lga = require("../model/Lga");
 const emitter = new eventEmitter();
 
 // register events
@@ -19,6 +20,8 @@ class Client {
   constructor() {
     this.client_service = clientService;
     this.initial_setup = Setups;
+    this.state = State;
+    this.Lga = Lga;
   }
 
   password() {
@@ -29,13 +32,13 @@ class Client {
     // console.log({str})
     // Trim any extra spaces
     // const name = str.trim();
-    if (!str) return "";  // Handle empty string
+    if (!str) return ""; // Handle empty string
 
     if (str.indexOf(" ") === -1) {
-        return str.slice(0, 4).toUpperCase();
+      return str.slice(0, 4).toUpperCase();
     } else {
-        let matches = str.match(/\b(\w)/g) || [];
-        return matches.join("").toUpperCase();
+      let matches = str.match(/\b(\w)/g) || [];
+      return matches.join("").toUpperCase();
     }
   }
 
@@ -85,10 +88,9 @@ class Client {
     }
 
     const adminPss = this.password();
-  console.log(adminPss, "After resize")
+    console.log(adminPss, "After resize");
     await this.resizeImg(value);
     // console.log(adminPss, "Before resize")
-
 
     // Proceed with client creation
     await this.client_service.create({
@@ -107,7 +109,8 @@ class Client {
       service_logo: `/uploads/${value.filename}`,
       client_address: "Address",
       service_authentication_code: this.acronyms(value.client_name),
-      permissions: "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65"
+      permissions:
+        "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65",
     });
 
     // const details = {
@@ -132,8 +135,6 @@ class Client {
         "Client created & email has been sent to the client registered email address",
     };
   }
-
-  
 
   async setup(data) {
     // console.log(data)
@@ -176,9 +177,32 @@ class Client {
         service_id: service_id,
       },
       include: {
-        model: Users, // The User model you associated with the Client
-        attributes: ["id", "username", "user_phone"], // Select the fields you need from the User
+        model: Users,
+        attributes: ["id", "username", "user_phone"],
       },
+    });
+  }
+  async updateClientStateAndLga(data, clientId) {
+   const response = await clientService.update(
+     {
+       state: data.state,
+       lga: data.lga,
+       client_admin_phone: data.phone_number,
+     },
+     {
+       where: { service_id: clientId },
+     }
+   );
+    return {
+      success: true,
+      message: "Client state and LGA updated successfully",
+    };
+  }
+  async getClientDetails(serviceId) {
+    return await clientService.findOne({
+      where: { service_id: serviceId },
+      raw: true,
+      attributes: ["state", "client_admin_phone"],
     });
   }
 }

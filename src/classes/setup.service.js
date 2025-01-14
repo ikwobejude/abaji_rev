@@ -86,9 +86,9 @@ class Setup {
   }
 
   async lga(id) {
-    return await this.lgas.findAll({ 
-      where: { state_id: id },
-      raw: true 
+    return await this.lgas.findAll({
+      where: { state_id: id.state_id },
+      raw: true,
     });
   }
 

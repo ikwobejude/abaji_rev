@@ -569,7 +569,68 @@
                 </div> -->
                 <!--/ Sales by Countries tabs -->
 
+                <div class="modal fade" id="stateModal" tabindex="-1" aria-labelledby="stateModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="stateModalLabel">Action Required</h5>
+                        <button type="button" class="btn-close" aria-label="Close" id="preventModalClose"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Your state information is incomplete. Please update your details to proceed.</p>
+                        <form id="stateUpdateForm">
+                          <div class="mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control"
+                              value="<%= datatoPass.client_admin_phone ? datatoPass.client_admin_phone : '' %>" id="phoneNumber"
+                              placeholder="Enter phone number" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-select" id="state" required>
+                              <option value="" disabled selected>Select your state</option>
+                              <% states.forEach(state=> { %>
+                                <option value="<%= state.state_id %>, <%= state.state %>">
+                                  <%= state.state %>
+                                </option>
+                                <% }) %>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="lga" class="form-label">Local Government Area (LGA)</label>
+                            <select class="form-select" id="lga" required>
+                              <option value="" disabled selected>Select your LGA</option>
+                            </select>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="stateUpdateForm">Update State</button>
+                        <button type="button" class="btn btn-secondary" id="closeModalButton" data-bs-dismiss="modal"
+                          disabled>Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 
+                <!-- Error Modal -->
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="errorModalLabel">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p style="color:red">Please complete your information before proceeding.</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="reopenStateModal" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
                
               </div>
@@ -577,6 +638,9 @@
             <!-- / Content -->
 
         <%- include('./layout/footer') %>
+        
+          <%- include('./dashboardJS.ejs') %>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/canvasjs.min.js"></script>
         <script src="/custom_chart.js"></script>
   </body>

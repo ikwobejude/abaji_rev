@@ -7,7 +7,7 @@ const { Sequelize, QueryTypes } = require("sequelize");
 const { groupBy } = require("../helper/helper");
 const Wards = require("../model/Ward");
 const Streets = require("../model/Street");
-
+const Areas = require("../model/Area")
 class Setup {
   constructor() {
     this.revenue_item = Revenue_item;
@@ -17,6 +17,7 @@ class Setup {
     this.wards = Wards;
     this.streets = Streets;
     this.db = db;
+    this.areas = Areas;
   }
 
   validation(body) {
@@ -92,20 +93,32 @@ class Setup {
     });
   }
 
-  async ward(query) {
+  async ward(lga_id) {
+
+
+    // Fetch the wards and corresponding LGA
     const wards = await this.db.query(
       `
-            SELECT 	
-                _cities.city_id,
-                _cities.city,
-                _lga.lga 
-            FROM  _cities INNER JOIN _lga ON _lga.lga_id = _cities.lga_id`,
-      { type: QueryTypes.SELECT }
+    SELECT 
+      areas.area_code,
+      areas.areaname,
+      _lga.lga
+    FROM areas
+    INNER JOIN _lga ON _lga.lga_id = areas.lga_id
+    WHERE areas.lga_id = :lga_id
+    `,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { lga_id },
+      }
     );
-    const localGovrt = await this.lgas.findAll({ raw: true });
+
+    const localGovrts = await this.lgas.findAll({ raw: true });
+
+    const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
     return {
-      wards: groupBy(wards, "lga"),
-      localGovrt,
+      wards,
+      localGovrt: selectedLga, 
     };
   }
 
@@ -170,11 +183,15 @@ class Setup {
   }
 
   async findStreet(query) {
-    const streets = await this.streets.findAll({ attributes: [["idstreet", "id"], "street"], where: { city_id: query.ward_id }, raw: true});
-    console.log(streets)
+    const streets = await this.streets.findAll({
+      attributes: [["idstreet", "id"], "street"],
+      where: { city_id: query.ward_id },
+      raw: true,
+    });
+    console.log(streets);
     return {
       status: true,
-      data: streets
+      data: streets,
     };
   }
 

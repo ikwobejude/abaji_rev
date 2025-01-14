@@ -56,13 +56,14 @@ module.exports = {
     }
   },
   getState: async function (req, res) {
+    const yourState = req.user
     const response = await setup.state(req.query);
-    res.status(200).render("./setup/location/state", { response });
+    res.status(200).render("./setup/location/state", { response,yourState  });
   },
 
   getLga: async function (req, res) {
-    const response = await setup.Items(req.query);
-    res.status(200).render("./setup/location/lga", { response });
+    // const response = await setup.Items(req.query);
+    res.status(200).render("./setup/location/lga");
   },
 
   getLgaWithOutRender: async function (req, res) {
@@ -71,7 +72,10 @@ module.exports = {
     
   },
   getWard: async function (req, res) {
-    const response = await setup.ward(req.query);
+    // console.log("available query",req.user)
+    const lgaId = req.user.lga.split(", ")[0]; 
+    // console.log(lgaId)
+    const response = await setup.ward(lgaId);
     res.status(200).render("./setup/location/ward", { ...response });
   },
 

@@ -45,19 +45,16 @@
                       <thead>
                         <tr>
                           <!-- <th></th> -->
-                          <th></th>
+                          <th>#</th>
                           <th>State</th>
                          
                         </tr>
                       </thead>
                       <tbody>
-                        <% response.forEach(state => { %>
-                            <tr>
-                                <td><%= state.state_code  %></td>
-                                <td><%= state.state  %></td>
-
-                            </tr>
-                        <% }) %>
+                        <tr>
+                          <td>1</td>
+                          <td><%= user.lga.split(", ")[1] %></td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>

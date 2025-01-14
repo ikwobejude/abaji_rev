@@ -14,7 +14,7 @@ Router.route("/ticket_item/:id")
 Router.get("/state", setup.getState);
 Router.get("/lga", setup.getLgaWithOutRender);
 Router.route("/ward").get(setup.getWard).post(setup.postWard);
-
+Router.route("/lgas").get(setup.getLga)
 Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);
 
 Router.route("/street").get(setup.getStreets).post(setup.postStreet);

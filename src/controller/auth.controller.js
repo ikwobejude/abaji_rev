@@ -27,7 +27,7 @@ class AuthController {
           subject: "Login notification"
       }
 
-      emitter.emit("AfterLogin", details)
+      // emitter.emit("AfterLogin", details)
       res.status(200).json({
         status: "success",
         message: "Login Successful",

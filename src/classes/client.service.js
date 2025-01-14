@@ -13,7 +13,7 @@ const Lga = require("../model/LGA");
 const emitter = new eventEmitter();
 
 // register events
-// require('../events/notifications')(emitter)
+require('../events/notifications')(emitter)
 require("../events/validation/clientServiceValidation")(emitter);
 
 class Client {
@@ -113,9 +113,9 @@ class Client {
     
 
     const details = {
-      client: value.client_name,
+      client: value.client,
       email: value.client_email.toLowerCase(),
-      client_admin_email:"admin@" + this.acronyms(value.client_name).toLowerCase(),
+      client_admin_email:"admin@"+this.acronyms(value.client).toLowerCase(),
       admin_pass: adminPss,
       url: "",
       Contact: "SMART REVENUE CUSTOMER SERVICE DESK",

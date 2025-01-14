@@ -41,7 +41,7 @@
         const users = new Set(["/admin/user_group"]);
         const wallet = new Set(["/wallet", "/wallet/reports"]);
         const reports = new Set(["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report"]);
-        const building = new Set(["/setup/building_categories", "/setup/building_types"]);
+        const buildingSetUp = new Set(["/setup/building_categories", "/setup/building_types"]);
         const business = new Set(["/setup/business_categories", "/setup/business_types", "/setup/business_sizes", "/setup/business_sector", "/setup/business_operations"]);
 
         // Helper function to check active/open state
@@ -131,7 +131,7 @@
             </ul>
           </li>
           <!-- Building Menu -->
-          <li class="menu-item <%= isActive(building) %>">
+          <li class="menu-item <%= isActive(buildingSetUp) %>">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
               <div data-i18n="Building">Building Setup</div>
             </a>

@@ -545,6 +545,7 @@ class Business {
       return {
           viewBuilding: viewBuilding[0], 
           viewBusiness: viewBusiness[0],
+          profile: query.profile_id
       };
 
 

@@ -80,6 +80,8 @@ Router.get('/enumerated_business/view/:profile_id/:building_id', enumerationCont
 // Generate mandate
 Router.route('/generate_mandate')
 .get(enumerationController.generateMandate)
-.post()
+.post(enumerationController.processMandate)
+
+Router.get('/enumerated_demand_notice/:year/:invoice_number', enumerationController.printDemandNotice)
 
 module.exports = Router;

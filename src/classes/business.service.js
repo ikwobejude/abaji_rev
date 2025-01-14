@@ -14,6 +14,7 @@ const sequelize = require("../db/connection");
 const { QueryTypes } = require("sequelize");
 const { query } = require("express");
 const Areas = require("../model/location.model");
+const Revenues_invoices = require("../model/Revenue_invoice");
 
 const emitter = new eventEmitter();
 
@@ -459,12 +460,18 @@ class Business {
   }
 
   async mandateMetaData(query) {
-    const [areas] = await Promise.all([
+    const [areas, revenue_invoices] = await Promise.all([
       Areas.findAll({ where: { service_id: query.service_id }, raw: true }),
+      Revenues_invoices.findAll({
+        where: {
+          service_id: query.service_id
+         },
+         raw: true
+      })
     ]);
 
     return {
-      areas,
+      areas, revenue_invoices
     };
   }
 

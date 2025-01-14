@@ -33,7 +33,7 @@
                     <h5 class="mb-0">Search Payments</h5>
                   </div> -->
                   <div class="card-body">
-                    <form method="GET" action="">
+                    <form method="GET" action="" id="generateMandate">
                       <div class="row">
                         <div class="col-md-2">
                           <div class="mb-3">
@@ -80,6 +80,63 @@
                   </div>
                 </div>
 
+                <% if(revenue_invoices.length > 1) { %>
+                   <!-- DataTable with Buttons -->
+                <div class="card">
+                  <div class="card-header">
+                      <div class="row">
+                          <div class="col-6">Enumerated Buildings</div>
+                      </div>
+                  </div>
+                  
+                  <div class="card-datatable  table-responsive pt-0">
+                    <table class="datatables-basic table">
+                      <thead>
+                        <tr>
+                          <th>Action</th>
+                          <th>Taxpayer.</th>
+                          <th>Business/Building name</th>
+                          <th>Month/Year </th>
+                          <th>Invoice </th>
+                          <th>Amount </th>
+                          <th>Amount Paid </th>
+                          <th>Revenue Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% revenue_invoices.map(invoice => { %>
+                            <tr>
+                                <td>
+                                  <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                      <i class="ti ti-dots-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="/admin/enumerated_demand_notice/<%= invoice.year %>/<%= invoice.invoice_number %>">
+                                        <i class="ti ti-eye me-1"></i>View more
+                                      </a>
+                                      <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= invoice.building_number %>')">
+                                        <i class="ti ti-trash me-1"></i>Delete
+                                      </a>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td><%= invoice.taxpayer_name %></td>
+                                <td><%= invoice.revenue_id %></td>
+                                <td><%= invoice.month %>/<%= invoice.year %></td>
+                                <td><%= invoice.invoice_number %></td>
+                                <td><%= invoice.amount %></td>
+                                <td><%= invoice.amount_paid %></td>
+                                <td><%= invoice.source %></td>
+                            </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            
+                <% } %>
+
                
               
             </div>
@@ -117,6 +174,55 @@
 
             }
           }
+
+          const generateMandate = document.getElementById("generateMandate");
+          generateMandate.addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            const data = new FormData(generateMandate);
+            const payload = {
+              mandate_type: data.get("mandate_type"),
+              current_year: data.get("current_year"),
+              ward: data.get("ward"),
+              street: data.get("street"),
+            }
+
+            try {
+              const response = await axios.post("/admin/generate_mandate", payload, {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              })
+
+              console.log(response.data)
+
+              if(response.data.status == true) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Generated",
+                  text: response.data.message
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Reload the page
+                        window.location.reload();
+                    }
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: response.data.message
+                });
+              }
+            } catch (error) {
+              console.log(error)
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!"
+              });
+            }
+          })
 
         </script>
   </body>

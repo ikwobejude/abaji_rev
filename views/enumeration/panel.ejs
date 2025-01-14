@@ -21,6 +21,35 @@
           <!-- Navbar -->
 
          <%- include('../layout/side') %>
+         <% 
+            // Helper function to handle NaN values
+                                                    
+                                                    
+            const safeParseFloat = (value) => {
+                if (value === null || isNaN(value)) {
+                    return 0;
+                }
+                return parseFloat(value);
+            };
+
+            function formatNumber(value) {
+                const number = safeParseFloat(value);
+            
+                if (number < 0) {
+                    return `(${Math.abs(number).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    })})`;
+                }
+            
+                return number.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+           
+        %>
 
           <!-- / Navbar -->
 
@@ -34,50 +63,57 @@
                      <!-- Card Border Shadow -->
                 <div class="col-lg-3 col-sm-6">
                     <div class="card card-border-shadow-primary h-100">
-                      <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                          <div class="avatar me-4">
-                            <span class="avatar-initial rounded bg-label-primary"
-                              ><i class="ti ti-truck ti-28px"></i
-                            ></span>
+                      <a href="/admin/enumerated_buildings">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                              <span class="avatar-initial rounded bg-label-primary"
+                                ><i class="ti ti-truck ti-28px"></i
+                              ></span>
+                            </div>
+                            <h4 class="mb-0">Buildings</h4>
                           </div>
-                          <h4 class="mb-0">Buildings</h4>
+                          <p class="mb-1">View buildings</p>
                         </div>
-                        <p class="mb-1">View buildings</p>
-                        
-                      </div>
+                      </a>
+                      
                     </div>
                   </div>
                   <div class="col-lg-3 col-sm-6">
                     <div class="card card-border-shadow-warning h-100">
-                      <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                          <div class="avatar me-4">
-                            <span class="avatar-initial rounded bg-label-warning"
-                              ><i class="ti ti-alert-triangle6 ti-28px"></i
-                            ></span>
+                      <a href="/admin/enumerated_business">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                              <span class="avatar-initial rounded bg-label-warning"
+                                ><i class="ti ti-alert-triangle6 ti-28px"></i
+                              ></span>
+                            </div>
+                            <h4 class="mb-0">Business</h4>
                           </div>
-                          <h4 class="mb-0">Business</h4>
+                          <p class="mb-1">View Businesses</p>
                         </div>
-                        <p class="mb-1">View Businesses</p>
-                       
-                      </div>
+                      </a>
+                      
                     </div>
                   </div>
                   <div class="col-lg-3 col-sm-6">
                     <div class="card card-border-shadow-danger h-100">
-                      <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                          <div class="avatar me-4">
-                            <span class="avatar-initial rounded bg-label-danger"
-                              ><i class="ti ti-git-fork ti-28px"></i
-                            ></span>
+                      <a href="/admin/generate_mandate">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                              <span class="avatar-initial rounded bg-label-danger"
+                                ><i class="ti ti-git-fork ti-28px"></i
+                              ></span>
+                            </div>
+                            <h4 class="mb-0">Mandate</h4>
                           </div>
-                          <h4 class="mb-0">Mandate</h4>
+                          <p class="mb-1">2025 Generated Mandate</p>
+                          
                         </div>
-                        <p class="mb-1">2025 Generated Mandate</p>
-                        
-                      </div>
+                      </a>
+                      
                     </div>
                   </div>
                   <div class="col-lg-3 col-sm-6">
@@ -87,9 +123,9 @@
                           <div class="avatar me-4">
                             <span class="avatar-initial rounded bg-label-info"><i class="ti ti-clock ti-28px"></i></span>
                           </div>
-                          <h4 class="mb-0">Process</h4>
+                          <h4 class="mb-0">Invoices</h4>
                         </div>
-                        <p class="mb-1">Generate Mandate</p>
+                        <p class="mb-1">Payment Invoices</p>
                       </div>
                     </div>
                   </div>
@@ -98,6 +134,7 @@
                 <div class="col-lg-6">
                     <div class="card h-100">
                     <div class="card-header pb-0 d-flex justify-content-between">
+                      
                         <div class="card-title mb-0">
                         <h5 class="mb-1">Enumerated Buildings</h5>
                         <p class="card-subtitle">Buildings enumerated by enumerators</p>
@@ -140,12 +177,14 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Expected</h6>
                             </div>
-                            <h4 class="my-2">0.00</h4>
+                            <h4 class="my-2">
+                              <%= formatNumber(safeParseFloat(buildingAmounts.total)) %>
+                            </h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
                                 class="progress-bar"
                                 role="progressbar"
-                                style="width: 65%"
+                                style="width: 100%"
                                 aria-valuenow="65"
                                 aria-valuemin="0"
                                 aria-valuemax="100"></div>
@@ -156,12 +195,16 @@
                                 <div class="badge rounded bg-label-info p-1"><i class="ti ti-chart-pie-2 ti-sm"></i></div>
                                 <h6 class="mb-0 fw-normal">Paid</h6>
                             </div>
-                            <h4 class="my-2">0.00</h4>
+                            <%
+                              let paidPer = (safeParseFloat(buildingAmounts.total_paid) / safeParseFloat(buildingAmounts.total)) * 100
+                              let outPer = ((safeParseFloat(buildingAmounts.total) - safeParseFloat(buildingAmounts.total_paid ))/ safeParseFloat(buildingAmounts.total)) * 100
+                            %>
+                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts.total_paid)) %></h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
                                 class="progress-bar bg-info"
                                 role="progressbar"
-                                style="width: 50%"
+                                style="width: <%= paidPer %>%"
                                 aria-valuenow="50"
                                 aria-valuemin="0"
                                 aria-valuemax="100"></div>
@@ -174,12 +217,12 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Outstanding</h6>
                             </div>
-                            <h4 class="my-2">0.00</h4>
+                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts.total) - safeParseFloat(buildingAmounts.total_paid)) %></h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
                                 class="progress-bar bg-danger"
                                 role="progressbar"
-                                style="width: 65%"
+                                style="width: <%= outPer %>%"
                                 aria-valuenow="65"
                                 aria-valuemin="0"
                                 aria-valuemax="100"></div>
@@ -237,12 +280,16 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Expected</h6>
                                 </div>
-                                <h4 class="my-2">0.00</h4>
+                                <%
+                                  let paidPerB = (safeParseFloat(businessAmount.total_paid) / safeParseFloat(businessAmount.total)) * 100
+                                  let outPerB = ((safeParseFloat(businessAmount.total) - safeParseFloat(businessAmount.total_paid ))/ safeParseFloat(businessAmount.total)) * 100
+                                %>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar"
                                     role="progressbar"
-                                    style="width: 65%"
+                                    style="width: 100%"
                                     aria-valuenow="65"
                                     aria-valuemin="0"
                                     aria-valuemax="100"></div>
@@ -253,12 +300,12 @@
                                 <div class="badge rounded bg-label-info p-1"><i class="ti ti-chart-pie-2 ti-sm"></i></div>
                                 <h6 class="mb-0 fw-normal">Paid</h6>
                                 </div>
-                                <h4 class="my-2">0.00</h4>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total_paid)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar bg-info"
                                     role="progressbar"
-                                    style="width: 50%"
+                                    style="width: <%= paidPerB %>%"
                                     aria-valuenow="50"
                                     aria-valuemin="0"
                                     aria-valuemax="100"></div>
@@ -271,12 +318,12 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Outstanding</h6>
                                 </div>
-                                <h4 class="my-2">0.00</h4>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total) - safeParseFloat(businessAmount.total_paid)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar bg-danger"
                                     role="progressbar"
-                                    style="width: 65%"
+                                    style="width: <%= outPerB %>%"
                                     aria-valuenow="65"
                                     aria-valuemin="0"
                                     aria-valuemax="100"></div>

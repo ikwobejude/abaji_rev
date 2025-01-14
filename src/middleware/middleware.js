@@ -11,7 +11,7 @@ class AuthMiddleware {
     static async getClientDetails(serviceId) {
         try {
             return await clientService.findOne({
-                attributes: ['client', 'service_id', 'service_logo', 'service_status'],
+                attributes: ['client', 'service_id', 'service_logo', 'service_status', 'client_phone', 'state'],
                 where: { service_id: serviceId },
                 raw: true
             });

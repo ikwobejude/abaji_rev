@@ -7,4 +7,6 @@ Router.route("/payment_reports").get(reports.paymentsReports);
 Router.get("/revenue_assessments_reports", reports.assessmentsReports);
 Router.get("/ticket_report", reports.ticketReports);
 
+Router.get("/generated_mandate_reports", reports.enumeratedReports);
+
 module.exports = Router;

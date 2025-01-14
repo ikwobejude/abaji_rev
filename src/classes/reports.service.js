@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const db = require("../db/connection");
 const Api_Payments = require("../model/Api_payments");
+const Revenues_invoices = require("../model/Revenue_invoice");
+const Op = Sequelize.Op
 
 class Reports {
   constructor() {
@@ -137,7 +139,7 @@ class Reports {
       ? query.current_year
       : new Date().getFullYear();
 
-    console.log(year);
+    // console.log(year);
 
     let sql = `
             SELECT 
@@ -217,7 +219,7 @@ class Reports {
     LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
     LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
     WHERE revenue_invoices.service_id = ${query.service_id}
-`;
+   `;
 
    if (query.from && query.to) {
      sql += ` AND STR_TO_DATE(revenue_invoices.payment_date, '%Y-%m-%d') BETWEEN '${query.from}' AND '${query.to}'`;
@@ -242,6 +244,44 @@ class Reports {
       count,
       result,
     };
+  }
+
+  async revenueInvoicesReport(query) {
+    let perPage = 20; // number of records per page
+    var page = query.page || 1;
+    let offset = perPage * (page - 1);
+    let year = query.current_year ? query.current_year : new Date().getFullYear();
+
+    const [results, count] = await Promise.all([
+      Revenues_invoices.findAll({
+        where: {
+          service_id: query.service_id,
+          paid: 1,
+          [Op.and]: [
+            query.source && {source: query.source },
+            query.business_building_name && {source: query.business_building_name },
+          ]
+        }
+      }),
+
+      Revenues_invoices.count({
+        where: {
+          service_id: query.service_id,
+          [Op.and]: [
+            query.paid && {paid: query.paid },
+            query.source && {source: query.source },
+            query.business_building_name && {source: query.business_building_name },
+          ]
+        }
+      })
+    ])
+
+    return {
+      results,
+      current: page,
+      count,
+      pages: Math.ceil(count / perPage),
+    }
   }
 }
 

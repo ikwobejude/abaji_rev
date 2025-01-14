@@ -12,7 +12,7 @@ Router.route("/ticket_item/:id")
   .delete(setup.deleteTicketItem);
 
 Router.get("/state", setup.getState);
-
+Router.get("/lga", setup.getLgaWithOutRender);
 Router.route("/ward").get(setup.getWard).post(setup.postWard);
 
 Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);

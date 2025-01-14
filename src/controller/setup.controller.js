@@ -64,6 +64,11 @@ module.exports = {
     res.status(200).render("./setup/location/lga", { response });
   },
 
+  getLgaWithOutRender: async function (req, res) {
+    const response = await setup.lga(req.query);
+    return res.json(response)
+    
+  },
   getWard: async function (req, res) {
     const response = await setup.ward(req.query);
     res.status(200).render("./setup/location/ward", { ...response });
@@ -278,7 +283,7 @@ module.exports = {
   getBusinessOperations: async function (req, res) {
     try {
       const response = await businessService._business_operation(req.query);
-      console.log(response  )
+      console.log(response);
       res.status(200).render("./enumeration/business_operations", { response });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });

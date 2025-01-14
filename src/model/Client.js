@@ -28,6 +28,7 @@ const clientService = db.define(
     authorized_on: DataTypes.DATE,
     admin_first_use: DataTypes.TINYINT,
     service_status: DataTypes.TINYINT,
+    client_admin_phone: DataTypes.STRING,
     country: DataTypes.STRING,
     state: DataTypes.STRING,
     city: DataTypes.STRING,

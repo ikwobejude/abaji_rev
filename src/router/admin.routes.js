@@ -8,6 +8,7 @@ const permission = require("../controller/permission.controller");
 const Router = express.Router();
 
 Router.get("/dashboard", admin.adminDashboard);
+Router.put("/dashboard", admin.updateClientDetails);
 Router.get('/payment/street_graph', admin.paymentsStreet)
 Router.get('/revenue/street_graph', admin.revenueStreet)
 Router.get('/wallet_payment', admin.walletPayment)
@@ -80,5 +81,6 @@ Router.get('/enumerated_business/view/:profile_id/:building_id', enumerationCont
 // Generate mandate
 Router.route('/generate_mandate')
 .get(enumerationController.generateMandate)
+
 
 module.exports = Router;

@@ -3,6 +3,7 @@ const paymentSetup = require("../classes/paymentSetup.service");
 const buildingService = require("../classes/building.service");
 const businessService = require("../classes/business.service");
 const { building } = require("../model/Buildings");
+const { json } = require("sequelize");
 
 // const building = new buildingService();
 // const business = new businessService();
@@ -110,6 +111,11 @@ module.exports = {
   getStreets: async function (req, res) {
     const response = await setup.AllStreets(req.query);
     res.status(200).render("./setup/location/street", { ...response });
+  },
+
+  getStreet: async function (req, res) {
+    const response = await setup.findStreet(req.params);
+    res.status(200).json(response);
   },
 
   postStreet: async function (req, res) {

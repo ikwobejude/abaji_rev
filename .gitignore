@@ -136,3 +136,4 @@ dist
 #uploads file from local 
 
 uploads/*
+credential/*

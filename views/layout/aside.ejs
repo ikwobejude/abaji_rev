@@ -20,7 +20,7 @@
   <ul class="menu-inner py-1">
     <!-- Dashboards -->
   <% var link='/admin/dashboard' ; %>
-    <li class="menu-item <%= link && link === '/admin/dashboard' ? 'active' : '' %>">
+    <li class="menu-item <%= link === '/admin/dashboard' ? 'active' : '' %>">
       <a href="/admin/dashboard" class="menu-link">
         <i class="menu-icon tf-icons ti ti-smart-home"></i>
         <div data-i18n="Dashboard">Dashboard</div>
@@ -31,28 +31,30 @@
     <!-- Extended components -->
     <% 
         // Define all menu structures
-        const settings = ["/setup/ticket_item", "/setup/state", "/setup/ward", "/admin/user_group", "/admin/permission", "/setup/inter_switch", "/setup/street"];
-        const rolesPermissions = ["/admin/user_group", "/admin/permission"];
-        const payments = ["/setup/inter_switch"];
-        const revenues = ["/setup/ticket_item"];
-        const locations = ["/setup/state", "/setup/ward", "/setup/street"];
-        const assessments = ["/admin/revenue_upload"];
-        const enumeration = ["/admin/enumerated_panel", "/admin/enumerated_buildings", "/admin/enumerated_business", "/admin/generate_mandate"];
-        const ticket = ["/admin/payment_reconciliation"]
-        const users = ["/admin/user_group"]
-        const wallet = ["/wallet", "/wallet/reports"]
-        const reports = ["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report"]
-        const building = ["/setup/building_categories", "/setup/building_types"];
-        const business = ["/setup/business_categories", "/setup/business_types", "/setup/business_sizes", "/setup/business_sector", "/setup/business_operations"];
+        const settings = new Set(["/setup/ticket_item", "/setup/state", "/setup/ward", "/admin/user_group", "/admin/permission", "/setup/inter_switch", "/setup/street"]);
+        const rolesPermissions = new Set(["/admin/user_group", "/admin/permission"]);
+        const payments = new Set(["/setup/inter_switch"]);
+        const revenues = new Set(["/setup/ticket_item"]);
+        const locations = new Set(["/setup/state", "/setup/ward", "/setup/street"]);
+        const assessments = new Set(["/admin/revenue_upload"]);
+        const enumeration = new Set(["/admin/enumerated_panel", "/admin/enumerated_buildings", "/admin/enumerated_business", "/admin/generate_mandate"]);
+        const ticket = new Set(["/admin/payment_reconciliation"]);
+        const users = new Set(["/admin/user_group"]);
+        const wallet = new Set(["/wallet", "/wallet/reports"]);
+        const reports = new Set(["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report"]);
+        const building = new Set(["/setup/building_categories", "/setup/building_types"]);
+        const business = new Set(["/setup/business_categories", "/setup/business_types", "/setup/business_sizes", "/setup/business_sector", "/setup/business_operations"]);
 
         // Helper function to check active/open state
-        const isActive = (urls) => urls.some(url => link.includes(url)) ? "active open" : "";
+        const isActive = (urlsSet) => {
+            return urlsSet.has(link) ? "active open" : "";
+        };
     %>
   
       <li class="menu-item <%= isActive(settings) %>">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-components"></i>
-          <div data-i18n="Settings">Settings</div>
+          <div data-i18n="Settings <%= isActive(settings) %>">Settings </div>
         </a>
         <ul class="menu-sub">
       

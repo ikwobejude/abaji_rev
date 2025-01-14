@@ -169,6 +169,15 @@ class Setup {
     };
   }
 
+  async findStreet(query) {
+    const streets = await this.streets.findAll({ attributes: [["idstreet", "id"], "street"], where: { city_id: query.ward_id }, raw: true});
+    console.log(streets)
+    return {
+      status: true,
+      data: streets
+    };
+  }
+
   async createStreet(data, service_id) {
     await this.streets.create({
       street: data.street,

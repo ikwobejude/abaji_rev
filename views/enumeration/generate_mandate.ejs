@@ -38,7 +38,7 @@
                         <div class="col-md-2">
                           <div class="mb-3">
                             <label for="invoice" class="form-label">Mandate Type</label>
-                            <select name="" id="" class="form-control">
+                            <select name="mandate_type" id="mandate_type" class="form-control">
                               <option value="">Select mandate type</option>
                               <option value="Buildings">Buildings</option>
                               <option value="Business">Business</option>
@@ -66,7 +66,7 @@
                         <div class="col-md-3">
                           <div class="mb-3">
                             <label for="paymentDateTo" class="form-label">Street</label>
-                            <select name="" class="form-control" id=""></select>
+                            <select name="street" class="form-control" id="street"></select>
                           </div>
                         </div>
                         <div class="col-md-2">
@@ -96,9 +96,26 @@
           const ward = document.getElementById('ward').addEventListener('change', findStreets)
 
           async function findStreets() {
-            const wardId = this.value()
+            const wardId = this.value
+            const response = await axios.get(`/setup/street/${wardId}`);
+            console.log(response.data);
+            // alert(wardId
+            populateStreet(response.data.data)
 
-            
+          }
+
+
+          function populateStreet(data) {
+            if(data.length > 0) {
+              let html = '';
+               html +=`<option value='All'>All</option>`
+              for (let index = 0; index < data.length; index++) {
+                html +=`<option value='${data[index].id}'>${data[index].street}</option>`
+              };
+              
+              $('#street').html(html)
+
+            }
           }
 
         </script>

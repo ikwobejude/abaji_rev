@@ -18,6 +18,7 @@ Router.route("/ward").get(setup.getWard).post(setup.postWard);
 Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);
 
 Router.route("/street").get(setup.getStreets).post(setup.postStreet);
+Router.get('/street/:ward_id', setup.getStreet)
 
 Router.route("/inter_switch")
   .post(setup.postInterSwitch)
@@ -44,4 +45,7 @@ Router.route("/business_sector")
 Router.route("/business_operations")
   .get(setup.getBusinessOperations)
   .post(setup.addBusinessOperations);
+
+
+
 module.exports = Router;

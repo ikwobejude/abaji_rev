@@ -28,8 +28,11 @@ class enumerationController {
 
     static async generateMandate(req, res) {
         const response = await businessService.mandateMetaData({service_id: req.user.service_id, ...req.query})
-        console.log(response)
         res.status(200).render('./enumeration/generate_mandate', response)
+    }
+
+    static async processMandate(req, res) {
+
     }
 
     static async getBuilding(req, res) {

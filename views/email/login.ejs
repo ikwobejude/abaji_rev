@@ -1,0 +1,42 @@
+<%- include('layouts/header')%>
+  <body style="margin: 30px auto;">
+    <table style="width: 100%">
+      <tbody>
+        <tr>
+          <td>
+            <table style="background-color: #f6f7fb; width: 100%">
+              <tbody>
+                <tr>
+                  <td>
+                    <table style="width: 650px; margin: 0 auto; margin-bottom: 30px">
+                      <tbody>
+                        <tr>
+                          <td><img src="/public/assets/images/logo.png" alt=""></td>
+                          <td style="text-align: right; color:#999"><span><%= subject %></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table style="width: 650px; margin: 0 auto; background-color: #fff; border-radius: 8px">
+                      <tbody>
+                        <tr>
+                          <td style="padding: 30px"> 
+                            <p>Dear <%= detail.name %> ,</p>
+                            <p>A successful login just occurred on your Edoch profile at <%= new Date() %>.</p>
+                            <table></table>
+                            <p>If you did not initiate this login, please call our Yes Center on 0700, 0806 or email customer@edoch.ng immediately.</p>
+                            <p style="margin-bottom: 0">Regards.</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <%- include('layouts/footer')%>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

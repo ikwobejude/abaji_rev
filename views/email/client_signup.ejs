@@ -1,0 +1,55 @@
+<%- include('layouts/header')%>
+  <body style="margin: 30px auto;">
+    <table style="width: 100%">
+      <tbody>
+        <tr>
+          <td>
+            <table style="background-color: #f6f7fb; width: 100%">
+              <tbody>
+                <tr>
+                  <td>
+                    <table style="width: 650px; margin: 0 auto; margin-bottom: 30px">
+                      <tbody>
+                        <tr>
+                          <td><img src="/public/assets/images/logo.png" alt=""></td>
+                          <td style="text-align: right; color:#999"><span><%= subject %></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table style="width: 650px; margin: 0 auto; background-color: #fff; border-radius: 8px">
+                      <tbody>
+                        <tr>
+                          <td style="padding: 30px"> 
+                            <p>Dear <%= detail.client %>,</p>
+                            <p><strong>We're thrilled to welcome you to <strong>Smart Revenue</strong>! We're excited to have you on board.</strong></p>
+                            <h4>Your Account Details:</h4>
+                            <table>
+                              <tr>
+                                <td>Username</td>
+                                <td><strong><%= detail.client_admin_email %></strong></td>
+                              </tr>
+                              <tr>
+                                <td>Password</td>
+                                <td><strong><%= detail.admin_pass %></strong></td>
+                              </tr>
+                            </table>
+                            <a href="https://demo.abajirevenue.com/login" style="padding: 10px; background-color: #24695c; color: #ffffff; display: inline-block; border-radius: 4px; margin-bottom: 18px">Login </a>
+                            <p>o get started, simply click on the login URL above and enter your username and password. If you have any trouble logging in, please don't hesitate to contact us</p>
+                            
+                            <p>Thank you for choosing [Your Company Name]. We're looking forward to helping you achieve your goals!.</p>
+                            <p style="margin-bottom: 0">Thank you.</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <%- include('layouts/footer')%>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

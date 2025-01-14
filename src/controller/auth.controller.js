@@ -1,6 +1,10 @@
+const eventEmitter = require('events');
 const Auth = require("../classes/auth.service");
 
+
 const data = new Auth();
+const emitter = new eventEmitter()
+require("../events/notifications")(emitter);
 
 class AuthController {
   static async signInPage(req, res) {
@@ -16,6 +20,14 @@ class AuthController {
         httpOnly: true,
         masAge: response.data.masAge,
       });
+      const details = {
+          ...dt,
+          url: "",
+          template: "login",
+          subject: "Login notification"
+      }
+
+      emitter.emit("AfterLogin", details)
       res.status(200).json({
         status: "success",
         message: "Login Successful",

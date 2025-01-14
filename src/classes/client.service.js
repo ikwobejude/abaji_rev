@@ -96,38 +96,38 @@ class Client {
     await this.client_service.create({
       client: value.client,
       service_code: this.acronyms(value.client),
-      client_phone: value.client_phone,
+      client_phone: value.client_phone, // Ensure it fits the column type and length
       client_email: value.client_email,
       country: value.country_id,
-      country_code: "NG",
+      country_code: "NG", // Ensure this matches the length of the column
       admin_surname: value.admin_surname,
       admin_firstname: value.admin_first_name,
       admin_middlename: value.admin_middlename,
-      client_admin_phone: value.client_admin_phone,
+      client_admin_phone: value.client_admin_phone, // Validate phone number length
       client_admin_email: value.client_admin_email,
       client_admin_pwd: await bcrypt.hash(adminPss, salt),
       service_logo: `/uploads/${value.filename}`,
-      client_address: "Address",
+      client_address: "Address", // Ensure this doesn't exceed column length
       service_authentication_code: this.acronyms(value.client_name),
-      permissions:
-        "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65",
     });
+    
 
-    // const details = {
-    //   client: value.client_name,
-    //   email: value.client_email.toLowerCase(),
-    //   client_admin_email:
-    //     "admin@" + this.acronyms(value.client_name).toLowerCase(),
-    //   admin_pass: adminPss,
-    //   url: "",
-    //   Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
-    //   Email: "info@authhub.com",
-    //   Phone: "070 00000 000",
-    //   template: "client_signup",
-    //   subject: "Client email registration notification",
-    // };
+    const details = {
+      client: value.client_name,
+      email: value.client_email.toLowerCase(),
+      client_admin_email:"admin@" + this.acronyms(value.client_name).toLowerCase(),
+      admin_pass: adminPss,
+      url: "",
+      Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
+      Email: "info@authhub.com",
+      Phone: "070 00000 000",
+      template: "client_signup",
+      subject: "Client email registration notification",
+    };
 
-    // emitter.emit("afterCreatingClientService", details);
+    console.log(details)
+
+    emitter.emit("afterCreatingClientService", details);
 
     return {
       status: true,

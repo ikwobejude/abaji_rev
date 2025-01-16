@@ -125,7 +125,7 @@
                           </div>
                           <h4 class="mb-0">Invoices</h4>
                         </div>
-                        <p class="mb-1">Payment Invoices</p>
+                        <p class="mb-1">Payment</p>
                       </div>
                     </div>
                   </div>
@@ -178,7 +178,7 @@
                                 <h6 class="mb-0 fw-normal">Expected</h6>
                             </div>
                             <h4 class="my-2">
-                              <%= formatNumber(safeParseFloat(buildingAmounts.total)) %>
+                              <%= formatNumber(safeParseFloat(buildingAmounts?.total)) %>
                             </h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
@@ -196,10 +196,10 @@
                                 <h6 class="mb-0 fw-normal">Paid</h6>
                             </div>
                             <%
-                              let paidPer = (safeParseFloat(buildingAmounts.total_paid) / safeParseFloat(buildingAmounts.total)) * 100
-                              let outPer = ((safeParseFloat(buildingAmounts.total) - safeParseFloat(buildingAmounts.total_paid ))/ safeParseFloat(buildingAmounts.total)) * 100
+                              let paidPer = (safeParseFloat(buildingAmounts?.total_paid) / safeParseFloat(buildingAmounts?.total)) * 100
+                              let outPer = ((safeParseFloat(buildingAmounts?.total) - safeParseFloat(buildingAmounts?.total_paid ))/ safeParseFloat(buildingAmounts?.total)) * 100
                             %>
-                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts.total_paid)) %></h4>
+                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts?.total_paid)) %></h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
                                 class="progress-bar bg-info"
@@ -217,7 +217,7 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Outstanding</h6>
                             </div>
-                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts.total) - safeParseFloat(buildingAmounts.total_paid)) %></h4>
+                            <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts?.total) - safeParseFloat(buildingAmounts?.total_paid)) %></h4>
                             <div class="progress w-75" style="height: 4px">
                                 <div
                                 class="progress-bar bg-danger"
@@ -281,10 +281,10 @@
                                 <h6 class="mb-0 fw-normal">Expected</h6>
                                 </div>
                                 <%
-                                  let paidPerB = (safeParseFloat(businessAmount.total_paid) / safeParseFloat(businessAmount.total)) * 100
-                                  let outPerB = ((safeParseFloat(businessAmount.total) - safeParseFloat(businessAmount.total_paid ))/ safeParseFloat(businessAmount.total)) * 100
+                                  let paidPerB = (safeParseFloat(buildingAmounts?.total_paid) / safeParseFloat(buildingAmounts?.total)) * 100
+                                  let outPerB = ((safeParseFloat(buildingAmounts?.total) - safeParseFloat(buildingAmounts?.total_paid ))/ safeParseFloat(buildingAmounts?.total)) * 100
                                 %>
-                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total)) %></h4>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts?.total)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar"
@@ -300,7 +300,7 @@
                                 <div class="badge rounded bg-label-info p-1"><i class="ti ti-chart-pie-2 ti-sm"></i></div>
                                 <h6 class="mb-0 fw-normal">Paid</h6>
                                 </div>
-                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total_paid)) %></h4>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts?.total_paid)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar bg-info"
@@ -318,7 +318,7 @@
                                 </div>
                                 <h6 class="mb-0 fw-normal">Outstanding</h6>
                                 </div>
-                                <h4 class="my-2"><%= formatNumber(safeParseFloat(businessAmount.total) - safeParseFloat(businessAmount.total_paid)) %></h4>
+                                <h4 class="my-2"><%= formatNumber(safeParseFloat(buildingAmounts?.total) - safeParseFloat(buildingAmounts?.total_paid)) %></h4>
                                 <div class="progress w-75" style="height: 4px">
                                 <div
                                     class="progress-bar bg-danger"

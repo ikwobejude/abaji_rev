@@ -48,6 +48,7 @@ Router.route('/clients')
 
 
 Router.post('/initialize_payments', app.pushPayment)
+Router.get('/payment_notification', app.pushPayment)
 
 
 module.exports = Router

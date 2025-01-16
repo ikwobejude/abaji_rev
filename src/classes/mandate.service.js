@@ -175,7 +175,7 @@ class Mandates {
                         invoice_number: invoiceNumber, // Generate unique invoice number
                         revenue_code: item.item_code,
                         type: "Revenue Buildings",
-                        service_id: building.service_id,
+                        service_id: query.service_id,
                         batch: batchNumber,
                     });
                 }

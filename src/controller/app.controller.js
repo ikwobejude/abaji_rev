@@ -1,6 +1,9 @@
 const client = require('../classes/client.service');
 const pay = require('../lib/pay_demo.payment');
+const paymentService = require('../classes/payment.service');
 const helper = require('../helper/helper')
+
+const payment_service = new paymentService()
 
 module.exports = {
     homePage: async function(req, res) {
@@ -42,5 +45,17 @@ module.exports = {
         console.log(response)
         res.status(200).json(response)
         
+    },
+
+    demoPayNotification: async(req, res) => {
+        try {
+            const response = await payment_service.settleIntoVariousRevenues(req.query)
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(400).json({
+                status: true,
+                message: error.message
+            })
+        }
     }
 }

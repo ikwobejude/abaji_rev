@@ -21,6 +21,11 @@ class payDemo {
 
         return response.data
     }
+
+
+    async payNotification() {
+        
+    }
 }
 
 module.exports = new payDemo();

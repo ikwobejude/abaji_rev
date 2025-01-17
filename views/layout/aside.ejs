@@ -30,7 +30,7 @@
     <!-- Extended components -->
     <% 
         // Define all menu structures
-        const settings = new Set(["/setup/ticket_item", "/setup/state", "/setup/ward", "/admin/user_group", "/admin/permission", "/setup/inter_switch", "/setup/street"]);
+        const settings = new Set(["/setup/ticket_item", "/setup/state", "/setup/ward", "/admin/user_group", "/admin/permission", "/setup/inter_switch", "/setup/street", "/setup/account", "/setup/inter_switch"]);
         const rolesPermissions = new Set(["/admin/user_group", "/admin/permission"]);
         const payments = new Set(["/setup/inter_switch"]);
         const revenues = new Set(["/setup/ticket_item"]);
@@ -43,6 +43,7 @@
         const reports = new Set(["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report"]);
         const buildingSetUp = new Set(["/setup/building_categories", "/setup/building_types"]);
         const business = new Set(["/setup/business_categories", "/setup/business_types", "/setup/business_sizes", "/setup/business_sector", "/setup/business_operations"]);
+        const approval = new Set(["/setup/approval_type", "/setup/approval_level"]);
 
         // Helper function to check active/open state
         const isActive = (urlsSet) => {
@@ -83,11 +84,29 @@
               <div data-i18n="Payment Setup">Payment Setup</div>
             </a>
             <ul class="menu-sub">
+              <li class="menu-item <%= link==='/setup/account' ? 'active' : '' %>">
+                <a href="/setup/account" class="menu-link">
+                  <div data-i18n="Account">Account</div>
+                </a>
+              </li>
               <li class="menu-item <%= link === '/setup/inter_switch' ? 'active' : '' %>">
                 <a href="/setup/inter_switch" class="menu-link">
                   <div data-i18n="Interswitch">Interswitch</div>
                 </a>
               </li>
+            </ul>
+          </li>
+          <li class="menu-item <%= isActive(approval) %>">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <div data-i18n="Approval">Approval</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item <%= link==='/setup/account' ? 'active' : '' %>">
+                <a href="/setup/approval_type" class="menu-link">
+                  <div data-i18n="Approval Type">Approval Type</div>
+                </a>
+              </li>
+         
             </ul>
           </li>
       
@@ -143,7 +162,7 @@
             </a>
             <ul class="menu-sub">
               <li class="menu-item <%= link === '/setup/building_categories' ? 'active' : '' %>">
-                <a href="/setup/building_categories" class="menu-link">
+                <a href="/setup/building_categories" class="mpayenu-link">
                   <div data-i18n="Building Categories">Building Categories</div>
                 </a>
               </li>

@@ -2,6 +2,8 @@ const Setup = require("../classes/setup.service");
 const paymentSetup = require("../classes/paymentSetup.service");
 const buildingService = require("../classes/building.service");
 const businessService = require("../classes/business.service");
+const accountService = require("../classes/account.service");
+const approvalService = require("../classes/approval.service");
 const { building } = require("../model/Buildings");
 const { json } = require("sequelize");
 
@@ -56,9 +58,9 @@ module.exports = {
     }
   },
   getState: async function (req, res) {
-    const yourState = req.user
+    const yourState = req.user;
     const response = await setup.state(req.query);
-    res.status(200).render("./setup/location/state", { response,yourState  });
+    res.status(200).render("./setup/location/state", { response, yourState });
   },
 
   getLga: async function (req, res) {
@@ -68,12 +70,11 @@ module.exports = {
 
   getLgaWithOutRender: async function (req, res) {
     const response = await setup.lga(req.query);
-    return res.json(response)
-    
+    return res.json(response);
   },
   getWard: async function (req, res) {
     // console.log("available query",req.user)
-    const lgaId = req.user.lga.split(", ")[0]; 
+    const lgaId = req.user.lga.split(", ")[0];
     // console.log(lgaId)
     const response = await setup.ward(lgaId);
     res.status(200).render("./setup/location/ward", { ...response });
@@ -307,4 +308,71 @@ module.exports = {
       res.status(500).json({ success: false, message: error.message });
     }
   },
+  createAccount: async function (req, res) {
+    try {
+      const { service_id, name } = req.user;
+      console.log(req.user);
+
+      const data = {
+        ...req.body,
+        service_id: service_id,
+        user: name,
+      };
+
+      await accountService.createAccount(data);
+      res.status(201).json({ success: true, message: "Created Successfully" });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: `Error uploading account: ${error}`,
+      });
+    }
+  },
+  fetchAcct: async function (req, res) {
+    try {
+      const response = await accountService.fetchAccount(req.user.service_id);
+      console.log({ response });
+      res
+        .status(200)
+        .render("./setup/payment/create_account", { account: response });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+  createApproval_types: async function (req, res) {
+    try {
+      const { service_id } = req.user;
+      const data = {
+        ...req.body,
+        service_id: service_id,
+      };
+      await approvalService.createApprovalTypes(data);
+      res
+        .status(200)
+        .json({ success: true, message: "Approval Type Created Successfully" });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: `error creating: ${error.message}`,
+      });
+    }
+  },
+  fetch_approval_types: async function (req, res) {
+    try {
+      const response = await approvalService.fetchApprovalTypes(req.user.service_id)
+      res.status(200).render('./setup/approval/approval_type', {data:response})
+    } catch (error) {
+      res.status(500).json({
+        success:false,
+        message:`an error occured, ${error.message}`
+      })
+    }
+  },
+  create_approval_level: async function (req,res) {
+    try {
+      await approvalService.create
+    } catch (error) {
+      
+    }
+  }
 };

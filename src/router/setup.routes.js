@@ -14,16 +14,17 @@ Router.route("/ticket_item/:id")
 Router.get("/state", setup.getState);
 Router.get("/lga", setup.getLgaWithOutRender);
 Router.route("/ward").get(setup.getWard).post(setup.postWard);
-Router.route("/lgas").get(setup.getLga)
+Router.route("/lgas").get(setup.getLga);
 Router.route("/ward/:id").put(setup.editWard).delete(setup.deleteWard);
 
 Router.route("/street").get(setup.getStreets).post(setup.postStreet);
-Router.get('/street/:ward_id', setup.getStreet)
+Router.get("/street/:ward_id", setup.getStreet);
 
 Router.route("/inter_switch")
   .post(setup.postInterSwitch)
   .get(setup.fetchInterSwitch);
-
+Router.route("/account").post(setup.createAccount).get(setup.fetchAcct);
+Router.route('/approval_type').post(setup.createApproval_types).get(setup.fetch_approval_types)
 Router.get("/building_categories", setup.building_categories);
 Router.post("/building_categories", setup.create_building_category);
 Router.get("/building_types", setup.building_types);
@@ -45,7 +46,5 @@ Router.route("/business_sector")
 Router.route("/business_operations")
   .get(setup.getBusinessOperations)
   .post(setup.addBusinessOperations);
-
-
 
 module.exports = Router;

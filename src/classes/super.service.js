@@ -10,11 +10,14 @@ class SuperService {
     }
 
     async dashboard() {
-        const clients = await this.client.count();
+
+        const count = await this.client.count({raw: true});
+        const rows = await this.client.findAll({ where: { service_status: 0 }, limit: 5, raw: true})
         const users = await this.users.count()
 
+        console.log(rows, count)
         return {
-            clients, users
+            clients: rows, users, count
         }
     }
 }

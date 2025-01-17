@@ -140,10 +140,20 @@ class AuthMiddleware {
         return res.redirect("/login");
       }
 
+      
+
       if (user[0].inactive == 2) {
         req.flash(
           "danger",
           "Your account has been deactivated, contact admin for more detail"
+        );
+        return res.redirect("/login");
+      }
+
+      if (user[0].group_id !== 111) {
+        req.flash(
+          "danger",
+          "You don't have permission to access the page"
         );
         return res.redirect("/login");
       }
@@ -158,7 +168,7 @@ class AuthMiddleware {
     }
   };
 
-  
+
   static async checkUser(req, res, next) {
     // console.log(req.cookies.jwt)
     // return

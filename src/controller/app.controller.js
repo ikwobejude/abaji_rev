@@ -15,7 +15,15 @@ module.exports = {
 
     // success login 
     loginSuccess: async function(req, res) {
-        if(req.user.group_id == 111111 || req.user.group_id == 222222) res.redirect('/admin/dashboard')
+        console.log(req.user.group_id)
+        if(req.user.group_id == 111111 || req.user.group_id == 222222){
+            res.redirect('/admin/dashboard')
+        } 
+
+        if(req.user.group_id === 111) {
+            console.log(req.user.group_id)
+            res.redirect('/super/super_dashboard')
+        }
     },
 
     addClient: async function (req, res) {

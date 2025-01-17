@@ -93,33 +93,58 @@ class Setup {
     });
   }
 
-  async ward(lga_id) {
+  async ward(lga_id, group_id) {
 
+    if(group_id === 111) {
+      // Fetch the wards and corresponding LGA
+        const wards = await this.db.query(
+          `
+        SELECT 
+          areas.area_code,
+          areas.areaname,
+          _lga.lga
+        FROM areas
+        INNER JOIN _lga ON _lga.lga_id = areas.lga_id
+        `,
+          {
+            type: QueryTypes.SELECT
+          }
+        );
 
-    // Fetch the wards and corresponding LGA
-    const wards = await this.db.query(
-      `
-    SELECT 
-      areas.area_code,
-      areas.areaname,
-      _lga.lga
-    FROM areas
-    INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-    WHERE areas.lga_id = :lga_id
-    `,
-      {
-        type: QueryTypes.SELECT,
-        replacements: { lga_id },
-      }
-    );
+        const localGovrts = await this.lgas.findAll({ raw: true });
 
-    const localGovrts = await this.lgas.findAll({ raw: true });
+        const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
+        return {
+          wards,
+          localGovrt: selectedLga, 
+        };
+    } else {
+      // Fetch the wards and corresponding LGA
+      const wards = await this.db.query(
+        `
+      SELECT 
+        areas.area_code,
+        areas.areaname,
+        _lga.lga
+      FROM areas
+      INNER JOIN _lga ON _lga.lga_id = areas.lga_id
+      WHERE areas.lga_id = :lga_id
+      `,
+        {
+          type: QueryTypes.SELECT,
+          replacements: { lga_id : lga_id || [] },
+        }
+      );
 
-    const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
-    return {
-      wards,
-      localGovrt: selectedLga, 
-    };
+      const localGovrts = await this.lgas.findAll({ raw: true });
+
+      const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
+      return {
+        wards,
+        localGovrt: selectedLga, 
+      };
+    }
+    
   }
 
   async createWard(data, service_id) {

@@ -74,9 +74,9 @@ module.exports = {
   },
   getWard: async function (req, res) {
     // console.log("available query",req.user)
-    const lgaId = req.user.lga.split(", ")[0];
+    const lgaId = req?.user?.lga?.split(", ")[0] || null
     // console.log(lgaId)
-    const response = await setup.ward(lgaId);
+    const response = await setup.ward(lgaId, req.user.group_id);
     res.status(200).render("./setup/location/ward", { ...response });
   },
 

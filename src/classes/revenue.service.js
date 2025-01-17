@@ -279,7 +279,7 @@ class Revenue extends Bud_pay {
       where: { invoice_number: query.invoice },
       raw: true,
     });
-    // console.log(revenue)
+    console.log(tax_items)
     return {
       revenue: revenue[0],
       items: tax_items,

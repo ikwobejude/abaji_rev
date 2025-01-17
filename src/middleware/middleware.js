@@ -93,6 +93,72 @@ class AuthMiddleware {
     }
   };
 
+  static requireSuperAuth = async (req, res, next) => {
+    try {
+      const token = req.cookies.jwt;
+
+      if (!token) {
+        req.flash("danger", "You're not logged in! Please login to get access");
+        return res.redirect("/login");
+      }
+
+      const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+
+      if (!decodedToken.userId) {
+        throw new Error("Your session has expired. Please login and continue.");
+      }
+
+      const user = await db.query(
+        `
+                SELECT 
+                    users.id,
+                    users.group_id,
+                    g.group_name,
+                    users.username,
+                    users.email,
+                    users.surname,
+                    users.firstname,
+                    users.user_phone,
+                    users.service_id,
+                    users.service_code,
+                    users.inactive,
+                    users.name,
+                    users.user_code,
+                    users.permissions
+                FROM users 
+                INNER JOIN user_groups AS g ON g.group_id = users.group_id
+                WHERE users.id = :userId LIMIT 1
+                `,
+        {
+          replacements: { userId: decodedToken.userId },
+          type: QueryTypes.SELECT,
+        }
+      );
+
+      if (!user || user.length === 0) {
+        req.flash("danger", "The User with the ID doesn't exist");
+        return res.redirect("/login");
+      }
+
+      if (user[0].inactive == 2) {
+        req.flash(
+          "danger",
+          "Your account has been deactivated, contact admin for more detail"
+        );
+        return res.redirect("/login");
+      }
+
+      res.locals.user = user[0];
+      req.user = user[0];
+      next();
+    } catch (error) {
+      console.error("Authentication error:", error);
+      req.flash("danger", error.message);
+      return res.redirect("/login");
+    }
+  };
+
+  
   static async checkUser(req, res, next) {
     // console.log(req.cookies.jwt)
     // return

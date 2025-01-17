@@ -88,52 +88,62 @@ class Client {
     }
 
     const adminPss = this.password();
-    console.log(adminPss, "After resize");
+    // console.log(adminPss, "After resize");
     await this.resizeImg(value);
     // console.log(adminPss, "Before resize")
 
     // Proceed with client creation
-    await this.client_service.create({
-      client: value.client,
-      service_code: this.acronyms(value.client),
-      client_phone: value.client_phone, // Ensure it fits the column type and length
-      client_email: value.client_email,
-      country: value.country_id,
-      country_code: "NG", // Ensure this matches the length of the column
-      admin_surname: value.admin_surname,
-      admin_firstname: value.admin_first_name,
-      admin_middlename: value.admin_middlename,
-      client_admin_phone: value.client_admin_phone, // Validate phone number length
-      client_admin_email: value.client_admin_email,
-      client_admin_pwd: await bcrypt.hash(adminPss, salt),
-      service_logo: `/uploads/${value.filename}`,
-      client_address: "Address", // Ensure this doesn't exceed column length
-      service_authentication_code: this.acronyms(value.client_name),
-    });
-    
+    try {
+      await this.client_service.create({
+        client: value.client,
+        service_code: this.acronyms(value.client),
+        client_phone: value.client_phone, // Ensure it fits the column type and length
+        client_email: value.client_email,
+        country: value.country_id,
+        country_code: "NG", // Ensure this matches the length of the column
+        admin_surname: value.admin_surname,
+        admin_firstname: value.admin_first_name,
+        admin_middlename: value.admin_middlename,
+        client_admin_phone: value.client_admin_phone, // Validate phone number length
+        client_admin_email: value.client_admin_email,
+        client_admin_pwd: await bcrypt.hash(adminPss, salt),
+        service_logo: `/uploads/${value.filename}`,
+        client_address: "Address", // Ensure this doesn't exceed column length
+        service_authentication_code: this.acronyms(value.client_name),
+      });
+      
 
-    const details = {
-      client: value.client,
-      email: value.client_email.toLowerCase(),
-      client_admin_email:"admin@"+this.acronyms(value.client).toLowerCase(),
-      admin_pass: adminPss,
-      url: "",
-      Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
-      Email: "info@authhub.com",
-      Phone: "070 00000 000",
-      template: "client_signup",
-      subject: "Client email registration notification",
-    };
+      const details = {
+        client: value.client,
+        email: value.client_email.toLowerCase(),
+        client_admin_email:"admin@"+this.acronyms(value.client).toLowerCase(),
+        admin_pass: adminPss,
+        url: "",
+        Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
+        Email: "info@authhub.com",
+        Phone: "070 00000 000",
+        template: "client_signup",
+        subject: "Client email registration notification",
+      };
 
-    console.log(details)
+      console.log(details)
 
-    emitter.emit("afterCreatingClientService", details);
+      emitter.emit("afterCreatingClientService", details);
 
-    return {
-      status: true,
-      message:
-        "Client created & email has been sent to the client registered email address",
-    };
+      return {
+        status: true,
+        message:
+          "Client created & email has been sent to the client registered email address",
+      };
+    } catch (error) {
+      if (error instanceof Sequelize.UniqueConstraintError) {
+        console.error('Duplicate entry:', error.errors[0].message);
+        // Handle the error, e.g., send a response or log it
+        throw new Error("Local governments area already registered")
+      } else {
+        throw new Error('An unexpected error occurred:', error)
+      }
+    }
   }
 
   async setup(data) {

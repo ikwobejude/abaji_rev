@@ -61,6 +61,7 @@ const adminRouter = require("./router/admin.routes");
 const setupRouter = require("./router/setup.routes");
 const walletRouter = require("./router/wallet.routes");
 const reportRouter = require("./router/report.routes");
+const superRoutes = require("./router/super.routes");
 const budRouter = require("./router/budpay.routes");
 
 app.set("views", path.join(__dirname, "../views"));
@@ -74,6 +75,7 @@ app.use("/setup", middleware.requireAuth, setupRouter);
 app.use("/wallet", middleware.requireAuth, walletRouter);
 app.use("/report", middleware.requireAuth, reportRouter);
 app.use("/pay", budRouter);
+app.use('/super', middleware.requireSuperAuth, superRoutes)
 
 
 // app.user('/')

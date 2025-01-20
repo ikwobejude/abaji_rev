@@ -43,29 +43,11 @@ class AuthMiddleware {
         throw new Error("Your session has expired. Please login and continue.");
       }
 
-      const user = await db.query(
-            `SELECT 
-                users.id,
-                users.group_id,
-                g.group_name,
-                users.username,
-                users.email,
-                users.surname,
-                users.firstname,
-                users.user_phone,
-                users.service_id,
-                users.service_code,
-                users.inactive,
-                users.name,
-                users.user_code,
-                users.permissions
-            FROM users 
-            INNER JOIN user_groups AS g ON g.group_id = users.group_id
-            WHERE users.id = ${decodedToken.userId} LIMIT 1`,
-        {
-          type: QueryTypes.SELECT,
-        }
-      );
+      const user = await Users.findByPk(decodedToken.userId, {
+        attributes: { exclude: ['password'] },
+         raw: true
+        })
+      
 
       console.log({user})
 
@@ -74,7 +56,7 @@ class AuthMiddleware {
         return res.redirect("/login");
       }
 
-      if (user[0].inactive == 2) {
+      if (user.inactive == 2) {
         req.flash(
           "danger",
           "Your account has been deactivated, contact admin for more detail"
@@ -82,9 +64,9 @@ class AuthMiddleware {
         return res.redirect("/login");
       }
 
-      const client = await this.getClientDetails(user[0]?.service_id); // `this` works correctly now.
-      res.locals.user = { ...user[0], ...client };
-      req.user = { ...user[0], ...client };
+      const client = await this.getClientDetails(user?.service_id); // `this` works correctly now.
+      res.locals.user = { ...user, ...client };
+      req.user = { ...user, ...client };
       next();
     } catch (error) {
       console.error("Authentication error:", error);

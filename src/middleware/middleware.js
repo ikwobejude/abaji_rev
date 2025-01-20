@@ -5,6 +5,7 @@ const Users = require("../model/Users");
 const clientService = require("../model/Client");
 const Op = Sequelize.Op;
 
+const excl = ['password', 'admin_ministry_id',  'ministry_supervisor', 'supervisor_ministry_id', "is_admin", "is_supervisor", "prev_username", "updated_by", "registered_on"]
 class AuthMiddleware {
   static async getClientDetails(serviceId) {
     try {
@@ -44,14 +45,14 @@ class AuthMiddleware {
       }
 
       const user = await Users.findByPk(decodedToken.userId, {
-        attributes: { exclude: ['password'] },
+        attributes: { exclude: excl },
          raw: true
         })
       
 
       console.log({user})
 
-      if (!user || user.length === 0) {
+      if (!user) {
         req.flash("danger", "The User with the ID doesn't exist");
         return res.redirect("/login");
       }

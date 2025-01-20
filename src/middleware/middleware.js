@@ -44,28 +44,25 @@ class AuthMiddleware {
       }
 
       const user = await db.query(
-        `
-                SELECT 
-                    users.id,
-                    users.group_id,
-                    g.group_name,
-                    users.username,
-                    users.email,
-                    users.surname,
-                    users.firstname,
-                    users.user_phone,
-                    users.service_id,
-                    users.service_code,
-                    users.inactive,
-                    users.name,
-                    users.user_code,
-                    users.permissions
-                FROM users 
-                INNER JOIN user_groups AS g ON g.group_id = users.group_id
-                WHERE users.id = :userId LIMIT 1
-                `,
+            `SELECT 
+                users.id,
+                users.group_id,
+                g.group_name,
+                users.username,
+                users.email,
+                users.surname,
+                users.firstname,
+                users.user_phone,
+                users.service_id,
+                users.service_code,
+                users.inactive,
+                users.name,
+                users.user_code,
+                users.permissions
+            FROM users 
+            INNER JOIN user_groups AS g ON g.group_id = users.group_id
+            WHERE users.id = ${decodedToken.userId} LIMIT 1`,
         {
-          replacements: { userId: decodedToken.userId },
           type: QueryTypes.SELECT,
         }
       );

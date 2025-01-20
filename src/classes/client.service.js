@@ -78,7 +78,7 @@ class Client {
 
     if (existingClient) {
       if (existingClient.client_email === value.client_email) {
-        throw new Error(`The email '${value.client_email}' is already in use.`);
+        throw new Error(`The email ${value.client_email} is already in use.`);
       }
       if (existingClient.client_phone === value.client_phone) {
         throw new Error(
@@ -120,8 +120,8 @@ class Client {
         admin_pass: adminPss,
         url: "",
         Contact: "SMART REVENUE CUSTOMER SERVICE DESK",
-        Email: "info@authhub.com",
-        Phone: "070 00000 000",
+        // Email: "info@authhub.com",
+        // Phone: "070 00000 000",
         template: "client_signup",
         subject: "Client email registration notification",
       };

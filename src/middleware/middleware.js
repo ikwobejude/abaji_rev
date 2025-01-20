@@ -135,7 +135,7 @@ class AuthMiddleware {
         }
       );
 
-      if (!user || user.length === 0) {
+      if (!user[0] || user[0].length === 0) {
         req.flash("danger", "The User with the ID doesn't exist");
         return res.redirect("/login");
       }

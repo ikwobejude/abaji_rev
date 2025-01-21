@@ -43,7 +43,6 @@ const uploadLgaDataFromExcel = async () => {
         console.log(`LGA already exists: ${lgaName} in ${stateName}`);
         continue;
       }
-
       // Prepare LGA upload data
       lgaUploads.push({
         lga: lgaName,

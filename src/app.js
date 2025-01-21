@@ -63,6 +63,7 @@ const walletRouter = require("./router/wallet.routes");
 const reportRouter = require("./router/report.routes");
 const superRoutes = require("./router/super.routes");
 const budRouter = require("./router/budpay.routes");
+const taxpayerRouter = require("./router/tax_payer.routes")
 
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
@@ -76,6 +77,7 @@ app.use("/wallet", middleware.requireAuth, walletRouter);
 app.use("/report", middleware.requireAuth, reportRouter);
 app.use("/pay", budRouter);
 app.use('/super', middleware.requireSuperAuth, superRoutes)
+app.use("/tax", middleware.requireAuth, taxpayerRouter);
 
 
 // app.user('/')

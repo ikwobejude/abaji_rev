@@ -89,5 +89,8 @@ Router.route('/generate_mandate')
 Router.get('/enumerated_demand_notice/:year/:invoice_number', enumerationController.printDemandNotice)
 
 
+Router.get('/all_users', admin.allUsers)
+
+
 
 module.exports = Router;

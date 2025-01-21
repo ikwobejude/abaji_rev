@@ -5,6 +5,7 @@
 
 <head>
   <%- include('../../layout/head') %>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -90,6 +91,37 @@
                   <div class="card-header">
                     <div class="row">
                       <div class="col-6">
+                        <div id="action-dropdown" style="display: none; margin-top: 10px;">
+                          <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            Actions
+                          </button>
+                          <div class="dropdown-menu ">
+                           
+                            <form class="p-6" onsubmit="return false">
+                              <span style="color: red">Tye selected assessment to a staff</span>
+                              <div class="mb-4">
+                                <label for="exampleDropdownFormEmail1" class="form-label">Select Staff</label>
+                                <select name="staff" id="staff" class="form-control custom-select">
+                                  <option value="">Select Staffs</option>
+                                </select>
+                              </div>
+                             
+                              
+                              <button type="button" class="btn btn-primary">Submit</button>
+                            </form>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="javascript:void(0)"> <i class="ti ti-lock me-1"></i> Disable selected Assessments</a>
+                            <a class="dropdown-item" href="javascript:void(0)"> <i class="ti ti-trash me-1"></i> Delete selected Assessments</a>
+                          </div>
+                          </div>
+                        </div>
+
+                        
+                        
                         <!-- Implement search by all available params here -->
                       </div>
                       <div class="col-6" style="text-align: end;">
@@ -102,10 +134,15 @@
                   </div>
 
                   <div class="card-datatable  table-responsive pt-0">
-                    <table class="datatables-basic table">
+                    <table class="table">
                       <thead>
                         <tr>
-                          <!-- <th></th> -->
+                          <th>
+                            <div class="form-check mb-0 ms-2">
+                              <input class="email-list-item-input form-check-input" id="all" type="checkbox" />All
+                              
+                            </div>
+                          </th>
                           <th>Invoice</th>
                           <th>Year</th>
                           <th>Revenue Name</th>
@@ -121,6 +158,11 @@
                       <tbody>
                         <% revenue.forEach(item=> { %>
                           <tr>
+                            <td>
+                              <div class="form-check mb-0 ms-2">
+                                <input class="email-list-item-input form-check-input"  type="checkbox" id="single" />
+                              </div>
+                            </td>
                             <td>
                               <%= item.bill_ref_no %>
                             </td>
@@ -215,73 +257,10 @@
 
               <%- include('../../layout/footer') %>
                 <!-- Page JS -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
                 <script src="/assets/js/tables-datatables-basic.js"></script>
-                <script>
-                  if (document.getElementById("form-upload-new-record")) {
-                    $(".spinner-border").hide()
-                    const dt = document.getElementById("form-upload-new-record");
-                    dt.addEventListener("submit", async function (e) {
-                      e.preventDefault();
-                      $(".spinner-border").show()
-                      const data = new FormData(dt);
-                      const payload = {
-                        base64url: data.get("base64url"),
-                      }
-
-                      console.log(payload)
-
-                      try {
-                        const request = await fetch('/admin/revenue_upload', {
-                          method: "post",
-                          body: JSON.stringify(payload),
-                          headers: {
-                            "Content-Type": "application/json"
-                          }
-                        })
-                        const response = await request.json()
-                        $(".spinner-border").hide()
-                        if (response.status == true) {
-                          toastr.success(response.message);
-                          setTimeout(() => {
-                            location.reload()
-                          }, "3000");
-                        } else {
-                          // for errors - red box
-                          toastr.error(response.message);
-                        }
-                      } catch (error) {
-                        $(".spinner-border").hide()
-                        // for errors - red box
-                        toastr.error(error.message);
-                      }
-                    })
-                  }
-
-
-                  const fileInput = document.getElementById('upload_excel');
-                  //  console.log(fileInput)
-                  fileInput.addEventListener('change', async (e) => {
-                    // console.log("Hi")
-                    try {
-                      $('#cover-spin').show(0)
-                      const file = fileInput.files[0];
-
-                      const reader = new FileReader();
-                      reader.addEventListener('load', async () => {
-                        // console.log(reader.result)
-                        $('#cover-spin').hide(0)
-                        $('#base64url').val(reader.result)
-                      })
-
-                      reader.readAsDataURL(file)
-                    } catch (error) {
-                      $('#cover-spin').hide(0)
-                      toastr.error(error.message)
-                    }
-                  });
-
-
-                </script>
+                <script src="/custom/revenue_invoice.js"></script>
+                
                 <!-- <script>
         document.addEventListener("DOMContentLoaded", () => {
             const currentYear = new Date().getFullYear();

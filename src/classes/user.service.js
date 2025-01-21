@@ -91,6 +91,7 @@ class User {
 
     return { status: true, message: "User created successfully." };
   }
+
   async getUser(service_id) {
     const users = await db.query(
       `SELECT
@@ -206,6 +207,16 @@ class User {
       }
     }
       
+  }
+
+  async findAllUsers(service_id) {
+    return await this.users.findAll({
+      attributes: ["id", "name", "email" ],
+      where: {
+        service_id
+      },
+      raw: true
+    })
   }
 }
 

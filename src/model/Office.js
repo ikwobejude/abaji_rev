@@ -9,7 +9,7 @@ const Tax_offices = db.define('tax_offices',{
         allowNull: true
     },
     tax_office_id:{
-        type: Sequelize.STRING(45),
+        type: Sequelize.STRING,
     },
     tax_office:{
         type: Sequelize.STRING

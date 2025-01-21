@@ -47,4 +47,8 @@ Router.route("/business_operations")
   .get(setup.getBusinessOperations)
   .post(setup.addBusinessOperations);
 
+Router.route('/office')
+   .get(setup.office)
+   .post(setup.createOffices)
+
 module.exports = Router;

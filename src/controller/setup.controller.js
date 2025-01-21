@@ -6,6 +6,7 @@ const accountService = require("../classes/account.service");
 const approvalService = require("../classes/approval.service");
 const { building } = require("../model/Buildings");
 const { json } = require("sequelize");
+const { createOffice, allOffices } = require("../classes/super.service");
 
 // const building = new buildingService();
 // const business = new businessService();
@@ -368,11 +369,29 @@ module.exports = {
       })
     }
   },
+  
   create_approval_level: async function (req,res) {
     try {
       await approvalService.create
     } catch (error) {
       
+    }
+  },
+
+  office: async(req, res) => {
+    const response = await allOffices({...req.user, ...req.body});
+    res.render('./setup/office/office', {response})
+  },
+
+  createOffices: async (req, res) => {
+    try {
+      const response = await createOffice({...req.user, ...req.body})
+      res.status(201).json(response)
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: error.message
+      })
     }
   }
 };

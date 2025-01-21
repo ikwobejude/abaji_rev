@@ -4,7 +4,33 @@
   <head>
     <%- include('../layout/head') %>
   </head>
+  <% 
+	// Helper function to handle NaN values
+											
+											
+	const safeParseFloat = (value) => {
+		if (value === null || isNaN(value)) {
+			return 0;
+		}
+		return parseFloat(value);
+	};
 
+	function formatNumber(value) {
+		const number = safeParseFloat(value);
+	
+		if (number < 0) {
+			return `(${Math.abs(number).toLocaleString(undefined, {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			})})`;
+		}
+	
+		return number.toLocaleString(undefined, {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+	}
+%>
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
@@ -46,6 +72,9 @@
                           <th>Type of property</th>
                           <th>Payment Date</th>
                           <th>Amount</th>
+                          <th>Amount Paid</th>
+                          <th>Outstanding</th>
+                          <th>Arears</th>
                           <!-- <th></th> -->
                         </tr>
                       </thead>
@@ -56,9 +85,11 @@
                                 <td><%= item.revenue_code %></td>
                                 <td><%= item.name_of_business %></td>
                                 <td><%= item.type_of_property %></td>
-                                <td><%= item.payment_date.toLocaleDateString() %></td>
-                                <td><%= item.amount_paid %></td>
-                          
+                                <td><%= item?.payment_date?.toLocaleDateString() %></td>
+                                <td><%= formatNumber(safeParseFloat(item.grand_total)) %></td>
+                                <td><%= formatNumber(safeParseFloat(item.amount_paid))  %></td>
+                                <td><%= formatNumber(safeParseFloat(item.amount_paid) - safeParseFloat(item.grand_total))  %></td>
+                                <td><%= formatNumber(safeParseFloat(item.arrears)) %></td>
                             </tr>
                         <% }) %>
                       </tbody>

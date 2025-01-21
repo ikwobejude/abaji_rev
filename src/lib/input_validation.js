@@ -215,5 +215,12 @@ module.exports = {
       }) 
   }).unknown(),
 
+  officeFormData: Joi.object({
+    office: Joi.string().trim().required().messages({
+        "any.required": `Offices is required.`,
+        "string.empty": `Offices cannot be empty.`,
+    }) 
+}).unknown(),
+
   
 };

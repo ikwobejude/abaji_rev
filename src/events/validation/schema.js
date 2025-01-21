@@ -82,6 +82,15 @@ module.exports = (emitter) => {
   });
 
 
+  emitter.on('beforeCreateOffice', (data) => {
+    const { error } = validations.officeFormData.validate(data);
+    if (error) {
+      emitter.emit('ValidationError', error);
+      throw error;
+    }
+  });
+
+
 
   
 };

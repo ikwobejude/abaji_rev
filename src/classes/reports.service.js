@@ -162,7 +162,7 @@ class Reports {
             FROM revenue_upload AS r
             INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
             INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
-        WHERE r.payment_status = 1 AND r.rate_year = ${year} AND r.service_id = ${query.service_id}`;
+        WHERE  r.rate_year = ${year} AND r.service_id = ${query.service_id}`;
 
     if (query.bill_ref)
       sql += ` AND revenue_upload.bill_ref_no = '%${query.bill_ref}%'`;

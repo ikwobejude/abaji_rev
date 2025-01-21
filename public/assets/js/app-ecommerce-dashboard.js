@@ -301,7 +301,6 @@
   // --------------------------------------------------------------------
   const req1 = await fetch('/admin/revenue_uploads');
   const res1 = await req1.json();
-  console.log(res1)
   let label1 = [];
   let series1 = [];
   res1.forEach(rf => {
@@ -309,7 +308,7 @@
     series1.push(rf.invoice_count)
   })
 
-  console.log(res1)
+  // console.log(res1)
   const generatedLeadsChartEl = document.querySelector('#generatedLeadsChart'),
     generatedLeadsChartConfig = {
       chart: {

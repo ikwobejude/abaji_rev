@@ -1,3 +1,5 @@
+const Assessments = require("../model/Assessments");
+
 class TCC {
 
     /* Terms 
@@ -61,6 +63,7 @@ class TCC {
         // Return the total tax payable rounded to two decimal places
         return totalTaxPayable.toFixed(2);
     }
+
     async individualTCC1 (data){
         const amount = Number(data);
         const allowance = 200000;
@@ -128,6 +131,38 @@ class TCC {
         } 
         return parseFloat(total).toFixed(2) 
     }
+
+    async generateTCC(query) {
+        const startYear = parseInt(query.year, 10)
+        const tin = query.tin
+
+        const response = await this.findTaxPayerInvoices(tin, startYear);
+        console.log(response)
+
+    }
+
+    async findTaxPayerInvoices(tin, yr) {
+        // const start = yr;
+        const inv = new Date().getTime().toString(36)
+        const payload = []
+        for (yr; yr < startYear + 3; yr++) {
+            // const element = array[index];
+            console.log(yr)
+            const detail = await Assessments.findOne({ where: { tax_year: yr, tax_payer_rin: tin, settlement_status: 1 }, raw: true });
+            payload.push[{
+                assessment_amount: detail.assessment_amount,
+                amount_paid: detail.assessment_amount_paid,
+                yr,
+                tin,
+                batch: inv
+            }]
+            
+        }
+
+        return payload
+    }
+
+
     
 }
 

@@ -25,7 +25,8 @@ const TaxPayers = db.define('tax_payers',{
     created_on: {type: Sequelize.DATE},
 }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    id: false,         // Explicitly disable the default id field
 })
 
 module.exports = TaxPayers

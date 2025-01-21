@@ -212,17 +212,17 @@
     <!-- Extended components -->
     <% 
         // Define all menu structures
-        const settings = new Set(["/setup/ticket_item", "/setup/state", "/setup/ward", "/admin/user_group", "/admin/permission", "/setup/inter_switch", "/setup/street", "/setup/account", "/setup/inter_switch"]);
+        const settings = new Set(["/setup/ticket_item", "/setup/state", "/setup/business_categories", "/setup/business_types","/setup/business_sizes", "/setup/business_sector" ,"/setup/business_operations" ,"/setup/ward", "/admin/user_group", "/admin/permission","/setup/building_categories","/setup/building_types", "/setup/inter_switch","/setup/lgas", "/setup/street", "/setup/account", "/setup/inter_switch", "/setup/approval_type"]);
         const rolesPermissions = new Set(["/admin/user_group", "/admin/permission"]);
-        const payments = new Set(["/setup/inter_switch"]);
+        const payments = new Set(["/setup/inter_switch", "/setup/account"]);
         const revenues = new Set(["/setup/ticket_item"]);
-        const locations = new Set(["/setup/state", "/setup/ward", "/setup/street"]);
+        const locations = new Set(["/setup/state", "/setup/ward", "/setup/street", "/setup/lgas"]);
         const assessments = new Set(["/admin/revenue_upload"]);
         const enumeration = new Set(["/admin/enumerated_panel", "/admin/enumerated_buildings", "/admin/enumerated_business", "/admin/generate_mandate"]);
         const ticket = new Set(["/admin/payment_reconciliation"]);
-        const users = new Set(["/admin/user_group"]);
+        const users = new Set(["/admin/user_group", "/admin/user"]);
         const wallet = new Set(["/wallet", "/wallet/reports"]);
-        const reports = new Set(["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report"]);
+        const reports = new Set(["/report/payment_reports", "/report/revenue_assessments_reports", "/report/ticket_report", "/report/generated_mandate_reports"]);
         const buildingSetUp = new Set(["/setup/building_categories", "/setup/building_types"]);
         const business = new Set(["/setup/business_categories", "/setup/business_types", "/setup/business_sizes", "/setup/business_sector", "/setup/business_operations"]);
         const approval = new Set(["/setup/approval_type", "/setup/approval_level"]);
@@ -283,7 +283,7 @@
               <div data-i18n="Approval">Approval</div>
             </a>
             <ul class="menu-sub">
-              <li class="menu-item <%= link==='/setup/account' ? 'active' : '' %>">
+              <li class="menu-item <%= link==='/setup/approval_type' ? 'active' : '' %>">
                 <a href="/setup/approval_type" class="menu-link">
                   <div data-i18n="Approval Type">Approval Type</div>
                 </a>
@@ -343,11 +343,11 @@
               <div data-i18n="Building">Building Setup</div>
             </a>
             <ul class="menu-sub">
-              <li class="menu-item <%= link === '/setup/building_categories' ? 'active' : '' %>">
-                <a href="/setup/building_categories" class="mpayenu-link">
-                  <div data-i18n="Building Categories">Building Categories</div>
-                </a>
-              </li>
+                <li class="menu-item <%= link === '/setup/building_categories' ? 'active' : '' %>">
+                  <a href="/setup/building_categories" class="menu-link">
+                    <div data-i18n="Building Categories">Building Categories</div>
+                  </a>
+                </li>
               <li class="menu-item <%= link === '/setup/building_types' ? 'active' : '' %>">
                 <a href="/setup/building_types" class="menu-link">
                   <div data-i18n="Building Types">Building Types</div>
@@ -492,7 +492,7 @@
               </a>
               <ul class="menu-sub">
 
-                <li class="menu-item <%= link == " /admin/user" ? "active" : "" %>">
+                <li class="menu-item <%= link == "/admin/user" ? "active" : "" %>">
                   <a href="/admin/user" class="menu-link">
                     <div data-i18n="Users">Users</div>
                   </a>

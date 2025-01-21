@@ -5,6 +5,7 @@ const Users = require("../model/Users");
 const clientService = require("../model/Client");
 const Op = Sequelize.Op;
 
+const excl = ['password', 'admin_ministry_id',  'ministry_supervisor', 'supervisor_ministry_id', "is_admin", "is_supervisor", "prev_username", "updated_by", "registered_on"]
 class AuthMiddleware {
   static async getClientDetails(serviceId) {
     try {
@@ -37,44 +38,26 @@ class AuthMiddleware {
       }
 
       const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+      console.log({decodedToken})
 
       if (!decodedToken.userId) {
         throw new Error("Your session has expired. Please login and continue.");
       }
 
-      const user = await db.query(
-        `
-                SELECT 
-                    users.id,
-                    users.group_id,
-                    g.group_name,
-                    users.username,
-                    users.email,
-                    users.surname,
-                    users.firstname,
-                    users.user_phone,
-                    users.service_id,
-                    users.service_code,
-                    users.inactive,
-                    users.name,
-                    users.user_code,
-                    users.permissions
-                FROM users 
-                INNER JOIN user_groups AS g ON g.group_id = users.group_id
-                WHERE users.id = :userId LIMIT 1
-                `,
-        {
-          replacements: { userId: decodedToken.userId },
-          type: QueryTypes.SELECT,
-        }
-      );
+      const user = await Users.findByPk(decodedToken.userId, {
+        attributes: { exclude: excl },
+         raw: true
+        })
+      
 
-      if (!user || user.length === 0) {
+      console.log({user})
+
+      if (!user) {
         req.flash("danger", "The User with the ID doesn't exist");
         return res.redirect("/login");
       }
 
-      if (user[0].inactive == 2) {
+      if (user.inactive == 2) {
         req.flash(
           "danger",
           "Your account has been deactivated, contact admin for more detail"
@@ -82,9 +65,9 @@ class AuthMiddleware {
         return res.redirect("/login");
       }
 
-      const client = await this.getClientDetails(user[0]?.service_id); // `this` works correctly now.
-      res.locals.user = { ...user[0], ...client };
-      req.user = { ...user[0], ...client };
+      const client = await this.getClientDetails(user?.service_id); // `this` works correctly now.
+      res.locals.user = { ...user, ...client };
+      req.user = { ...user, ...client };
       next();
     } catch (error) {
       console.error("Authentication error:", error);
@@ -103,6 +86,7 @@ class AuthMiddleware {
       }
 
       const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+      console.log({decodedToken})
 
       if (!decodedToken.userId) {
         throw new Error("Your session has expired. Please login and continue.");
@@ -135,7 +119,7 @@ class AuthMiddleware {
         }
       );
 
-      if (!user || user.length === 0) {
+      if (!user[0] || user[0].length === 0) {
         req.flash("danger", "The User with the ID doesn't exist");
         return res.redirect("/login");
       }

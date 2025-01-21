@@ -58,7 +58,6 @@ class Auth {
       where: { [this.Op.or]: [{ username: username }, { email: username }] },
       raw: true,
     });
-    console.log(user)
 
     if (user) {
       //   console.log({ user });

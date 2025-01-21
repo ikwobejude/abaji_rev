@@ -45,7 +45,7 @@ class Email {
             const mailOptions = {
                 from: {
                     address: this.from,
-                    name: "SEAMLEX"
+                    name: "SMART REVENUE"
                 },
                 to: {
                     address: this.details.email,

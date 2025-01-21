@@ -160,6 +160,7 @@ module.exports = {
       const data = req.body;
       const payload = {
         ...data,
+        service_id: req.user.service_id,
         created_by: req.user.id,
       };
       const response = await payment.interSwitchPost(payload);

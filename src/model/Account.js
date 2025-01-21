@@ -12,7 +12,7 @@ const ApprovalLevels = db.define(
     lga_account_name: Sequelize.STRING,
     lga_account_number: Sequelize.STRING,
     lga_bank_name: Sequelize.STRING,
-    approval_status: Sequelize.BOOLEAN,
+    approval_status: Sequelize.STRING,
     approved_by: Sequelize.INTEGER,
     created_by: Sequelize.STRING,
     service_id: Sequelize.STRING,

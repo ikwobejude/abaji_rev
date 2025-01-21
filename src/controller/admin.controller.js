@@ -2,10 +2,13 @@ const Admin = require("../classes/dashboard.service");
 const User = require("../classes/user.service");
 const Client = require("../classes/client.service");
 const Setup = require("../classes/setup.service");
+const tcc = require("../classes/tcc_calculation.service");
 const user = new User();
 const admin = new Admin();
 const setup = new Setup();
 class DashboardController {
+
+  // dashboard controller
   static async adminDashboard(req, res) {
     try {
       const states = await setup.state(); 
@@ -108,6 +111,8 @@ class DashboardController {
       res.status(500).send("Internal Server Error");
     }
   }
+
+
   static async updateClientDetails(req, res) {
     try {
       const clientId = req.user.service_id;
@@ -118,6 +123,8 @@ class DashboardController {
       res.status(500).send("Internal Server Error");
     }
   }
+
+  
   static async security(req, res) {
     try {
       res.status(200).render("security");
@@ -125,6 +132,15 @@ class DashboardController {
       console.error("Error in security:", error);
       res.status(500).send("Internal Server Error");
     }
+  }
+
+  static async tccCalculation(req, res) {
+    console.log(req.body)
+    const response = await tcc.individualTCC(req.body.amount)
+    res.status(200).json({
+      status: true,
+      data: response
+    })
   }
 }
 

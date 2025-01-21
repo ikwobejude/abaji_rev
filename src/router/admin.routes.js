@@ -88,5 +88,9 @@ Router.route('/generate_mandate')
 
 Router.get('/enumerated_demand_notice/:year/:invoice_number', enumerationController.printDemandNotice)
 
+// tax payers 
+Router.route('/tax_payer')
+.get()
+.post();
 
 module.exports = Router;

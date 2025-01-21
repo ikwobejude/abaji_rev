@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const app = require('../controller/app.controller');
+const admin = require('../controller/admin.controller');
 const middleware = require('../middleware/middleware');
 const Router = express.Router();
 
@@ -49,6 +50,7 @@ Router.route('/clients')
 
 Router.post('/initialize_payments', app.pushPayment)
 Router.get('/payment_notification', app.pushPayment)
+Router.post('/tcc_calculation', admin.tccCalculation)
 
 
 module.exports = Router

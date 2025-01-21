@@ -187,6 +187,7 @@ const run = async () => {
         },
        { transaction: t });
     await t.commit();
+    
     parentPort.postMessage({
       status: true,
       message: "Successfully Uploaded",

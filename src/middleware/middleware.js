@@ -38,7 +38,7 @@ class AuthMiddleware {
       }
 
       const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-      console.log({decodedToken})
+      // console.log({decodedToken})
 
       if (!decodedToken.userId) {
         throw new Error("Your session has expired. Please login and continue.");
@@ -50,7 +50,7 @@ class AuthMiddleware {
         })
       
 
-      console.log({user})
+      // console.log({user})
 
       if (!user) {
         req.flash("danger", "The User with the ID doesn't exist");

@@ -1,4 +1,9 @@
+const { Op } = require("sequelize");
+const db = require('../db/connection')
 const Assessments = require("../model/Assessments");
+const CertificateRequests = require("../model/CertificateRequests");
+const certificateRequestsRecord = require("../model/certificateRequestsRecord");
+const TaxPayers = require("../model/TaxPayers");
 
 class TCC {
 
@@ -133,34 +138,120 @@ class TCC {
     }
 
     async generateTCC(query) {
-        const startYear = parseInt(query.year, 10)
-        const tin = query.tin
+        const startYear = parseInt(query.tcc_start_year, 10);
+        const tin = query.tcc_taxpayer_tin;
+        const inv = new Date().getTime().toString(36); // Unique batch identifier
+    
+        const t = await db.transaction();
 
-        const response = await this.findTaxPayerInvoices(tin, startYear);
-        console.log(response)
-
-    }
-
-    async findTaxPayerInvoices(tin, yr) {
-        // const start = yr;
-        const inv = new Date().getTime().toString(36)
-        const payload = []
-        for (yr; yr < startYear + 3; yr++) {
-            // const element = array[index];
-            console.log(yr)
-            const detail = await Assessments.findOne({ where: { tax_year: yr, tax_payer_rin: tin, settlement_status: 1 }, raw: true });
-            payload.push[{
-                assessment_amount: detail.assessment_amount,
-                amount_paid: detail.assessment_amount_paid,
-                yr,
-                tin,
+        try {
+            // Create a Certificate Request record
+            await CertificateRequests.create({
+                taxpayer_name: query.tcc_taxpayer_name,
+                service_id: query.service_id,
+                taxpayer_id: tin,
+                request_date: new Date(),
+                start_year: startYear,
+                end_year: startYear + 2,
                 batch: inv
-            }]
-            
+            }, { transaction: t });
+        
+            // Fetch taxpayer invoices for the given years
+            const response = await this.findTaxPayerInvoices(tin, startYear, query.service_id, inv);
+            console.log(response);
+        
+            // If invoices are found, bulk insert them into certificateRequestsRecord
+            if (response.count > 0) {
+                await certificateRequestsRecord.bulkCreate(response.payload, { ignoreDuplicates: true }, { transaction: t });
+            }
+            await t.commit()
+        
+            // Return status and message
+            return {
+                status: response.count > 0,
+                message: response.count > 0 
+                    ? `Successfully generated` 
+                    : `No tax found for the year ${startYear} - ${startYear + 2}`,
+            };
+        } catch (error) {
+            console.log(error)
+            await t.rollback()
+            throw error(error.message)
         }
-
-        return payload
     }
+    
+    async findTaxPayerInvoices(tin, startYear, service_id, inv) {
+       
+        const payload = [];
+        let count = 0;
+    
+        // Fetch all assessments for the given taxpayer and year range in a single query
+        const details = await Assessments.findAll({
+            where: {
+                tax_payer_rin: tin,
+                settlement_status: 1,
+                tax_year: {
+                    [Op.between]: [startYear, startYear + 2],
+                },
+            },
+            raw: true,
+        });
+    
+        // Process the fetched assessments
+        for (let year = startYear; year <= startYear + 2; year++) {
+            const detail = details.find((d) => d.tax_year === year);
+            if (detail) count++;
+            payload.push({
+                tax_payable: detail ? detail.assessment_amount : 0,
+                total_profit: detail ? detail.assessment_amount_paid : 0,
+                year: year,
+                tin,
+                batch: inv,
+                service_id
+            });
+        }
+    
+        return { payload, count };
+    }
+
+
+    async findAll(query) {
+        console.log({query})
+        let perPage = 10; // number of records per page
+        var page = query.page || 1;
+        let offset = perPage * page - perPage;
+
+        const conditions = {
+            service_id: query.service_id, // Always include service_id
+            [Op.and]: [
+                query.taxpayer_name ? { taxpayer_name: query.taxpayer_name } : null,
+                query.start_year ? { start_year: query.start_year } : null,
+                query.taxpayer_id ? { taxpayer_id: query.taxpayer_id } : null,
+            ].filter(Boolean), // Filter out empty or null conditions
+        };
+
+        const [results, count] = await Promise.all([
+            CertificateRequests.findAll({
+                where: conditions,
+                limit: perPage,
+                offset: offset,
+                raw: true,
+            }),
+            CertificateRequests.count({
+                where: conditions,
+                limit: perPage,
+                offset: offset,
+                raw: true,
+            })      
+        ])
+
+        return {
+            results,
+            count,  
+        };
+        
+    }
+    
 
 
     

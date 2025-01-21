@@ -391,6 +391,19 @@
           </li>
         </ul>
       </li>
+      <li class="menu-item  <%= isActive(ticket)  %>">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons ti ti-users"></i>
+          <div data-i18n="Tax Payers">Tax Payers</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item <%= link == '/tax/payers' ? 'active' : '' %>">
+            <a href="/tax/payers" class="menu-link">
+              <div data-i18n="Tax Payers">Tax Payers</div>
+            </a>
+          </li>
+        </ul>
+      </li>
   
         <li class="menu-item <%= isActive(assessments) %>">
           <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -443,12 +456,12 @@
         <li class="menu-item  <%= isActive(ticket)  %>">
           <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons ti ti-users"></i>
-            <div data-i18n="Tax Payers">Tax Payers</div>
+            <div data-i18n="Assessments">Assessments</div>
           </a>
           <ul class="menu-sub">
-            <li class="menu-item <%= link == '/admin/payment_reconciliation' ? 'active' : '' %>">
-              <a href="/admin/payment_reconciliation" class="menu-link">
-                <div data-i18n="Tax Payers">Tax Payers</div>
+            <li class="menu-item <%= link == '/tax/tcc' ? 'active' : '' %>">
+              <a href="/tax/tcc" class="menu-link">
+                <div data-i18n="Request TCC">Request TCC</div>
               </a>
             </li>
           </ul>

@@ -76,12 +76,31 @@
                                                     <th>Account Name</th>
                                                     <th>Bank</th>
                                                     <th>Approved</th>
-                                                    <th>Action</th>
+                                                    <!-- <th>Action</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <tbody>
-                                               
+
+
+                                                <tr>
+                                                    <td>
+                                                        <%= account.lga_account_number %>
+                                                    </td>
+                                                    <td>
+                                                        <%= account.lga_account_name %>
+                                                    </td>
+                                                    <td>
+                                                        <%= account.lga_bank_name %>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge <%= account.approved_status ? 'badge-success' : 'badge-pending' %>">
+                                                            <%= account.approved_status ? 'Approved' : 'Pending' %>
+                                                        </span>
+                                                    </td>
+
+                                                </tr>
 
                                             </tbody>
                                         </table>

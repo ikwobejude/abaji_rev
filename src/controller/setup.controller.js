@@ -75,7 +75,7 @@ module.exports = {
   },
   getWard: async function (req, res) {
     // console.log("available query",req.user)
-    const lgaId = req?.user?.lga?.split(", ")[0] || null
+    const lgaId = req?.user?.lga?.split(", ")[0] || null;
     // console.log(lgaId)
     const response = await setup.ward(lgaId, req.user.group_id);
     res.status(200).render("./setup/location/ward", { ...response });
@@ -332,7 +332,7 @@ module.exports = {
   fetchAcct: async function (req, res) {
     try {
       const response = await accountService.fetchAccount(req.user.service_id);
-      console.log({ response });
+      // console.log({ response });
       res
         .status(200)
         .render("./setup/payment/create_account", { account: response });
@@ -360,38 +360,40 @@ module.exports = {
   },
   fetch_approval_types: async function (req, res) {
     try {
-      const response = await approvalService.fetchApprovalTypes(req.user.service_id)
-      res.status(200).render('./setup/approval/approval_type', {data:response})
+      const response = await approvalService.fetchApprovalTypes(
+        req.user.service_id
+      );
+      res
+        .status(200)
+        .render("./setup/approval/approval_type", { data: response });
     } catch (error) {
       res.status(500).json({
-        success:false,
-        message:`an error occured, ${error.message}`
-      })
-    }
-  },
-  
-  create_approval_level: async function (req,res) {
-    try {
-      await approvalService.create
-    } catch (error) {
-      
+        success: false,
+        message: `an error occured, ${error.message}`,
+      });
     }
   },
 
-  office: async(req, res) => {
-    const response = await allOffices({...req.user, ...req.body});
-    res.render('./setup/office/office', {response})
+  create_approval_level: async function (req, res) {
+    try {
+      await approvalService.create;
+    } catch (error) {}
+  },
+
+  office: async (req, res) => {
+    const response = await allOffices({ ...req.user, ...req.body });
+    res.render("./setup/office/office", { response });
   },
 
   createOffices: async (req, res) => {
     try {
-      const response = await createOffice({...req.user, ...req.body})
-      res.status(201).json(response)
+      const response = await createOffice({ ...req.user, ...req.body });
+      res.status(201).json(response);
     } catch (error) {
       res.status(400).json({
         status: false,
-        message: error.message
-      })
+        message: error.message,
+      });
     }
-  }
+  },
 };

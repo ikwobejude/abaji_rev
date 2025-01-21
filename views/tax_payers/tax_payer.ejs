@@ -13,6 +13,54 @@
     .table {
         padding: 3px;
     }
+
+
+    #taxPayerTable th {
+        background-color: #f4f6f8;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        padding: 10px;
+    }
+
+
+    /* Pagination Styling */
+    .dataTables_paginate {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .dataTables_paginate .paginate_button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #6c757d;
+        background-color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #496d95;
+        color: #fff;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        color: #ccc;
+        cursor: not-allowed;
+    }
 </style>
 
 <body>
@@ -113,28 +161,27 @@
                                                     <tr>
                                                         <td>
                                                             <div class="dropdown">
-                                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                                  <i class="ti ti-dots-vertical"></i>
+                                                                <button type="button"
+                                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                                    data-bs-toggle="dropdown">
+                                                                    <i class="ti ti-dots-vertical"></i>
                                                                 </button>
                                                                 <div class="dropdown-menu">
-                                                                  <a class="dropdown-item"
-                                                                  
-                                                                   >
-                                                                    <i class="ti ti-eye me-1"></i>View Taxpayer
-                                                                  </a>
+                                                                    <a class="dropdown-item">
+                                                                        <i class="ti ti-eye me-1"></i>View Taxpayer
+                                                                    </a>
 
-                                                                  <a class="dropdown-item"  
-                                                                  href="javascript:;"
-                                                                  data-tin="<%= taxPayer.taxpayer_tin %>"
-                                                                  data-name="<%= taxPayer.taxpayer_name %>"
-                                                                  id="generate_tcc">
-                                                                    <i class="ti ti-folder  me-1"></i>Generate TCC
-                                                                  </a>
-                                                                  <a class="dropdown-item" href="javascript:void(0);" >
-                                                                    <i class="ti ti-trash me-1"></i>Delete
-                                                                  </a>
+                                                                    <a class="dropdown-item" href="javascript:;"
+                                                                        data-tin="<%= taxPayer.taxpayer_tin %>"
+                                                                        data-name="<%= taxPayer.taxpayer_name %>"
+                                                                        id="generate_tcc">
+                                                                        <i class="ti ti-folder  me-1"></i>Generate TCC
+                                                                    </a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                                        <i class="ti ti-trash me-1"></i>Delete
+                                                                    </a>
                                                                 </div>
-                                                              </div>
+                                                            </div>
                                                         </td>
                                                         <td>
                                                             <%= taxPayer.taxpayer_name %>
@@ -170,27 +217,27 @@
                                             onsubmit="return false">
                                             <div class="col-12">
                                                 <label class="form-label" for="taxpayer_name">Taxpayer Name</label>
-                                                <input type="text" id="taxpayer_name" name="taxpayer_name"
+                                                <input type="text" id="tax_payer_name" name="taxpayer_name"
                                                     class="form-control" placeholder="Enter Taxpayer Name" required />
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label" for="taxpayer_tin">Taxpayer TIN</label>
-                                                <input type="text" id="taxpayer_tin" name="taxpayer_tin"
+                                                <input type="text" id="tax_payer_tin" name="taxpayer_tin"
                                                     class="form-control" placeholder="Enter Taxpayer TIN" required />
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label" for="mobile_number">Mobile Number</label>
-                                                <input type="text" id="mobile_number" name="mobile_number"
+                                                <input type="text" id="mobile_no" name="mobile_number"
                                                     class="form-control" placeholder="Enter Mobile Number" required />
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label" for="email_addresss">Email Address</label>
-                                                <input type="email" id="email_addresss" name="email_addresss"
+                                                <input type="email" id="email_address" name="email_addresss"
                                                     class="form-control" placeholder="Enter Email Address" required />
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label" for="tax_payer_type">Taxpayer Type</label>
-                                                <select id="tax_payer_type" name="tax_payer_type" class="form-control"
+                                                <select id="taxpayer_type" name="tax_payer_type" class="form-control"
                                                     required>
                                                     <option value="" disabled selected>Select Taxpayer Type</option>
                                                     <option value="Individual">Individual</option>
@@ -255,50 +302,45 @@
     <!-- Add New Credit Card Modal -->
     <div class="modal fade" id="addNewCCModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
-          <div class="modal-content">
-            <div class="modal-body">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              <div class="text-center mb-6">
-                <h4 class="mb-2">TCC Generation</h4>
-                <!-- <p>Add new card to complete payment</p> -->
-              </div>
-              <form id="addNewCCForm" class="row g-6" onsubmit="return false">
-                
-                <div class="col-12">
-                  <label class="form-label" for="modalAddCardName">Taxpayer name</label>
-                  <input type="text" id="tcc_taxpayer_name"  class="form-control" name="tcc_taxpayer_name" placeholder="John Doe" />
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center mb-6">
+                        <h4 class="mb-2">TCC Generation</h4>
+                        <!-- <p>Add new card to complete payment</p> -->
+                    </div>
+                    <form id="addNewCCForm" class="row g-6" onsubmit="return false">
+
+                        <div class="col-12">
+                            <label class="form-label" for="modalAddCardName">Taxpayer name</label>
+                            <input type="text" id="tcc_taxpayer_name" class="form-control" name="tcc_taxpayer_name"
+                                placeholder="John Doe" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="modalAddCardName">Taxpayer tin</label>
+                            <input type="text" id="tcc_taxpayer_tin" class="form-control" name="tcc_taxpayer_tin"
+                                placeholder="John Doe" />
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="modalAddCardExpiryDate">Start year</label>
+                            <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                type="text" id="tcc_start_year" name="tcc_start_year" class="form-control"
+                                placeholder="2020" />
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary me-3">Submit</button>
+                            <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal"
+                                aria-label="Close">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-12">
-                    <label class="form-label" for="modalAddCardName">Taxpayer tin</label>
-                    <input type="text"  id="tcc_taxpayer_tin"  class="form-control" name="tcc_taxpayer_tin" placeholder="John Doe" />
-                  </div>
-                <div class="col-6 col-md-3">
-                  <label class="form-label" for="modalAddCardExpiryDate">Start year</label>
-                  <input
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                    type="text"
-                    id="tcc_start_year"
-                    name="tcc_start_year"
-                    class="form-control"
-                    placeholder="2020" />
-                </div>
-                
-                <div class="col-12 text-center">
-                  <button type="submit" class="btn btn-primary me-3">Submit</button>
-                  <button
-                    type="reset"
-                    class="btn btn-label-secondary btn-reset"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                    Cancel
-                  </button>
-                </div>
-              </form>
             </div>
-          </div>
         </div>
-      </div>
-      <!--/ Add New Credit Card Modal -->
+    </div>
+    <!--/ Add New Credit Card Modal -->
 
 
     <!-- Include Bootstrap JS -->
@@ -318,13 +360,23 @@
 
     <script>
         $(document).ready(function () {
-            $("#userTable").DataTable({
+            $("#taxPayerTable").DataTable({
                 ordering: false,
                 paging: true,
                 pageLength: 10,
                 searching: false,
+                lengthChange: true,
+                // info: false,
+                // dom: '<"top"fl>rt<"bottom"p><"clear">',
+                language: {
+                    paginate: {
+                        previous: "<i class='ti ti-chevron-left'></i>",
+                        next: "<i class='ti ti-chevron-right'></i>",
+                    },
+                },
             });
         });
+
         document.addEventListener('click', function (event) {
             if (!event.target.closest('.offcanvas') && document.querySelector('.offcanvas.show')) {
                 const offcanvas = bootstrap.Offcanvas.getInstance(document.querySelector('.offcanvas.show'));
@@ -342,26 +394,26 @@
 
                 $("#loading-spinner").removeClass("d-none");
 
-                const taxpayer_name = $("#taxpayer_name").val();
-                const taxpayer_tin = $("#taxpayer_tin").val();
-                const mobile_number = $("#mobile_number").val();
-                const email_addresss = $("#email_addresss").val();
-                const tax_payer_type = $("#tax_payer_type").val();
-                const contactaddress = $("#contactaddress").val();
-                const bvn = $("#bvn").val();
-                const nin = $("#nin").val();
-
+                // const taxpayer_name = $("#taxpayer_name").val();
+                // const taxpayer_tin = $("#taxpayer_tin").val();
+                // const mobile_number = $("#mobile_number").val();
+                // const email_addresss = $("#email_addresss").val();
+                // const tax_payer_type = $("#tax_payer_type").val();
+                // const contactaddress = $("#contactaddress").val();
+                // const bvn = $("#bvn").val();
+                // const nin = $("#nin").val();
 
                 const data = {
-                    taxpayer_name,
-                    taxpayer_tin,
-                    mobile_number,
-                    email_addresss,
-                    tax_payer_type,
-                    contactaddress,
-                    bvn,
-                    nin,
+                    taxpayer_name: $("#tax_payer_name").val().trim(),
+                    taxpayer_tin: $("#tax_payer_tin").val().trim(),
+                    mobile_number: $("#mobile_no").val().trim(),
+                    email_addresss: $("#email_address").val().trim(),
+                    tax_payer_type: $("#taxpayer_type").val(),
+                    contactaddress: $("#contactaddress").val().trim(),
+                    bvn: $("#bvn").val().trim(),
+                    nin: $("#nin").val().trim(),
                 };
+
 
                 fetch("/tax/payers", {
                     method: "POST",
@@ -412,16 +464,16 @@
 
             if (target.id === "generate_tcc") {
                 const tin = target.getAttribute("data-tin"),
-                name = target.getAttribute("data-name");
-                openTCCModal({name, tin});
+                    name = target.getAttribute("data-name");
+                openTCCModal({ name, tin });
             }
 
-            if(target.id === "delete_button") {
+            if (target.id === "delete_button") {
                 const id = target.getAttribute("data-id");
-                console.log({id})
+                console.log({ id })
                 deleteRecord(id)
             }
-        
+
         }
 
         // Function to edit taxpayer
@@ -429,14 +481,14 @@
             console.log(taxpayer)
             document.getElementById('tcc_taxpayer_name').value = taxpayer.name
             document.getElementById('tcc_taxpayer_tin').value = taxpayer.tin
-            
+
             const editModal = new bootstrap.Modal(document.getElementById('addNewCCModal'));
             editModal.show();
             // Add logic here
         }
 
         const addNewCCForm = document.getElementById('addNewCCForm');
-        addNewCCForm.addEventListener('submit', async(e) => {
+        addNewCCForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = new FormData(addNewCCForm);
             const payload = {
@@ -459,7 +511,7 @@
 
                 const response = await request.json();
 
-                if(response.status == true) {
+                if (response.status == true) {
                     toastr.success(response.message);
                     setTimeout(() => {
                         location.reload()

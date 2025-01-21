@@ -33,7 +33,7 @@ class Taxpayer {
   }
 
   async findAll(query) {
-    console.log({query})
+    console.log({ query });
     let perPage = 10; // number of records per page
     var page = query.page || 1;
     let offset = perPage * page - perPage;
@@ -52,22 +52,20 @@ class Taxpayer {
         },
       ].filter(Boolean), // Filter out empty or null conditions
     };
-    console.log(conditions)
-    
+    // console.log(conditions);
+
     // Query using filtered conditions
     const [results, count] = await Promise.all([
       this.tax_payers.findAll({
         where: conditions,
-        limit: perPage,
-        offset: offset,
+        // limit: perPage,
+        // offset: offset,
         raw: true,
       }),
       this.tax_payers.count({
         where: conditions,
       }),
     ]);
-    
-
 
     return {
       results,

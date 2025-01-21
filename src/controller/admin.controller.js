@@ -30,6 +30,12 @@ class DashboardController {
     }
   }
 
+  static async allUsers(req, res) {
+      const response = await user.findAllUsers(req.user.service_id)
+      console.log(response)
+      res.status(200).json(response)
+  }
+
   static async revenueStreet(req, res) {
     try {
       const data = await admin.streetExpectedGraph(req.user.service_id);

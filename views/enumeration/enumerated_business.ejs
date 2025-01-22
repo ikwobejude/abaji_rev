@@ -1,0 +1,144 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('../layout/head') %>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+       <%- include('../layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <%- include('../layout/side') %>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <!-- Search Form -->
+                <div class=" mb-4">
+                  <!-- <div class="card-header">
+                    <h5 class="mb-0">Search Payments</h5>
+                  </div> -->
+                  <div class="">
+                    <form method="GET" action="">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="invoice" class="form-label">Invoice</label>
+                            <input type="text" id="invoice" name="assessment_no" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentRef" class="form-label">Payment Ref</label>
+                            <input type="text" id="paymentRef" name="payment_ref" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <input type="text" id="paymentMethod" name="payment_method" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentDateFrom" class="form-label">Payment Date From</label>
+                            <input type="date" id="paymentDateFrom" name="payment_date_from" class="form-control" value="" />
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="mb-3">
+                            <label for="paymentDateTo" class="form-label">Payment Date To</label>
+                            <input type="date" id="paymentDateTo" name="payment_date_to" class="form-control" value="" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- DataTable with Buttons -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">Enumerated Businesses</div>
+                        </div>
+                    </div>
+                    
+                  <div class="card-datatable  table-responsive pt-0">
+                    <table class="datatables-basic table">
+                      <thead>
+                        <tr>
+                          <th>Action</th>
+                          <th>Business name</th>
+                          <th>Size</th>
+                          <th>Type</th>
+                          <th>Category</th>
+                          <th>Operation</th>
+                          <th>Sector</th>
+                          <!-- <th>LGA/Ward</th>
+                          <th>Street</th> -->
+                          <th>Owner.Name</th>
+                          <!-- <th>Owner.Email</th> -->
+                          <th>Owner.Phone</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% businesses.map(business => { %>
+                          <tr>
+                              <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="ti ti-dots-vertical"></i>
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/admin/enumerated_business/view/<%= business.Profile_ref %>/<%= business.building_id %>">
+                                      <i class="ti ti-eye me-1"></i>View more
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= business.Profile_ref %>')">
+                                      <i class="ti ti-trash me-1"></i>Delete
+                                    </a>
+                                  </div>
+                                </div>
+                              </td>
+                              <td><%= business.business_name %></td>
+                              <td><%= business.business_size %></td>
+                              <td><%= business.business_type %></td>
+                              <td><%= business.business_category %></td>
+                              <td><%= business.business_operation %></td>
+                              <td><%= business.business_sector %></td>
+                              <!-- <td></td>
+                              <td></td> -->
+                              <td><%= business.contact_person %></td>
+                              <!-- <td></td> -->
+                              <td><%= business.businessnumber %></td>
+                          </tr>
+                      <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              
+            </div>
+              <!-- / Content -->
+
+        <%- include('../layout/footer') %>
+  </body>
+</html>

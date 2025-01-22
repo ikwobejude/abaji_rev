@@ -1,0 +1,692 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('./layout/head') %>
+  </head>
+  <% 
+  // Helper function to handle NaN values
+                                          
+                                          
+  const safeParseFloat = (value) => {
+      if (value === null || isNaN(value)) {
+          return 0;
+      }
+      return parseFloat(value);
+  };
+
+  function formatNumber(value) {
+      const number = safeParseFloat(value);
+  
+      if (number < 0) {
+          return `(${Math.abs(number).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          })})`;
+      }
+  
+      return number.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+      });
+  }
+
+  
+%>
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+       <%- include('./layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <%- include('./layout/side') %>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row g-6">
+                <!-- View sales -->
+                <div class="col-xl-4">
+                  <div class="card">
+                    <div class="d-flex align-items-end row">
+                      <div class="col-7">
+                        <div class="card-body text-nowrap">
+                          <h5 class="card-title mb-0">Welcome <%= user.name %> 🎉</h5>
+                          <p class="mb-2"><%= user.group_name %></p>
+                          <!-- <h4 class="text-primary mb-1">$48.9k</h4> -->
+                          <a href="javascript:;" class="btn btn-primary">View profile</a>
+                        </div>
+                      </div>
+                      <div class="col-5 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                          <img
+                            src="../../assets/img/illustrations/card-advance-sale.png"
+                            height="140"
+                            alt="view sales" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- View sales -->
+
+                <!-- Statistics -->
+                <div class="col-xl-8 col-md-12">
+                  <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between">
+                      <h5 class="card-title mb-0">Statistics</h5>
+                      <small class="text-muted">Updated <%= new Date().getFullYear() %></small>
+                    </div>
+                    <div class="card-body d-flex align-items-end">
+                      <div class="w-100">
+                        <div class="row gy-3">
+                          <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                              <div class="badge rounded bg-label-info me-4 p-2"><i class="ti ti-users ti-lg"></i></div>
+                              <div class="card-info">
+                                <h5 class="mb-0"><%= users %></h5>
+                                <small>Users</small>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                              <div class="badge rounded bg-label-primary me-4 p-2">
+                                <i class="ti ti-chart-pie-2 ti-lg"></i>
+                              </div>
+                              <div class="card-info">
+                                <% 
+                                  let totalExpected = safeParseFloat(expected.grand_total) + safeParseFloat(revExpectations.grand_total)
+                                  let totalPaid = safeParseFloat(expected.amount_paid) - safeParseFloat(revExpectations.amount_paid) 
+                                %>
+                                <h5 class="mb-0"><%= formatNumber(totalExpected) %></h5>
+                                <small>Expected</small>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                              <div class="badge rounded bg-label-danger me-4 p-2">
+                                <i class="ti ti-shopping-cart ti-lg"></i>
+                              </div>
+                              <div class="card-info">
+                                <h5 class="mb-0"><%= formatNumber(totalPaid) %></h5>
+                                <small>Paid</small>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                              <div class="badge rounded bg-label-success me-4 p-2">
+                                ₦
+                              </div>
+                              <div class="card-info">
+                                <h5 class="mb-0"><%= formatNumber(totalExpected - totalPaid) %></h5>
+                                <small>Outstanding</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--/ Statistics -->
+
+                <div class="col-xxl-6 col-12">
+                  <div class="row g-6">
+
+                    <!-- Generated Leads -->
+                    <div class="col-xl-12">
+                      <div class="card h-100">
+                        <div class="card-body d-flex justify-content-between">
+                         
+                          <div id="chartPayment" style="height: 370px; width: 100%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--/ Generated Leads -->
+                  </div>
+                </div>
+
+                <!-- Revenue Report -->
+                <div class="col-xxl-6"> 
+                  <div class="card h-100">
+                    <div class="card-body p-0">
+                      <div class="row row-bordered g-0">
+                        <div class="col-md-12 position-relative p-6">
+                          <div class="card-header d-inline-block p-0 text-wrap position-absolute">
+                            <h5 class="m-0 card-title">Revenue Report</h5>
+                          </div>
+                          <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+                <!--/ Revenue Report -->
+
+                <!-- Earning Reports -->
+                
+
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card h-100">
+                   
+                    <div class="card-body pb-0">
+                      <div id="generated_mandate" style="height: 370px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div> 
+
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card h-100">
+                   
+                    <div class="card-body pb-0">
+                      <div id="paid_generated_mandate" style="height: 370px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div> 
+
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card h-100">
+                   
+                    <div class="card-body pb-0">
+                      <div id="walletUpload" style="height: 370px; width: 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+                <!--/ Earning Reports -->
+
+                <!-- Popular Product -->
+                <!-- <div class="col-xxl-4 col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between">
+                      <div class="card-title m-0 me-2">
+                        <h5 class="mb-1">Popular Products</h5>
+                        <p class="card-subtitle">Total 10.4k Visitors</p>
+                      </div>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
+                          type="button"
+                          id="popularProduct"
+                          data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                          <i class="ti ti-dots-vertical ti-md text-muted"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="popularProduct">
+                          <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <ul class="p-0 m-0">
+                        <li class="d-flex mb-6">
+                          <div class="me-4">
+                            <img src="../../assets/img/products/iphone.png" alt="User" class="rounded" width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Apple iPhone 13</h6>
+                              <small class="text-body d-block">Item: #FXZ-4567</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$999.29</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="d-flex mb-6">
+                          <div class="me-4">
+                            <img
+                              src="../../assets/img/products/nike-air-jordan.png"
+                              alt="User"
+                              class="rounded"
+                              width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Nike Air Jordan</h6>
+                              <small class="text-body d-block">Item: #FXZ-3456</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$72.40</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="d-flex mb-6">
+                          <div class="me-4">
+                            <img src="../../assets/img/products/headphones.png" alt="User" class="rounded" width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Beats Studio 2</h6>
+                              <small class="text-body d-block">Item: #FXZ-9485</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$99</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="d-flex mb-6">
+                          <div class="me-4">
+                            <img
+                              src="../../assets/img/products/apple-watch.png"
+                              alt="User"
+                              class="rounded"
+                              width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Apple Watch Series 7</h6>
+                              <small class="text-body d-block">Item: #FXZ-2345</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$249.99</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="d-flex mb-6">
+                          <div class="me-4">
+                            <img
+                              src="../../assets/img/products/amazon-echo.png"
+                              alt="User"
+                              class="rounded"
+                              width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Amazon Echo Dot</h6>
+                              <small class="text-body d-block">Item: #FXZ-8959</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$79.40</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="d-flex">
+                          <div class="me-4">
+                            <img
+                              src="../../assets/img/products/play-station.png"
+                              alt="User"
+                              class="rounded"
+                              width="46" />
+                          </div>
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              <h6 class="mb-0">Play Station Console</h6>
+                              <small class="text-body d-block">Item: #FXZ-7892</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                              <p class="mb-0">$129.48</p>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div> -->
+                <!--/ Popular Product -->
+
+                <!-- Sales by Countries tabs-->
+                <!-- <div class="col-xxl-4 col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                      <div class="card-title mb-0">
+                        <h5 class="mb-1">Orders by Countries</h5>
+                        <p class="card-subtitle">62 deliveries in progress</p>
+                      </div>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
+                          type="button"
+                          id="salesByCountryTabs"
+                          data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                          <i class="ti ti-dots-vertical ti-md text-muted"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="salesByCountryTabs">
+                          <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="nav-align-top">
+                        <ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
+                          <li class="nav-item">
+                            <button
+                              type="button"
+                              class="nav-link active"
+                              role="tab"
+                              data-bs-toggle="tab"
+                              data-bs-target="#navs-justified-new"
+                              aria-controls="navs-justified-new"
+                              aria-selected="true">
+                              New
+                            </button>
+                          </li>
+                          <li class="nav-item">
+                            <button
+                              type="button"
+                              class="nav-link"
+                              role="tab"
+                              data-bs-toggle="tab"
+                              data-bs-target="#navs-justified-link-preparing"
+                              aria-controls="navs-justified-link-preparing"
+                              aria-selected="false">
+                              Preparing
+                            </button>
+                          </li>
+                          <li class="nav-item">
+                            <button
+                              type="button"
+                              class="nav-link"
+                              role="tab"
+                              data-bs-toggle="tab"
+                              data-bs-target="#navs-justified-link-shipping"
+                              aria-controls="navs-justified-link-shipping"
+                              aria-selected="false">
+                              Shipping
+                            </button>
+                          </li>
+                        </ul>
+                        <div class="tab-content border-0 mx-1">
+                          <div class="tab-pane fade show active" id="navs-justified-new" role="tabpanel">
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Myrtle Ullrich</h6>
+                                  <p class="text-body mb-0">101 Boulder, California(CA), 95959</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Barry Schowalter</h6>
+                                  <p class="text-body mb-0">939 Orange, California(CA), 92118</p>
+                                </div>
+                              </li>
+                            </ul>
+                            <div class="border-1 border-light border-top border-dashed my-4"></div>
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Veronica Herman</h6>
+                                  <p class="text-body mb-0">162 Windsor, California(CA), 95492</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Helen Jacobs</h6>
+                                  <p class="text-body mb-0">487 Sunset, California(CA), 94043</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="tab-pane fade" id="navs-justified-link-preparing" role="tabpanel">
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Barry Schowalter</h6>
+                                  <p class="text-body mb-0">939 Orange, California(CA), 92118</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Myrtle Ullrich</h6>
+                                  <p class="text-body mb-0">101 Boulder, California(CA), 95959</p>
+                                </div>
+                              </li>
+                            </ul>
+                            <div class="border-1 border-light border-top border-dashed my-4"></div>
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Veronica Herman</h6>
+                                  <p class="text-body mb-0">162 Windsor, California(CA), 95492</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Helen Jacobs</h6>
+                                  <p class="text-body mb-0">487 Sunset, California(CA), 94043</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="tab-pane fade" id="navs-justified-link-shipping" role="tabpanel">
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Veronica Herman</h6>
+                                  <p class="text-body mb-0">101 Boulder, California(CA), 95959</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Barry Schowalter</h6>
+                                  <p class="text-body mb-0">939 Orange, California(CA), 92118</p>
+                                </div>
+                              </li>
+                            </ul>
+                            <div class="border-1 border-light border-top border-dashed my-4"></div>
+                            <ul class="timeline mb-0">
+                              <li class="timeline-item ps-6 border-left-dashed">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
+                                  <i class="ti ti-circle-check"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-success text-uppercase">sender</small>
+                                  </div>
+                                  <h6 class="my-50">Myrtle Ullrich</h6>
+                                  <p class="text-body mb-0">162 Windsor, California(CA), 95492</p>
+                                </div>
+                              </li>
+                              <li class="timeline-item ps-6 border-transparent">
+                                <span
+                                  class="timeline-indicator-advanced timeline-indicator-primary border-0 shadow-none">
+                                  <i class="ti ti-map-pin"></i>
+                                </span>
+                                <div class="timeline-event ps-1">
+                                  <div class="timeline-header">
+                                    <small class="text-primary text-uppercase">Receiver</small>
+                                  </div>
+                                  <h6 class="my-50">Helen Jacobs</h6>
+                                  <p class="text-body mb-0">487 Sunset, California(CA), 94043</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <!--/ Sales by Countries tabs -->
+
+                <div class="modal fade" id="stateModal" tabindex="-1" aria-labelledby="stateModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="stateModalLabel">Action Required</h5>
+                        <button type="button" class="btn-close" aria-label="Close" id="preventModalClose"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Your state information is incomplete. Please update your details to proceed.</p>
+                        <form id="stateUpdateForm">
+                          <div class="mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control"
+                              value="<%= datatoPass.client_admin_phone ? datatoPass.client_admin_phone : '' %>" id="phoneNumber"
+                              placeholder="Enter phone number" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="state" class="form-label">Revenue Type</label>
+                            <select class="form-select" id="revenue_type" required>
+                              <option value="" disabled selected>Select your state</option>
+                              <option value="State"> Revenue for State</option>
+                              <option value="Lga"> Revenue for LGA</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-select" id="state" required>
+                              <option value="" disabled selected>Select your state</option>
+                              <% states.forEach(state=> { %>
+                                <option value="<%= state.state_id %>, <%= state.state %>">
+                                  <%= state.state %>
+                                </option>
+                                <% }) %>
+                            </select>
+                          </div>
+                          <div class="mb-3" id="lga_holder">
+                            
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="stateUpdateForm">Update State</button>
+                        <button type="button" class="btn btn-secondary" id="closeModalButton" data-bs-dismiss="modal"
+                          disabled>Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Error Modal -->
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="errorModalLabel">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p style="color:red">Please complete your information before proceeding.</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="reopenStateModal" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+               
+              </div>
+            </div>
+            <!-- / Content -->
+
+        <%- include('./layout/footer') %>
+        
+          <%- include('./dashboardJS.ejs') %>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/canvasjs.min.js"></script>
+        <script src="/custom_chart.js"></script>
+        <script>
+          const revenue_type = document.getElementById("revenue_type");
+          revenue_type.addEventListener('change', function(e) {
+            const value = e.target.value;
+            console.log(value)
+            if(value === "Lga") {
+              $('#lga_holder').html(`
+              <label for="lga" class="form-label">Local Government Area (LGA)</label>
+                <select class="form-select" id="lga" required>
+                  <option value="" disabled selected>Select your LGA</option>
+                </select>
+              `)
+            }
+          })
+        </script>
+  </body>
+</html>

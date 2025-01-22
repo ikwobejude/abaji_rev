@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+    data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+
+<head>
+    <%- include('../../layout/head') %>
+</head>
+<style>
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        font-size: 0.875em;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.375rem;
+        color: white
+    }
+
+    .badge-success {
+        color: #fff;
+        background-color: #28a745;
+    }
+
+    .badge-pending {
+        color: #212529;
+        background-color: #ffc107;
+    }
+</style>
+
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <%- include('../../layout/aside') %>
+                <!-- / Menu -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Navbar -->
+                    <%- include('../../layout/side') %>
+                        <!-- / Navbar -->
+
+                        <!-- Content wrapper -->
+                        <div class="content-wrapper">
+                            <!-- Content -->
+                            <div class="container-xxl flex-grow-1 container-p-y">
+                                <!-- DataTable with Buttons -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-6"></div>
+                                            <div class="col-6" style="text-align: end">
+                                                <button class="create-new btn btn-primary waves-effect waves-light"
+                                                    data-bs-toggle="offcanvas" data-bs-target="#add-new-record">
+                                                    <i class="ti ti-plus me-sm-1"></i>
+                                                    <span class="d-none d-sm-inline-block">Add New Office</span>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="card-datatable table-responsive pt-0">
+                                        <table id="account-table" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Office </th>
+                                                    <th>Office Address</th>
+                                                    <th>Phone Number</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tbody>
+                                               <% response.forEach(res => { %>
+                                                <tr>
+                                                    <td><%= res.tax_office %></td>
+                                                    <td><%= res.office_address.trim() %></td>
+                                                    <td><%= res.phone_number %></td>
+                                                    <td></td>
+                                                </tr>
+                                               <% }) %>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- / DataTable with Buttons -->
+
+                                <!-- Modal to add new account -->
+                                <div class="offcanvas offcanvas-end" id="add-new-record">
+                                    <div class="offcanvas-header border-bottom">
+                                        <h5 class="offcanvas-title">New Account</h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body flex-grow-1">
+                                        <form id="form-account-create">
+
+
+                                            <!-- Account Number -->
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="account_number">Office Name</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="ti ti-credit-card"></i></span>
+                                                    <input type="text" id="office" name="office"
+                                                        class="form-control" placeholder="Enter Office Name" required />
+                                                </div>
+                                            </div>
+
+                                            <!-- Account Name -->
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="office_phone">Office Phone</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="ti ti-user"></i></span>
+                                                    <input type="text" id="office_phone" name="office_phone" class="form-control" placeholder="08100000000" length="11" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Bank -->
+                                            <div class="col-sm-12">
+                                                <label class="form-label" for="bank_name">Office Address</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="ti ti-building-bank"></i></span>
+                                                    <textarea type="text" id="office_address" name="office_address"  class="form-control" > </textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Submit and Cancel Buttons -->
+                                            <div class="col-sm-12 mt-3">
+                                                <button type="submit" class="btn btn-primary data-submit">
+                                                    <span class="spinner-border d-none" role="status"
+                                                        aria-hidden="true"></span> Submit
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                    data-bs-dismiss="offcanvas">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- / Modal to add new account -->
+                                <div class="modal fade" id="edit-account-modal" tabindex="-1"
+                                    aria-labelledby="editAccountModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editAccountModalLabel">Edit Account</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="form-account-edit">
+                                                    <!-- Account Number -->
+                                                    <div class="mb-3">
+                                                        <label for="edit-account-number" class="form-label">Account
+                                                            Number</label>
+                                                        <input type="text" id="edit-account-number"
+                                                            name="account_number" class="form-control" required />
+                                                    </div>
+
+                                                    <!-- Account Name -->
+                                                    <div class="mb-3">
+                                                        <label for="edit-account-name" class="form-label">Account
+                                                            Name</label>
+                                                        <input type="text" id="edit-account-name" name="account_name"
+                                                            class="form-control" required />
+                                                    </div>
+
+                                                    <!-- Bank -->
+                                                    <div class="mb-3">
+                                                        <label for="edit-bank-name" class="form-label">Bank</label>
+                                                        <input type="text" id="edit-bank-name" name="bank_name"
+                                                            class="form-control" required />
+                                                    </div>
+
+                                                    <!-- Submit Button -->
+                                                    <div class="mb-3">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="updateAccount()">Update</button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <%- include('../../layout/footer') %>
+                                    <script>
+                                        // Handle account creation
+                                        const office_data = document.getElementById("form-account-create");
+
+                                        office_data.addEventListener("submit", async(event) => {
+                                            event.preventDefault();
+                                            const form = event.target;
+                                            const spinner = form.querySelector(".spinner-border");
+                                            spinner.classList.remove("d-none");
+
+                                            const payload = {
+                                                office: form.office.value,
+                                                office_phone: form.office_phone.value,
+                                                office_address: form.office_address.value,
+
+                                            };
+
+                                            // console.log(payload)
+                                            // return
+
+                                            try {
+                                                const response = await fetch("/setup/office", {
+                                                    method: "POST",
+                                                    body: JSON.stringify(payload),
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                    },
+                                                });
+
+                                                const result = await response.json();
+                                                spinner.classList.add("d-none");
+
+                                                if (response.ok && result.status == true) {
+                                                    toastr.success(result.message);
+                                                    setTimeout(() => location.reload(), 2000);
+                                                } else {
+                                                    toastr.error(result.message || "Failed to create account.");
+                                                }
+                                            } catch (error) {
+                                                spinner.classList.add("d-none");
+                                                toastr.error("An unexpected error occurred.");
+                                            }
+                                        })
+
+
+                                        document.addEventListener("DOMContentLoaded", () => {
+                                            const editButtons = document.querySelectorAll(".edit-btn");
+
+                                            editButtons.forEach((button) => {
+                                                button.addEventListener("click", () => {
+                                                    const accountNumber = button.getAttribute("data-account-number");
+                                                    const accountName = button.getAttribute("data-account-name");
+                                                    const bankName = button.getAttribute("data-bank-name");
+
+                                                    document.getElementById("edit-account-number").value = accountNumber;
+                                                    document.getElementById("edit-account-name").value = accountName;
+                                                    document.getElementById("edit-bank-name").value = bankName;
+                                                });
+                                            });
+                                        });
+                                      
+                                    </script>
+                            </div>
+                        </div>
+                </div>
+        </div>
+    </div>
+</body>
+
+</html>

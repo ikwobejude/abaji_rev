@@ -1,0 +1,273 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+  data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+
+<head>
+  <%- include('../../layout/head') %>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+
+      <%- include('../../layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <%- include('../../layout/side') %>
+
+            <!-- / Navbar -->
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+              <!-- Content -->
+
+              <div class="container-xxl flex-grow-1 container-p-y">
+                <div class="card p-5">
+                  <div class="card-header">Search </div>
+                  <div class="row">
+                    <form id="search-form" class="d-flex flex-wrap align-items-center p-5 " method="GET">
+
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1  ">
+                        <label class="form-label" for="basic-default-fullname">Year</label>
+                        <input type="text" class="form-control" name="year" placeholder="Year" value="<%= new Date().getFullYear() %>">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Street</label>
+                        <select name="street" id="" class="form-control">
+                          <option value="">Select Street</option>
+                          <% Object.keys(streets).forEach(city=> { %>
+                            <% streets[city].forEach(street=> { %>
+                              <option value="<%= street.idstreet %>">
+                                <%= street.street %>
+                              </option>
+                              <% }) %>
+                            <% }) %>
+                        </select>
+
+
+                      </div>
+                      
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Invoice Number</label>
+                        <input type="text" class="form-control" name="bill_ref_no" placeholder="Invoice">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Business name</label>
+                        <input type="text" class="form-control" name="name_of_business"
+                          placeholder="Name Of Rate Payer">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Address</label>
+                        <input type="text" class="form-control" name="address_of_property"
+                          placeholder="Address Of Business">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Type of property</label>
+                        <input type="text" class="form-control" name="type_of_property" placeholder="Business Operation">
+                      </div>
+                      <div class="col-6 col-md-4 mb-2 mb-md-0 p-1">
+                        <label class="form-label" for="basic-default-fullname">Revenue Type</label>
+                        <input type="text" class="form-control" name="revenue_type" placeholder="Revenue Name">
+                      </div>
+                      <div class="col-6 col-md-8" style="text-align: end; padding-top: 30px ;">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <hr class="my-5" />
+
+                <!-- DataTable with Buttons -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <div id="action-dropdown" style="display: none; margin-top: 10px;">
+                          <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            Actions
+                          </button>
+                          <div class="dropdown-menu ">
+                           
+                            <form class="p-6" onsubmit="return false">
+                              <span style="color: red">Tye selected assessment to a staff</span>
+                              <div class="mb-4">
+                                <label for="exampleDropdownFormEmail1" class="form-label">Select Staff</label>
+                                <select name="staff" id="staff" class="form-control custom-select">
+                                  <option value="">Select Staffs</option>
+                                </select>
+                              </div>
+                             
+                              
+                              <button type="button" class="btn btn-primary">Submit</button>
+                            </form>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="javascript:void(0)"> <i class="ti ti-lock me-1"></i> Disable selected Assessments</a>
+                            <a class="dropdown-item" href="javascript:void(0)"> <i class="ti ti-trash me-1"></i> Delete selected Assessments</a>
+                          </div>
+                          </div>
+                        </div>
+
+                        
+                        
+                        <!-- Implement search by all available params here -->
+                      </div>
+                      <div class="col-6" style="text-align: end;">
+                        <button class="create-new btn btn-primary waves-effect waves-light">
+                          <i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New
+                            Record</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card-datatable  table-responsive pt-0">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>
+                            <div class="form-check mb-0 ms-2">
+                              <input class="email-list-item-input form-check-input" id="all" type="checkbox" />All
+                              
+                            </div>
+                          </th>
+                          <th>Invoice</th>
+                          <th>Year</th>
+                          <th>Revenue Name</th>
+                          <th>Business Operation</th>
+                          <th>Name Of Rate Payers</th>
+                          <th>Address Of Business</th>
+                          <th>Ward</th>
+                          <th>Street</th>
+                          <th>Amount Yearly</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% revenue.forEach(item=> { %>
+                          <tr>
+                            <td>
+                              <div class="form-check mb-0 ms-2">
+                                <input class="email-list-item-input form-check-input"  type="checkbox" id="single" />
+                              </div>
+                            </td>
+                            <td>
+                              <%= item.bill_ref_no %>
+                            </td>
+                            <td>
+                              <%= item.rate_year %>
+                            </td>
+                            <td>
+                              <%= item.revenue_type %>
+                            </td>
+                            <td>
+                              <%= item.type_of_property %>
+                            </td>
+                            <td>
+                              <%= item.name_of_business %>
+                            </td>
+                            <td>
+                              <%= item.address_of_property %>
+                            </td>
+                            <td>
+                              <%= item.city %>
+                            </td>
+                            <td>
+                              <%= item.street %>
+                            </td>
+
+                            <td>
+                              <%= item.grand_total %>
+                            </td>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                  data-bs-toggle="dropdown">
+                                  <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item"
+                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
+                                      class="ti ti-eye me-1"></i>View more </a>
+                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
+                                    Delete</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Modal to add new record -->
+                <div class="offcanvas offcanvas-end" id="add-new-record">
+                  <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="exampleModalLabel">Upload new assessments</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                      aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body flex-grow-1">
+                    <form class="add-new-record pt-0 row g-2" id="form-upload-new-record" onsubmit="return false">
+
+
+                      <div class="col-sm-12">
+                        <label class="form-label" for="basicEmail">Upload Assessments</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="ti ti-file"></i></span>
+                          <input type="file" name="upload_excel" id="upload_excel" class="form-control"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                          <input type="hidden" id="base64url" name="base64url">
+                        </div>
+                        <div class="form-text" style="color: red;">Only excel file are allowed</div>
+                      </div>
+
+
+                      <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                          <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                          Submit
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary"
+                          data-bs-dismiss="offcanvas">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!--/ DataTable with Buttons -->
+
+
+
+
+
+              </div>
+              <!-- / Content -->
+
+              <%- include('../../layout/footer') %>
+                <!-- Page JS -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+                <script src="/assets/js/tables-datatables-basic.js"></script>
+                <script src="/custom/revenue_invoice.js"></script>
+                
+                <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentYear = new Date().getFullYear();
+            const searchForm = document.getElementById("search-form");
+            searchForm.action = `revenue_upload/view/${currentYear}`;
+        });
+    </script> -->
+</body>
+
+</html>

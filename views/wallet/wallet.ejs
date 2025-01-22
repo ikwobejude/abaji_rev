@@ -1,0 +1,292 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('../layout/head') %>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+       <%- include('../layout/aside') %>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <%- include('../layout/side') %>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              
+                <div class="row">
+                    <!-- User Sidebar -->
+                    <div class="col-xl-4 col-lg-5 order-1 order-md-0">
+                      <% const foundObject = data.find(obj => obj.userId === user.id); %>
+                      <!-- Plan Card -->
+                      <div class="card mb-6 border border-2 border-primary rounded primary-shadow">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-start">
+                            <span class="badge bg-label-primary">Wallet Balance</span>
+                            <div class="d-flex justify-content-center">
+                              <sub class="h5 pricing-currency mb-auto mt-1 text-primary">₦</sub>
+                              <h3 class="mb-0 text-primary"><%=  foundObject ? foundObject.balance.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0 %></h3>
+                              <!-- <sub class="h6 pricing-duration mt-auto mb-3 fw-normal">month</sub> -->
+                            </div>
+                          </div>
+                          <ul class="list-unstyled g-2 my-6">
+                            <li class="mb-2 d-flex align-items-center">
+                              <i class="ti ti-circle-filled ti-10px text-secondary me-2"></i><span>Wallet Account: <strong><%= data.length %></strong></span>
+                            </li>
+                            <li class="mb-2 d-flex align-items-center">
+                              <% const sum = data.reduce((sum, transaction) => sum + parseFloat(transaction.balance), 0) %>
+                              <i class="ti ti-circle-filled ti-10px text-secondary me-2"></i
+                              ><span>Total wallet balance: <strong><%= sum ? parseFloat(sum).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0 %></strong></span>
+                            </li>
+                            <!-- <li class="mb-2 d-flex align-items-center">
+                              <i class="ti ti-circle-filled ti-10px text-secondary me-2"></i><span>Basic Support</span>
+                            </li> -->
+                          </ul>
+                          <!-- <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="h6 mb-0">Days</span>
+                            <span class="h6 mb-0">26 of 30 Days</span>
+                          </div> -->
+                          <div class="progress mb-1 bg-label-primary" style="height: 6px">
+                            <div
+                              class="progress-bar"
+                              role="progressbar"
+                              style="width: 100%"
+                              aria-valuenow="65"
+                              aria-valuemin="0"
+                              aria-valuemax="100"></div>
+                          </div>
+                          <!-- <small>4 days remaining</small> -->
+                          <div class="d-grid w-100 mt-6">
+                            <button class="btn btn-primary" data-bs-target="#upgradePlanModal" data-bs-toggle="modal">
+                              TopUp
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /Plan Card -->
+                    </div>
+                    <!--/ User Sidebar -->
+    
+                    <!-- User Content -->
+                    <div class="col-xl-8 col-lg-7 order-0 order-md-1">
+                    
+    
+                      <!-- Invoice table -->
+                      <div class="card mb-4">
+                        <div class="card-datatable table-responsive">
+                          <table class="table datatable-invoice">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Wallet Balance</th>
+                                <th>Created Date</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% data.forEach((dt, i) => { %>
+                               <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= dt.name %></td>
+                                <td><%= dt.balance %></td>
+                                <td><%= dt.created_on.toLocaleString() %></td>
+                                <td>
+                                  <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                      <i class="ti ti-dots-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="/wallet//transactions/<%= dt.userId %>"><i class="ti ti-eye me-1"></i>View wallet transactions </a>
+                                      <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i> Delete wallet</a>
+                                    </div>
+                                  </div>
+                                </td>
+                               </tr>
+                              <% }) %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <!-- /Invoice table -->
+                    </div>
+                    <!--/ User Content -->
+                  </div>
+    
+                  <!-- Modal -->
+                  
+    
+                  <!-- Add New Credit Card Modal -->
+                  <div class="modal fade" id="upgradePlanModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-simple modal-upgrade-plan">
+                      <div class="modal-content">
+                        <div class="modal-body p-4">
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          <div class="text-center mb-6">
+                            <h4 class="mb-2">TopUp User Wallet</h4>
+                            <p>Enter the users email to be founded.</p>
+                          </div>
+                          <form id="upgradePlanForm" class="row g-4" onsubmit="return false">
+                            <div class="col-sm-12">
+                              <label class="form-label" for="choosePlan">Email</label>
+                              <input type="text" name="email" id="email" class="form-control">
+                              <input type="hidden" name="owner_name" id="owner_name">
+                              <input type="hidden" name="userId" id="userId">
+                              <input type="hidden" name="owner_mobile_no" id="owner_mobile_no">
+                            </div>
+                            <div id="msg"></div>
+                            <div class="col-sm-9">
+                                <label class="form-label" for="choosePlan">TopUp Amount</label>
+                                <input type="text" name="amount" id="amount" class="form-control">
+                              </div>
+                            <div class="col-sm-3 d-flex align-items-end">
+                              <button type="submit" class="btn btn-primary">
+                                <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                                TopUp
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                        <hr class="mx-4 my-2" />
+                        <!-- <div class="modal-body p-4">
+                          <p class="mb-0">User current plan is standard plan</p>
+                          <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="d-flex justify-content-center me-2 mt-1">
+                              <sup class="h6 pricing-currency pt-1 mt-2 mb-0 me-1 text-primary">$</sup>
+                              <h1 class="mb-0 text-primary">99</h1>
+                              <sub class="pricing-duration mt-auto mb-5 pb-1 small text-body">/month</sub>
+                            </div>
+                            <button class="btn btn-label-danger cancel-subscription">Cancel Subscription</button>
+                          </div>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                  <!--/ Add New Credit Card Modal -->
+
+
+            </div>
+            <!-- / Content -->
+
+        <%- include('../layout/footer') %>
+
+        <script>
+          // Setup before functions
+          const typingTimerDelay = 3000; // Delay for done typing in ms
+          let typingTimer; // Timer identifier
+      
+          // Email Validation and TIN Verification
+          const emailInput = document.getElementById("email");
+          const message = document.getElementById("msg");
+      
+          if (emailInput) {
+              emailInput.addEventListener("input", handleEmailValidation);
+      
+              async function handleEmailValidation() {
+                  clearTimeout(typingTimer);
+                  const email = this.value.trim();
+      
+                  if (!validateEmailFormat(email)) {
+                      message.textContent = "Invalid email format!";
+                      message.style.color = "red";
+                      return;
+                  }
+      
+                  // Delayed validation after typing stops
+                  typingTimer = setTimeout(async () => {
+                      try {
+                          $('#cover-spin').show(0); // Show spinner
+                          message.textContent = ""; // Reset message
+      
+                          const response = await fetch(`/wallet/validate_email?email=${email}`);
+                          const data = await response.json();
+                          $('#cover-spin').hide(0); // Hide spinner
+      
+                          if (data.status) {
+                              message.textContent = "Unique email found";
+                              message.style.color = "green";
+      
+                              // Populate form fields
+                              document.getElementById("owner_name").value = data.name || "";
+                              document.getElementById("userId").value = data.id || "";
+                              document.getElementById("owner_mobile_no").value = data.phoneNumber || "";
+                          } else {
+                              message.textContent = "Email not found!";
+                              message.style.color = "red";
+                          }
+                      } catch (error) {
+                          $('#cover-spin').hide(0);
+                          message.textContent = "Error validating email. Try again.";
+                          message.style.color = "red";
+                          console.error("Validation Error:", error);
+                      }
+                  }, typingTimerDelay);
+              }
+      
+              // Utility to validate email format
+              function validateEmailFormat(email) {
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  return emailRegex.test(email);
+              }
+          }
+      
+          // Form Submission for Upgrade Plan
+          const upgradePlanForm = document.getElementById("upgradePlanForm");
+      
+          if (upgradePlanForm) {
+              $(".spinner-border").hide(); // Hide spinner by default
+      
+              upgradePlanForm.addEventListener("submit", async function (e) {
+                  e.preventDefault(); // Prevent form submission
+      
+                  $(".spinner-border").show(); // Show spinner
+                  const formData = {
+                      email: document.getElementById("email").value,
+                      owner_name: document.getElementById("owner_name").value,
+                      userId: document.getElementById("userId").value,
+                      owner_mobile_no: document.getElementById("owner_mobile_no").value,
+                      amount: document.getElementById("amount").value,
+                      transactionId: new Date().getTime().toString(36) // Unique transaction ID
+                  };
+      
+                  try {
+                      const response = await fetch("/wallet", {
+                          method: "POST",
+                          body: JSON.stringify(formData),
+                          headers: { "Content-Type": "application/json" }
+                      });
+      
+                      const result = await response.json();
+                      $(".spinner-border").hide(); // Hide spinner
+      
+                      if (result.status) {
+                          toastr.success("Wallet funded successfully!");
+                          setTimeout(() => location.reload(), 3000); // Reload after success
+                      } else {
+                          toastr.error(result.message || "Failed to fund wallet!");
+                      }
+                  } catch (error) {
+                      $(".spinner-border").hide(); // Hide spinner
+                      toastr.error("An error occurred: " + error.message);
+                      console.error("Form Submission Error:", error);
+                  }
+              });
+          }
+      </script>
+      
+  </body>
+</html>

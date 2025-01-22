@@ -1,0 +1,166 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="../../assets/" data-template="vertical-menu-template" data-style="light">
+  <head>
+    <%- include('./layout/landing/head') %>
+  </head>
+
+  <body>
+    <!-- Content -->
+
+    <div class="container-xxl">
+      <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner py-6">
+          <!-- Login -->
+          <div class="card">
+            <div class="card-body">
+              <!-- Logo -->
+              <div class="app-brand justify-content-center mb-6">
+                <a href="/" class="app-brand-link">
+                  <img src="/smartapps_logo.png" alt="abaji local government" style="width: 100px; height: 100px;">
+                  <span class="app-brand-text demo text-heading fw-bold">Smart Revenue</span>
+                </a>
+              </div>
+              <!-- /Logo -->
+              <h4 class="mb-1">Login 👋</h4>
+              <p class="mb-2"> <%- messages('messages', locals) %></p>
+
+              <form id="login_form" class="mb-2" action="">
+                <div class="mb-4">
+                  <label for="email" class="form-label">Email or Username</label>
+                  <input type="text" class="form-control" id="username" name="username" placeholder="Enter your email or username" autofocus />
+                </div>
+                <div class="mb-4 form-password-toggle">
+                  <label class="form-label" for="password">Password</label>
+                  <div class="input-group input-group-merge">
+                    <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                    <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                  </div>
+                </div>
+                <div class="my-4">
+                  <div class="d-flex justify-content-between">
+                    <div class="form-check mb-0 ms-2">
+                      <input class="form-check-input" type="checkbox" id="remember-me" />
+                      <label class="form-check-label" for="remember-me"> Remember Me </label>
+                    </div>
+                    <a href="auth-forgot-password-basic.html">
+                      <p class="mb-0">Forgot Password?</p>
+                    </a>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <button class="btn btn-primary  w-100" id="submit" type="submit">
+                    <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                    Login
+                  </button>
+                </div>
+              </form>
+
+              <p class="text-center">
+                <span>New on our platform?</span>
+                <a href="/clients">
+                  <span>Create an account</span>
+                </a>
+              </p>
+
+              <!-- <div class="divider my-6">
+                <div class="divider-text">or</div>
+              </div> -->
+
+              <!-- <div class="d-flex justify-content-center">
+                <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-facebook me-1_5">
+                  <i class="tf-icons ti ti-brand-facebook-filled"></i>
+                </a>
+
+                <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-twitter me-1_5">
+                  <i class="tf-icons ti ti-brand-twitter-filled"></i>
+                </a>
+
+                <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-github me-1_5">
+                  <i class="tf-icons ti ti-brand-github-filled"></i>
+                </a>
+
+                <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus">
+                  <i class="tf-icons ti ti-brand-google-filled"></i>
+                </a>
+              </div> -->
+            </div>
+          </div>
+          <!-- /Register -->
+        </div>
+      </div>
+    </div>
+
+    <!-- / Content -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <%- include('./layout/landing/footer') %>
+    <script>
+        if(document.getElementById("login_form")) {
+            // console.log("Hi")
+            $(".spinner-border").hide()
+            
+            const form = document.getElementById("login_form");
+            form.addEventListener("submit", async function(e) {
+                e.preventDefault();
+                $(".spinner-border").show()
+                document.getElementById("submit").disabled = true;
+                const data = new FormData(form)
+                const payload = {
+                    username: data.get("username"),
+                    password: data.get("password")
+                }
+
+                // console.log(payload);
+                try {
+                    const res = await fetch('/login', {
+                        method: "post",
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+
+                    const response = await res.json()
+                    // console.log(response)
+                    $(".spinner-border").hide()
+                    document.getElementById("submit").disabled = false;
+                    if(response.status == "success") {
+                      
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Login successful",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                          location.assign("/success")
+                        }, "5000");
+                        
+                    } else {
+                        // toastr.error(response.message)
+                        Swal.fire({
+                          icon: "error",
+                          title: "Oops...",
+                          text: response.message,
+                          // footer: '<a href="#">Why do I have this issue?</a>'
+                        });
+                    }
+                } catch (error) {
+                  $(".spinner-border").hide()
+                  document.getElementById("submit").disabled = false;
+                  Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: error.message,
+                    // footer: '<a href="#">Why do I have this issue?</a>'
+                  });
+                }
+            })
+        }
+    </script>
+  </body>
+</html>

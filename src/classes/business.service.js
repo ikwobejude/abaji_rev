@@ -530,7 +530,6 @@ class Business {
         LEFT JOIN _buildings b ON b.building_id = bu.building_id
         WHERE bu.service_id = :service_id 
           AND (bu.building_id = :building_number OR b.building_id = :building_number)
-          AND bu.Profile_ref = :profile_ref
     `;
 
     try {
@@ -545,8 +544,8 @@ class Business {
             this.db.query(sql1, {
                 replacements: {
                     service_id: query.service_id,
-                    building_number: query.building_id,
-                    profile_ref: query.profile_id
+                    building_number: query.building_id
+                    // profile_ref: query.profile_id
                 },
                 type: QueryTypes.SELECT,
             }),

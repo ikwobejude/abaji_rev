@@ -476,87 +476,93 @@ class Business {
   }
 
   async findBusiness(query) {
-    console.log(query)
-    let sql = `
-    SELECT 
-        _buildings.building_number, 
-        _buildings.building_id,
-        _buildings.building_name, 
-        _buildings.owner_name, 
-        _buildings.owner_email, 
-        _buildings.owner_mobile_no,
-        _building_categories.building_category,  
-        _building_types.building_type,
-        _buildings.registered_on,
-        _buildings.status,
-        _states.state,
-        _lga.lga, 
-        _streets.street, 
-        areas.areaname AS city  
-    FROM _buildings 
-    LEFT JOIN _building_categories ON _building_categories.idbuilding_category = _buildings.building_category_id
-    LEFT JOIN _building_types ON _building_types.idbuilding_types = _buildings.apartment_type
-    LEFT JOIN _streets ON _streets.idstreet = _buildings.ward
-     LEFT JOIN areas ON areas.Id = _buildings.ward
-    LEFT JOIN _lga ON _lga.lga_id = _buildings.lga
-    LEFT JOIN _states ON _states.state_id = _buildings.state_id
-    WHERE _buildings.service_id = :service_id AND  _buildings.building_number = :building_number OR _buildings.building_id = :building_number
+    console.log(query);
+    
+    const sql = `
+        SELECT 
+            b.building_number, 
+            b.building_id,
+            b.building_name, 
+            b.owner_name, 
+            b.owner_email, 
+            b.owner_mobile_no,
+            bc.building_category,  
+            bt.building_type,
+            b.registered_on,
+            b.status,
+            s.state,
+            l.lga, 
+            st.street, 
+            a.areaname AS city  
+        FROM _buildings b
+        LEFT JOIN _building_categories bc ON bc.idbuilding_category = b.building_category_id
+        LEFT JOIN _building_types bt ON bt.idbuilding_types = b.apartment_type
+        LEFT JOIN _streets st ON st.idstreet = b.ward
+        LEFT JOIN areas a ON a.Id = b.ward
+        LEFT JOIN _lga l ON l.lga_id = b.lga
+        LEFT JOIN _states s ON s.state_id = b.state_id
+        WHERE b.service_id = :service_id 
+          AND (b.building_number = :building_number OR b.building_id = :building_number)
     `;
 
-    let sql1 = `
+    const sql1 = `
         SELECT 
-            businesses.business_name, 
-            businesses.business_address,  
-            businesses.businessnumber,  
-            businesses.contact_person,  
-            businesses.business_tag,
-            _business_categories.business_category, 
-            _business_operations.business_operation, 
-            _business_sectors.business_sector, 
-            _business_sizes.business_size, 
-            _business_types.business_type,
-            _buildings.building_name, 
-            _buildings.street_id, 
-            businesses.created_at
-        FROM businesses 
-        LEFT JOIN _business_categories ON businesses.business_category = _business_categories.business_category_id OR businesses.business_category = _business_categories.business_category
-        LEFT JOIN _business_operations ON businesses.business_operation = _business_operations.business_operation_id OR businesses.business_operation = _business_operations.business_operation
-        LEFT JOIN _business_sectors ON businesses.business_sector = _business_sectors.business_sector_id OR businesses.business_sector = _business_sectors.business_sector
-        LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id OR businesses.business_size = _business_sizes.business_size
-        LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type OR businesses.business_type = _business_types.business_type
-        LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
-        WHERE businesses.service_id = :service_id AND (businesses.building_id = :building_number 0R OR _buildings.building_id = :building_number) AND businesses.Profile_ref = :Profile_ref`;
+            bu.business_name, 
+            bu.business_address,  
+            bu.businessnumber,  
+            bu.contact_person,  
+            bu.business_tag,
+            bc.business_category, 
+            bo.business_operation, 
+            bs.business_sector, 
+            bz.business_size, 
+            bt.business_type,
+            b.building_name, 
+            bu.photo_url,
+            b.street_id, 
+            bu.created_at
+        FROM businesses bu
+        LEFT JOIN _business_categories bc ON bu.business_category = bc.business_category_id
+        LEFT JOIN _business_operations bo ON bu.business_operation = bo.business_operation_id
+        LEFT JOIN _business_sectors bs ON bu.business_sector = bs.business_sector_id
+        LEFT JOIN _business_sizes bz ON bu.business_size = bz.business_size_id
+        LEFT JOIN _business_types bt ON bu.business_type = bt.idbusiness_type
+        LEFT JOIN _buildings b ON b.building_id = bu.building_id
+        WHERE bu.service_id = :service_id 
+          AND (bu.building_id = :building_number OR b.building_id = :building_number)
+          AND bu.Profile_ref = :profile_ref
+    `;
 
-        const [ viewBuilding, viewBusiness, count ] = await Promise.all([
-          this.db.query(sql, {
-              replacements: {
-                  service_id: query.service_id,
-                  building_number: query.building_id
-                 
-              },
-              type: QueryTypes.SELECT,
-          }),
+    try {
+        const [viewBuilding, viewBusiness] = await Promise.all([
+            this.db.query(sql, {
+                replacements: {
+                    service_id: query.service_id,
+                    building_number: query.building_id
+                },
+                type: QueryTypes.SELECT,
+            }),
+            this.db.query(sql1, {
+                replacements: {
+                    service_id: query.service_id,
+                    building_number: query.building_id,
+                    profile_ref: query.profile_id
+                },
+                type: QueryTypes.SELECT,
+            }),
+        ]);
 
-          this.db.query(sql1, {
-              replacements: {
-                service_id: query.service_id,
-                building_number: query.building_id,
-                Profile_ref: query.profile_id
-              },
-              
+        return {
+            viewBuilding: viewBuilding[0] || null,
+            viewBusiness: viewBusiness[0] || null,
+            profile: query.profile_id
+        };
+    } catch (error) {
+        console.error("Error fetching business/building data:", error);
+        throw error;
+    }
+}
 
-              type: QueryTypes.SELECT,
-          }),
-      ])
-
-      return {
-          viewBuilding: viewBuilding[0], 
-          viewBusiness: viewBusiness[0],
-          profile: query.profile_id
-      };
-
-
-  }
 
   
 }

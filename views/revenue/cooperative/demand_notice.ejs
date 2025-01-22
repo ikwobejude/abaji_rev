@@ -50,8 +50,8 @@
                           <img src="/logo.jpeg" alt="logo" style="text-align: center;"> <br>
                           <span
                             style="text-align: center; color: green; font-size: 40px; font-weight: 900px; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
-                            class="mt-2">ABAJI AREA COUNCIL</span><br>
-                          <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span>
+                            class="mt-2"><%= user?.client %></span><br>
+                          <!-- <span class="mt-0"><strong>FEDERAL CAPITAL ADMINISTRATION</strong></span> -->
                         </div>
                       </div>
                       <table width="100%" class="tbl">
@@ -81,14 +81,14 @@
                             width="20%">Payer’s Name </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.name_of_business %>
+                            <%= revenue?.name_of_business %>
                           </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
                             width="20%">RRR</td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.rrr %>
+                            <%= revenue?.rrr %>
                           </td>
                         </tr>
                         <tr>
@@ -97,14 +97,14 @@
                             width="20%">Phone Number </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.phone_number %>
+                            <%= revenue?.phone_number %>
                           </td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;"
                             width="20%">Date of issue</td>
                           <td
                             style=" padding: 5px !important; border: 1px solid black !important;border-collapse: collapse !important;">
-                            <%= revenue.date_uploaded.toLocaleDateString('en-US') %>
+                            <%= revenue?.date_uploaded?.toLocaleDateString('en-US') %>
                           </td>
                         </tr>
                         <tr>

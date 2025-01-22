@@ -264,8 +264,8 @@ class Revenue extends Bud_pay {
                 c.city,
                 s.street
             FROM revenue_upload AS r
-            INNER JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
-            INNER JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
+            LEFT JOIN _cities AS c ON c.city_id = r.rate_district or c.city = r.rate_district
+            LEFT JOIN _streets AS s ON s.idstreet = r.street or s.street = r.street
             WHERE r.rate_year = :rate_year AND r.bill_ref_no= :bill_ref_no
         `;
 

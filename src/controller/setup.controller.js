@@ -162,6 +162,7 @@ module.exports = {
       const data = req.body;
       const payload = {
         ...data,
+        service_id: req.user.service_id,
         created_by: req.user.id,
       };
       const response = await payment.interSwitchPost(payload);
@@ -214,11 +215,13 @@ module.exports = {
   },
   createBuildingType: async function (req, res) {
     try {
+      // console.log(req.body)
       await buildingService.addBuildingType(req.body);
       res
         .status(200)
         .json({ success: true, message: "Building Type created successfully" });
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         success: false,
         message: error.message,
@@ -334,7 +337,7 @@ module.exports = {
   fetchAcct: async function (req, res) {
     try {
       const response = await accountService.fetchAccount(req.user.service_id);
-      console.log({ response });
+      // console.log({ response });
       res
         .status(200)
         .render("./setup/payment/create_account", { account: response });
@@ -362,38 +365,40 @@ module.exports = {
   },
   fetch_approval_types: async function (req, res) {
     try {
-      const response = await approvalService.fetchApprovalTypes(req.user.service_id)
-      res.status(200).render('./setup/approval/approval_type', {data:response})
+      const response = await approvalService.fetchApprovalTypes(
+        req.user.service_id
+      );
+      res
+        .status(200)
+        .render("./setup/approval/approval_type", { data: response });
     } catch (error) {
       res.status(500).json({
-        success:false,
-        message:`an error occured, ${error.message}`
-      })
-    }
-  },
-  
-  create_approval_level: async function (req,res) {
-    try {
-      await approvalService.create
-    } catch (error) {
-      
+        success: false,
+        message: `an error occured, ${error.message}`,
+      });
     }
   },
 
-  office: async(req, res) => {
-    const response = await allOffices({...req.user, ...req.body});
-    res.render('./setup/office/office', {response})
+  create_approval_level: async function (req, res) {
+    try {
+      await approvalService.create;
+    } catch (error) {}
+  },
+
+  office: async (req, res) => {
+    const response = await allOffices({ ...req.user, ...req.body });
+    res.render("./setup/office/office", { response });
   },
 
   createOffices: async (req, res) => {
     try {
-      const response = await createOffice({...req.user, ...req.body})
-      res.status(201).json(response)
+      const response = await createOffice({ ...req.user, ...req.body });
+      res.status(201).json(response);
     } catch (error) {
       res.status(400).json({
         status: false,
-        message: error.message
-      })
+        message: error.message,
+      });
     }
-  }
+  },
 };

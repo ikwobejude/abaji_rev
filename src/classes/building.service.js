@@ -73,7 +73,7 @@ class Buildings {
     
     // add building type
     async addBuildingType(data) {
-        // console.log(data);
+        console.log(data);
         emitter.emit('before_create_building_type', data)
         const type = data.type.split(',')
 

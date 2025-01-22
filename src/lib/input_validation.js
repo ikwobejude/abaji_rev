@@ -74,9 +74,8 @@ module.exports = {
       "any.required": `Revenue line is required`,
       "string.empty": `Revenue line cannot be empty`,
     }),
-    timeline: Joi.string().required().messages({
-      "any.required": `Timeline is required`,
-      "string.empty": `Timeline cannot be empty`,
+    timeline: Joi.string().optional().allow("").messages({
+      "string.base": `Timeline must be a string`,
     }),
     name: Joi.string().required().messages({
       "any.required": `Revenue item name is required`,
@@ -141,86 +140,87 @@ module.exports = {
       }),
   }),
 
-
-
   taxItemsValidation: Joi.object({
     economic_code: Joi.string().required().messages({
-        "any.required": `Revenue Code is required.`,
-        "string.empty": `Revenue Code  cannot be empty.`,
+      "any.required": `Revenue Code is required.`,
+      "string.empty": `Revenue Code  cannot be empty.`,
     }),
-    
-    revenue_item: 
-    Joi.array().items(Joi.string().messages({
-        'string.base': 'Each item in the Revenue items array must be a string.',
-        'string.empty': 'Revenue items Array items cannot be empty strings.',
-      })).required()
+
+    revenue_item: Joi.array()
+      .items(
+        Joi.string().messages({
+          "string.base":
+            "Each item in the Revenue items array must be a string.",
+          "string.empty": "Revenue items Array items cannot be empty strings.",
+        })
+      )
+      .required()
       .messages({
-        'array.base': 'The value must be an array.',
-        'array.includes': 'All items in the array Revenue items must be valid strings.',
-        'any.required': 'Revenue items array is required and cannot be empty.',
+        "array.base": "The value must be an array.",
+        "array.includes":
+          "All items in the array Revenue items must be valid strings.",
+        "any.required": "Revenue items array is required and cannot be empty.",
       }),
     amount: Joi.array()
-    .items(
-      Joi.number()
-        .positive() // Ensures the number is positive
-        .messages({
-          'number.base': 'Each amount in the array must be a number.',
-          'number.positive': 'Amount in the array must be greater than zero.',
-        })
-    )
-    .required()
-    .messages({
-      'array.base': 'The amount value must be an array.',
-      'array.includes': 'Each amount in the array must be valid numbers.',
-      'any.required': 'Amount array is required and cannot be empty.',
-    }),
+      .items(
+        Joi.number()
+          .positive() // Ensures the number is positive
+          .messages({
+            "number.base": "Each amount in the array must be a number.",
+            "number.positive": "Amount in the array must be greater than zero.",
+          })
+      )
+      .required()
+      .messages({
+        "array.base": "The amount value must be an array.",
+        "array.includes": "Each amount in the array must be valid numbers.",
+        "any.required": "Amount array is required and cannot be empty.",
+      }),
   }).unknown(),
 
   buildingCategoryValidation: Joi.object({
-      categories: Joi.string().trim().required().messages({
-          "any.required": `Building categories is required.`,
-          "string.empty": `Building categories cannot be empty.`,
-      })  
+    categories: Joi.string().trim().required().messages({
+      "any.required": `Building categories is required.`,
+      "string.empty": `Building categories cannot be empty.`,
+    }),
   }).unknown(),
 
   buildingTypeValidation: Joi.object({
-      categories: Joi.string().trim().required().messages({
-          "any.required": `Building categories is required.`,
-          "string.empty": `Building categories cannot be empty.`,
-      }),
-      type: Joi.string().trim().required().messages({
-          "any.required": `Building Type is required.`,
-          "string.empty": `Building Type cannot be empty.`,
-      })  
+    categories: Joi.string().trim().required().messages({
+      "any.required": `Building categories is required.`,
+      "string.empty": `Building categories cannot be empty.`,
+    }),
+    type: Joi.string().trim().required().messages({
+      "any.required": `Building Type is required.`,
+      "string.empty": `Building Type cannot be empty.`,
+    }),
   }).unknown(),
 
   businessTypeValidation: Joi.object({
-      business_type: Joi.string().trim().required().messages({
-          "any.required": `Business type is required.`,
-          "string.empty": `Business type cannot be empty.`,
-      }) 
+    business_type: Joi.string().trim().required().messages({
+      "any.required": `Business type is required.`,
+      "string.empty": `Business type cannot be empty.`,
+    }),
   }).unknown(),
 
   businessOperationValidation: Joi.object({
-      business_operation: Joi.string().trim().required().messages({
-          "any.required": `Business operation is required.`,
-          "string.empty": `Business operation cannot be empty.`,
-      }) 
+    business_operation: Joi.string().trim().required().messages({
+      "any.required": `Business operation is required.`,
+      "string.empty": `Business operation cannot be empty.`,
+    }),
   }).unknown(),
 
   businessCategoryValidation: Joi.object({
-      business_category: Joi.string().trim().required().messages({
-          "any.required": `Business category is required.`,
-          "string.empty": `Business category cannot be empty.`,
-      }) 
+    business_category: Joi.string().trim().required().messages({
+      "any.required": `Business category is required.`,
+      "string.empty": `Business category cannot be empty.`,
+    }),
   }).unknown(),
 
   officeFormData: Joi.object({
     office: Joi.string().trim().required().messages({
-        "any.required": `Offices is required.`,
-        "string.empty": `Offices cannot be empty.`,
-    }) 
-}).unknown(),
-
-  
+      "any.required": `Offices is required.`,
+      "string.empty": `Offices cannot be empty.`,
+    }),
+  }).unknown(),
 };

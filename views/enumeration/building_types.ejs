@@ -180,21 +180,29 @@
             backdrops.forEach((backdrop) => backdrop.remove());
         });
 
-        $('#add-building-form').on('submit', function (e) {
+       $('#add-building-form').on('submit', function (e) {
             e.preventDefault();
+
             var buildingType = $('#building-type').val();
             var category = $('#category').val();
+
+            const data = {
+                type: buildingType,
+                category: category
+            };
+
             $.ajax({
                 url: '/setup/building_types',
                 method: 'POST',
-                data: { type:  buildingType, category: category },
+                contentType: 'application/json', 
+                data: JSON.stringify(data),
                 success: function (response) {
-                    $('#add-new-record').modal('hide');
-                    toastr.success('Building type added successfully');
-                    window.location.reload();
+                    $('#add-new-record').modal('hide'); 
+                    toastr.success('Building type added successfully'); 
+                    window.location.reload(); 
                 },
                 error: function (err) {
-                    toastr.error('Error adding building type');
+                    toastr.error(err.responseJSON?.message || 'Error adding building type'); 
                 }
             });
         });

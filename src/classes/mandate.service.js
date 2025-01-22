@@ -29,21 +29,39 @@ class Mandates {
             let sql = `
             SELECT 
                 b.* 
-            FROM businesses AS b 
-            INNER JOIN _buildings AS bul ON bul.building_number = b.building_id OR 
-            bul.building_id = b.building_id
-            WHERE b.service_id = :service_id`;
-
-            if(query.ward && query.ward !== "All") sql += ` AND bul.ward = :ward`;
-            if(query.street_id) sql += ` AND bul.street_id = :street_id`
+            FROM businesses AS b
+            INNER JOIN _buildings AS bul 
+                ON bul.building_number = b.building_id OR bul.building_id = b.building_id
+            WHERE b.service_id = :service_id
+        `;
+        
+        // Add conditional filters based on query
+        if (query.ward && query.ward !== "All") {
+            sql += ` AND bul.ward = :ward`;
+        }
+        if (query.street_id) {
+            sql += ` AND bul.street_id = :street_id`;
+        }
+        
+        try {
+            // Execute query with relevant replacements
+            const replacements = {
+                service_id: query.service_id,
+                ...(query.ward && query.ward !== "All" ? { ward: query.ward } : {}),
+                ...(query.street_id ? { street_id: query.street_id } : {})
+            };
+        
             const businesses = await this.db.query(sql, {
-                replacements: {
-                    service_id: query.service_id,
-                    ward: query.ward,
-                    street_id: query.street_id,
-                },
+                replacements,
                 type: QueryTypes.SELECT
-            })
+            });
+        
+            return businesses;
+        } catch (error) {
+            console.error("Error fetching businesses:", error);
+            throw error;
+        }
+        
             // console.log(businesses)
 
             if (!businesses || businesses.length === 0) throw new Error("No building found");

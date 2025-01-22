@@ -500,7 +500,7 @@ class Business {
      LEFT JOIN areas ON areas.Id = _buildings.ward
     LEFT JOIN _lga ON _lga.lga_id = _buildings.lga
     LEFT JOIN _states ON _states.state_id = _buildings.state_id
-    WHERE _buildings.service_id = :service_id AND  _buildings.building_number = :building_number
+    WHERE _buildings.service_id = :service_id AND  _buildings.building_number = :building_number OR _buildings.building_id = :building_number
     `;
 
     let sql1 = `
@@ -525,7 +525,7 @@ class Business {
         LEFT JOIN _business_sizes ON businesses.business_size = _business_sizes.business_size_id OR businesses.business_size = _business_sizes.business_size
         LEFT JOIN _business_types ON businesses.business_type = _business_types.idbusiness_type OR businesses.business_type = _business_types.business_type
         LEFT JOIN _buildings ON _buildings.building_id = businesses.building_id
-        WHERE businesses.service_id = :service_id AND businesses.building_id = :building_number AND businesses.Profile_ref = :Profile_ref`;
+        WHERE businesses.service_id = :service_id AND (businesses.building_id = :building_number 0R OR _buildings.building_id = :building_number) AND businesses.Profile_ref = :Profile_ref`;
 
         const [ viewBuilding, viewBusiness, count ] = await Promise.all([
           this.db.query(sql, {

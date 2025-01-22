@@ -7,7 +7,7 @@ const { Sequelize, QueryTypes, Op } = require("sequelize");
 const { groupBy } = require("../helper/helper");
 const Wards = require("../model/Ward");
 const Streets = require("../model/Street");
-const Areas = require("../model/Area")
+const Areas = require("../model/Area");
 class Setup {
   constructor() {
     this.revenue_item = Revenue_item;
@@ -27,12 +27,14 @@ class Setup {
   }
 
   async addItem(data, service_id) {
+    // console.log({ data });
     const value = this.validation(data);
     if (value) {
       await this.revenue_item.create({
         code: value.revenue_line == "Ticket" ? 11111111 : 232233322,
         revenue_line: value.revenue_line,
-        item_code: value.timeline,
+        item_code: value.item_code,
+        timeline: value.timeline,
         revenue_item: value.name,
         amount: value.Amount,
         service_id: service_id,
@@ -51,7 +53,8 @@ class Setup {
 
     await item.update({
       revenue_line: data.revenue_line,
-      item_code: data.timeline,
+      item_code: data.item_code,
+      timeline: data.timeline,
       revenue_item: data.name,
       amount: data.amount,
     });
@@ -89,13 +92,13 @@ class Setup {
   async lga(query) {
     // console.log(query);
     const conditions = [];
-  
+
     if (query.service_type === "State") {
-      conditions.push({ state_id: query.state.split(',')[0] });
+      conditions.push({ state_id: query.state.split(",")[0] });
     } else {
-      conditions.push({ lga_id: query.lga.split(',')[0] });
+      conditions.push({ lga_id: query.lga.split(",")[0] });
     }
-  
+
     return await this.lgas.findAll({
       where: {
         [Op.and]: conditions,
@@ -103,16 +106,15 @@ class Setup {
       raw: true,
     });
   }
-  
 
   async ward(user) {
     // console.log(user);
-  
+
     // Fetch LGAs based on the user input
     const result = await this.lga(user);
-    const lgaIds = result.map(item => item.lga_id);
-    const lga_id = user.lga ? user.lga.split(',')[0] : null;
-  
+    const lgaIds = result.map((item) => item.lga_id);
+    const lga_id = user.lga ? user.lga.split(",")[0] : null;
+
     // Condition for "State" service type
     if (user.service_type === "State") {
       if (user.group_id === 111) {
@@ -130,12 +132,12 @@ class Setup {
             type: QueryTypes.SELECT,
           }
         );
-  
+
         const localGovrts = await this.lgas.findAll({
           where: { lga_id: lgaIds },
           raw: true,
         });
-  
+
         return {
           wards,
           localGovrt: localGovrts,
@@ -150,16 +152,16 @@ class Setup {
             _lga.lga
           FROM areas
           INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-          WHERE areas.lga_id IN (${lgaIds.map(() => '?').join(',')})
+          WHERE areas.lga_id IN (${lgaIds.map(() => "?").join(",")})
           `,
           {
             type: QueryTypes.SELECT,
             replacements: lgaIds,
           }
         );
-  
+
         const localGovrts = await this.lgas.findAll({ raw: true });
-  
+
         return {
           wards,
           localGovrt: localGovrts,
@@ -182,9 +184,9 @@ class Setup {
             type: QueryTypes.SELECT,
           }
         );
-  
+
         const localGovrts = await this.lgas.findAll({ raw: true });
-  
+
         const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
         return {
           wards,
@@ -207,9 +209,9 @@ class Setup {
             replacements: { lga_id },
           }
         );
-  
+
         const localGovrts = await this.lgas.findAll({ raw: true });
-  
+
         const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
         return {
           wards,
@@ -218,7 +220,7 @@ class Setup {
       }
     }
   }
-  
+
   async createWard(data, service_id) {
     await this.wards.create({
       city: data.ward,

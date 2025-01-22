@@ -85,6 +85,10 @@ module.exports = {
       "any.required": `Amount is required`,
       "string.empty": `Amount cannot be empty`,
     }),
+      item_code: Joi.number().required().messages({
+      "any.required": `item code is required`,
+      "string.empty": `item code cannot be empty`,
+    }),
   }),
 
   validateUserGrpp: Joi.object({

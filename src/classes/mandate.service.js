@@ -25,6 +25,7 @@ class Mandates {
     }
 
     async generateForBusiness(query) {
+        console.log({query})
         try {
             let sql = `
             SELECT 
@@ -43,7 +44,7 @@ class Mandates {
             sql += ` AND bul.street_id = :street_id`;
         }
         
-        try {
+        // try {
             // Execute query with relevant replacements
             const replacements = {
                 service_id: query.service_id,
@@ -55,12 +56,13 @@ class Mandates {
                 replacements,
                 type: QueryTypes.SELECT
             });
+            // console.log(businesses)
         
-            return businesses;
-        } catch (error) {
-            console.error("Error fetching businesses:", error);
-            throw error;
-        }
+            // return businesses;
+        // } catch (error) {
+        //     console.error("Error fetching businesses:", error);
+        //     throw error;
+        // }
         
             // console.log(businesses)
 
@@ -102,7 +104,7 @@ class Mandates {
 
                 businessPayload.push({
                     ref_no: new Date().getTime().toString(36),
-                    tin: business.profile_ref,
+                    tin: business.business_rin,
                     taxpayer_name: business.business_ownership,
                     revenue_id: business.business_name,
                     description: business.business_name,

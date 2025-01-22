@@ -30,7 +30,8 @@ class Mandates {
             SELECT 
                 b.* 
             FROM businesses AS b 
-            INNER JOIN _buildings AS bul ON bul.building_number = b.building_id
+            INNER JOIN _buildings AS bul ON bul.building_number = b.building_id OR 
+            bul.building_id = b.building_id
             WHERE b.service_id = :service_id`;
 
             if(query.ward && query.ward !== "All") sql += ` AND bul.ward = :ward`;

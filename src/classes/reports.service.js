@@ -256,7 +256,7 @@ class Reports {
       Revenues_invoices.findAll({
         where: {
           service_id: query.service_id,
-          paid: 1,
+          // paid: 1,
           [Op.and]: [
             query.source && {source: query.source },
             query.business_building_name && {source: query.business_building_name },
@@ -276,6 +276,7 @@ class Reports {
       })
     ])
 
+    console.log(results)
     return {
       results,
       current: page,

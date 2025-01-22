@@ -46,6 +46,8 @@
                           <th>Invoice Number</th>
                           <th>Payment Date</th>
                           <th>Amount</th>
+                          <th>Amount</th>
+                          <th>Outstanding</th>
                           <!-- <th></th> -->
                         </tr>
                       </thead>
@@ -58,7 +60,10 @@
                                 <td><%= item?.revenue_id %></td>
                                 <td><%= item?.invoice_number %></td>
                                 <td><%= item?.payment_date %></td>
+                                <td><%= item?.amount %></td>
                                 <td><%= item?.amount_paid %></td>
+                                <td><%= item?.amount_paid %></td>
+
                           
                             </tr>
                         <% }) %>

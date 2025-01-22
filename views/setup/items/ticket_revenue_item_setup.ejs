@@ -65,11 +65,11 @@
                               <%= item.code==11111111 ? "TICKET" : "TAX ITEMS" %>
                             </td>
                             <td>
-                            <% if (item.code==11111111) { %>
-                              <%= item.item_code==1 ? "Daily" : "Every 4 Days" %>
-                                <% } else { %>
-                                  Timeline not applicable
-                                  <% } %>
+                              <% if (item.code==11111111) { %>
+                                <%= item.item_code==1 ? "Daily" : "Every 4 Days" %>
+                                  <% } else { %>
+                                    Timeline not applicable
+                                    <% } %>
 
                             </td>
                             <td>
@@ -140,13 +140,13 @@
                         </div>
                         <div class="form-text">Item name</div>
                       </div>
-                      <!-- <div class="col-sm-12">
-                        <label class="form-label" for="basicDate">Joining Date</label>
+                      <div class="col-sm-12">
+                        <label class="form-label" for="basicSalary">Item Code</label>
                         <div class="input-group input-group-merge">
-                          <span id="basicDate2" class="input-group-text"><i class="ti ti-calendar"></i></span>
-                          <input type="text" class="form-control dt-date" id="basicDate" name="basicDate" aria-describedby="basicDate2" placeholder="MM/DD/YYYY" aria-label="MM/DD/YYYY" />
+                          <input type="number" id="item-code" name="item-code" class="form-control dt-salary"
+                            placeholder="10000001" aria-label="100001" aria-describedby="itemCode" />
                         </div>
-                      </div> -->
+                      </div>
                       <div class="col-sm-12">
                         <label class="form-label" for="basicSalary">Amount</label>
                         <div class="input-group input-group-merge">
@@ -194,6 +194,7 @@
                         <label for="edit-name" class="form-label">Item Name</label>
                         <input type="text" id="edit-name" name="name" class="form-control" required />
                       </div>
+
                       <div class="mb-3">
                         <label for="edit-amount" class="form-label">Amount</label>
                         <input type="number" id="edit-amount" name="amount" class="form-control" required />
@@ -242,7 +243,8 @@
                         revenue_line: data.get("revenue_line"),
                         timeline: data.get("timeline"),
                         name: data.get("name"),
-                        Amount: data.get("Amount")
+                        Amount: data.get("Amount"),
+                        item_code: data.get("item-code")
                       }
 
                       // console.log(payload)
@@ -359,7 +361,7 @@
                     const toggleTimelineField = () => {
                       const selectedValue = revenueLineSelect.value;
                       if (selectedValue === 'Tax Item') {
-                        timelineField.style.display = 'none'; 
+                        timelineField.style.display = 'none';
                       } else {
                         timelineField.style.display = 'block';
                       }

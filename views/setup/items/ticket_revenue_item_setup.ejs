@@ -242,7 +242,7 @@
                         Amount: data.get("Amount")
                       }
 
-                      console.log(payload)
+                      // console.log(payload)
 
                       try {
                         const request = await fetch('/setup/ticket_item', {
@@ -298,7 +298,7 @@
                           name: document.getElementById('edit-name').value,
                           amount: document.getElementById('edit-amount').value
                         };
-                        console.log(itemId)
+                        // console.log(itemId)
                         try {
                           const request = await fetch(`/setup/ticket_item/${itemId}`, {
                             method: 'PUT',

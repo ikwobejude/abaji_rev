@@ -256,6 +256,7 @@ class Buildings {
         SELECT 
             _buildings.building_number, 
             _buildings.building_id,
+             _buildings.building_image,
             _buildings.building_name, 
             _buildings.owner_name, 
             _buildings.owner_email, 

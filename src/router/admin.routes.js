@@ -78,7 +78,7 @@ Router.route('/enumerated_business')
 .get(enumerationController.businesses)
 
 
-Router.get('/enumerated_buildings/view/:building_id', enumerationController.getBuilding)
+Router.get('/enumerated_buildings/view', enumerationController.getBuilding)
 Router.get('/enumerated_business/view/:profile_id/:building_id', enumerationController.getBusiness)
 
 // Generate mandate

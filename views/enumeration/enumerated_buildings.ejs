@@ -108,7 +108,7 @@
                                       <i class="ti ti-dots-vertical"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="/admin/enumerated_buildings/view/<%= building.building_number %>">
+                                      <a class="dropdown-item" href="/admin/enumerated_buildings/view?building_id=<%= building.building_number %>">
                                         <i class="ti ti-eye me-1"></i>View more
                                       </a>
                                       <a class="dropdown-item" href="javascript:void(0);" onclick="deleteRecords('<%= building.building_number %>')">

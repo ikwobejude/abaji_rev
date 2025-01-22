@@ -46,8 +46,7 @@ class enumerationController {
     try {
       const response = await buildingService.getBuilding({
         service_id: req.user.service_id,
-        ...req.query,
-        ...req.params,
+        ...req.query
       });
       //   console.log(response);
       res.status(200).render("./enumeration/view_building", response);

@@ -51,8 +51,8 @@
                           <th></th>
                           <th>Revenue</th>
                           <th>Time line</th>
-                          <th>Item Name</th>
                           <th>Item Code</th>
+                          <th>Item Name</th>
                           <th>Amount</th>
                           <th>Action</th>
                         </tr>
@@ -65,9 +65,12 @@
                               <%= item.code==11111111 ? "TICKET" : "TAX ITEMS" %>
                             </td>
                             <td>
-                              <% if(item.code==11111111){%>
-                                <%= item.item_code==1 ? "Daily" : "Every 4 Days" %>
-                              <% } %>
+                            <% if (item.code==11111111) { %>
+                              <%= item.item_code==1 ? "Daily" : "Every 4 Days" %>
+                                <% } else { %>
+                                  Timeline not applicable
+                                  <% } %>
+
                             </td>
                             <td>
                               <%= item.item_code %>

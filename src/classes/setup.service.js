@@ -53,7 +53,8 @@ class Setup {
 
     await item.update({
       revenue_line: data.revenue_line,
-      item_code: data.timeline,
+      item_code: data.item_code,
+      timeline: data.timeline,
       revenue_item: data.name,
       amount: data.amount,
     });

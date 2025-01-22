@@ -86,7 +86,7 @@
                                 data-revenue-line="<%= item.code == 11111111 ? 'TICKET' : 'TAX REVENUE' %>"
                                 data-timeline="<%= item.item_code == 1 ? 'Daily' : 'Every 4 Days' %>"
                                 data-name="<%= item.revenue_item %>" data-amount="<%= item.amount %>"
-                                style="cursor: pointer; margin-right: 10px;"></i>
+                                data-item-code="<%= item.item_code %>" style="cursor: pointer; margin-right: 10px;"></i>
                               <i class="ti ti-trash delete-icon" data-id="<%= item.itemID %>" style="cursor: pointer;"
                                 data-bs-toggle="modal" data-bs-target="#delete-confirmation-modal"></i></i>
                             </td>
@@ -194,7 +194,13 @@
                         <label for="edit-name" class="form-label">Item Name</label>
                         <input type="text" id="edit-name" name="name" class="form-control" required />
                       </div>
-
+                      <div class="col-sm-12">
+                        <label class="form-label" for="basicSalary">Item Code</label>
+                        <div class="input-group input-group-merge">
+                          <input type="number" id="edit_item-code" name="edit_item-code" class="form-control dt-salary"
+                            placeholder="10000001" aria-label="100001" aria-describedby="edititemCode" />
+                        </div>
+                      </div>
                       <div class="mb-3">
                         <label for="edit-amount" class="form-label">Amount</label>
                         <input type="number" id="edit-amount" name="amount" class="form-control" required />
@@ -283,13 +289,14 @@
                       const name = this.getAttribute('data-name');
                       const amount = this.getAttribute('data-amount');
                       const itemId = this.getAttribute('data-id');
+                      const itemCode = this.getAttribute('data-item-code');
 
                       // Populate the modal input fields with the data
                       document.getElementById('edit-revenue-line').value = revenueLine === "TICKET" ? "Ticket" : "Tax Item";
                       document.getElementById('edit-timeline').value = timeline === "Daily" ? "1" : "4";
                       document.getElementById('edit-name').value = name;
                       document.getElementById('edit-amount').value = amount;
-
+                      document.getElementById('edit_item-code').value = itemCode
                       // Show the modal
                       const modal = new bootstrap.Offcanvas(document.getElementById('edit-new-record'));
                       modal.show();
@@ -301,7 +308,8 @@
                           revenue_line: document.getElementById('edit-revenue-line').value,
                           timeline: document.getElementById('edit-timeline').value,
                           name: document.getElementById('edit-name').value,
-                          amount: document.getElementById('edit-amount').value
+                          amount: document.getElementById('edit-amount').value,
+                          item_code: document.getElementById('edit_item-code').value
                         };
                         // console.log(itemId)
                         try {

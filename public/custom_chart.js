@@ -1,5 +1,6 @@
 window.onload = async () => {
-  const res = await fetch("/admin/revenue/street_graph");
+  console.log(year)
+  const res = await fetch(`/admin/revenue/street_graph?year=${year}`);
   const data = await res.json();
   let dataPoints1 = [];
   let sum = 0;
@@ -41,7 +42,7 @@ window.onload = async () => {
 
 
 
-  const res1 = await fetch("/admin/payment/street_graph");
+  const res1 = await fetch(`/admin/payment/street_graph?year=${year}`);
   const data1 = await res1.json();
 
   let dataPoints2 = [];
@@ -83,7 +84,7 @@ window.onload = async () => {
 
 
 
-  const res4 = await fetch("/admin/wallet_payment");
+  const res4 = await fetch(`/admin/wallet_payment?year=${year}`);
   const data4 = await res4.json();
   let dataPoint3 = [];
 

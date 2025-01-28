@@ -54,7 +54,7 @@ class Admin {
         // }
     }
 
-    async streetExpectedGraph(service_id) {
+    async streetExpectedGraph(query) {
         let sql = `
         SELECT 
             sum(r.grand_total) AS amount,
@@ -66,8 +66,8 @@ class Admin {
 
         const data = await this.db.query(sql, {
             replacements: {
-                serviceId: service_id,
-                year:  this.year
+                serviceId: query.service_id,
+                year: query.year || this.year
             },
             type: sequelize.QueryTypes.SELECT
         })
@@ -75,7 +75,7 @@ class Admin {
         return data
     }
 
-    async streetPaymentGraph(service_id) {
+    async streetPaymentGraph(query) {
         let sql = `
         SELECT 
             sum(r.amount_paid) AS amount,
@@ -86,26 +86,27 @@ class Admin {
 
         const data = await this.db.query(sql, {
             replacements: {
-                serviceId: service_id,
-                year:  this.year
+                serviceId: query.service_id,
+                year: query.year || this.year
             },
             type: sequelize.QueryTypes.SELECT
         })
         return data
     }
 
-    async walletPayment(service_id) {
+    async walletPayment(query) {
         let sql = `
         SELECT 
-             MAX(r.description) AS label,
+            MAX(r.description) AS label,
             sum(r.amount_paid) AS amount
         FROM revenue_invoices AS r
-        WHERE r.service_id = :serviceId
+        WHERE r.service_id = :serviceId AND r.year = :year
         GROUP BY r.description`;
 
         const data = await this.db.query(sql, {
             replacements: {
-                serviceId: service_id
+                serviceId: query.service_id,
+                year: query.year || this.year
             },
             type: sequelize.QueryTypes.SELECT
         })

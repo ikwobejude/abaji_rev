@@ -55,6 +55,9 @@
                 <%
                     const view_year = rate_year == new Date().getFullYear() ? new Date().getFullYear() - 1 : new Date().getFullYear()
                 %>
+                <script>
+                  const year = '<%= rate_year %>';
+                </script>
                 <!-- Statistics -->
                 <div class="col-xl-8 col-md-12">
                   <div class="card h-100">

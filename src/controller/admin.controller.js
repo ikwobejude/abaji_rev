@@ -10,17 +10,17 @@ module.exports = {
     },
 
     revenueStreet: async function(req, res) {
-        const data = await admin.streetExpectedGraph(req.user.service_id)
+        const data = await admin.streetExpectedGraph({service_id: req.user.service_id, year: req.query.year})
         res.status(200).json(data)
     },
 
     paymentsStreet: async function(req, res) {
-        const data = await admin.streetPaymentGraph(req.user.service_id)
+        const data = await admin.streetPaymentGraph({service_id: req.user.service_id, year: req.query.year})
         res.status(200).json(data)
     },
 
     walletPayment: async function(req, res) {
-        const data = await admin.walletPayment(req.user.service_id)
+        const data = await admin.walletPayment({service_id: req.user.service_id, year: req.query.year})
         res.status(200).json(data)
     },
 

@@ -373,7 +373,7 @@ class Revenue extends Bud_pay {
       FROM revenue_invoices 
       LEFT JOIN _cities ON _cities.city_id = revenue_invoices.ward
       LEFT JOIN _streets ON _streets.idstreet = revenue_invoices.session_id
-      WHERE revenue_invoices.year = 2024
+      WHERE revenue_invoices.year = ${new Date().getFullYear()}
       GROUP BY revenue_invoices.batch
     `;
 

@@ -5,7 +5,7 @@ const user = new User();
 const admin = new Admin()
 module.exports = {
     adminDashboard: async function(req, res) {
-        const data = await admin.adminDashboard(req.user)
+        const data = await admin.adminDashboard({...req.user, ...req.query})
         res.status(200).render('./dashboard', {...data})
     },
 

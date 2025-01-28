@@ -12,6 +12,47 @@
         <!-- Menu -->
 
        <%- include('./layout/aside') %>
+       <% 
+            // Helper function to handle NaN values
+                                                    
+                                                    
+            const safeParseFloat = (value) => {
+                if (value === null || isNaN(value)) {
+                    return 0;
+                }
+                return parseFloat(value);
+            };
+
+            function formatNumber(value) {
+                const number = safeParseFloat(value);
+            
+                if (number < 0) {
+                    return `(${Math.abs(number).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    })})`;
+                }
+            
+                return number.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            const end_year = new Date().getFullYear();
+            // Get all month names
+            function getMonthNames(locale = 'en-US') {
+                const monthNames = [];
+                for (let i = 0; i < 12; i++) {
+                    const date = new Date(2000, i); // Use any year, just cycling through months
+                    monthNames.push(new Intl.DateTimeFormat(locale, { month: 'long' }).format(date));
+                }
+                return monthNames;
+            }
+
+            const now = new Date();
+            const currentMonth = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(now)
+        %>
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -83,7 +124,7 @@
                                 <i class="ti ti-chart-pie-2 ti-lg"></i>
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= parseFloat(expected.grand_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></h5>
+                                <h5 class="mb-0"><%= formatNumber(expected.grand_total) %></h5>
                                 <small>Expected</small>
                               </div>
                             </div>
@@ -106,7 +147,7 @@
                                 ₦
                               </div>
                               <div class="card-info">
-                                <h5 class="mb-0"><%= parseFloat(expected.grand_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></h5>
+                                <h5 class="mb-0"><%= formatNumber(expected.grand_total) %></h5>
                                 <small>Outstanding</small>
                               </div>
                             </div>

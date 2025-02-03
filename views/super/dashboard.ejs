@@ -208,13 +208,17 @@
                                     <i class="ti ti-dots-vertical"></i>
                                   </button>
                                   <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Approvals</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Reports</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
+                                    <li><a 
+                                      class="dropdown-item approvals" 
+                                      href="javascript:void(0);" 
+                                      data-service-id="<%= client.service_id %>"
+                                      data-approval-status="<%= client.service_status %>"
+                                      >Approvals</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);">View reports</a></li>
                                     <li>
                                       <hr class="dropdown-divider" />
                                     </li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+                                    <li><a class="dropdown-item edit_button" href="javascript:void(0);">Edit</a></li>
                                   </ul>
                                 </div>
                               </div>
@@ -247,6 +251,123 @@
             </div>
             <!-- / Content -->
 
+            <!-- Add New Credit Card Modal -->
+            <div class="modal fade" id="addNewCCModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center mb-6">
+                      <h4 class="mb-2">Approve client service</h4>
+                      <!-- <p>Add new card to complete payment</p> -->
+                    </div>
+                    <form id="addNewCCForm" class="row g-6" onsubmit="return false">
+                      
+                      <input type="hidden" id="service_id" class="form-control" />
+                      <!-- </div> -->
+                      <div class="col-12">
+                        <div class="form-check form-switch">
+                          <input type="checkbox" class="form-check-input" id="approval_status" />
+                          <label for="futureAddress" class="switch-label">Switch on to approve then off to reject/disapprove </label>
+                        </div>
+                      </div>
+                      <!-- <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary me-3">Submit</button>
+                        <button
+                          type="reset"
+                          class="btn btn-label-secondary btn-reset"
+                          data-bs-dismiss="modal"
+                          aria-label="Close">
+                          Cancel
+                        </button>
+                      </div> -->
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--/ Add New Credit Card Modal -->
+
         <%- include('../layout/footer') %>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+
+            // Function to handle button click events
+
+            function handleButtonClick(event) {
+                event.preventDefault();
+                const target = event.currentTarget;
+                let taxpayer = {}
+
+                if(target.classList.contains("apply_Discount") || target.classList.contains("edit_button")) {
+                    // Retrieve data attributes
+                    const taxpayerId = target.getAttribute("data-tin");
+                    const idtax = target.getAttribute("data-idtax");
+                    const code = target.getAttribute("data-code");
+                    const taxitem = target.getAttribute("data-taxitem");
+                    const discount = target.getAttribute("data-discount");
+                    const amount = target.getAttribute("data-amount");
+
+                    // Construct the taxpayer object
+                    taxpayer = { taxpayerId, idtax, code, taxitem, discount, amount };
+
+                } else if(target.classList.contains("approvals")) {
+                    const service_id = target.getAttribute("data-service-id");
+                    const approval = target.getAttribute("data-approval-status");
+                    taxpayer = { service_id, approval };
+                } else if(target.classList.contains("delete_all_items")){
+                    const tin = target.getAttribute("data-main-tin");
+                    taxpayer = { tin };
+                }
+                
+                // Perform different actions based on the button type
+                if (target.classList.contains("approvals")) {
+                    approveCLients(taxpayer);
+                } else if (target.classList.contains("edit_button")) {
+                    editTaxpayer(taxpayer);
+                } else if(target.classList.contains("remove_item")) {
+                    deleteItem(taxpayer);
+                } else {
+                    deleteItem(taxpayer);
+                }
+            }
+    
+            // Select buttons with both classes
+            const allButtons = document.querySelectorAll(".approvals, .edit_button, .remove_item, .delete_all_items");
+
+            // Attach event listeners to all buttons
+            allButtons.forEach(button => {
+                button.addEventListener("click", handleButtonClick);
+            });
+          })
+
+          // Example function to process the discount
+          function approveCLients(taxpayer) {
+              console.log("Processing discount for taxpayer:", taxpayer);
+              document.getElementById('service_id').value = taxpayer.service_id;
+              toggleSwitchBasedOnValue(parseInt(taxpayer.approval)) 
+              const editModal = new bootstrap.Modal(document.getElementById('addNewCCModal'));
+              editModal.show();
+              // Perform actions with the taxpayer data
+          }
+          const toggleSwitch = document.getElementById("approval_status");
+          function toggleSwitchBasedOnValue(value) {
+            if (value == 1) {
+                toggleSwitch.checked = true;
+            } else {
+                toggleSwitch.checked = false;
+            }
+        }
+
+
+          toggleSwitch.addEventListener("change", function() {
+              if (this.checked) {
+                  
+              } else {
+                alert("OnChecked")
+              }
+          });
+        </script>
   </body>
 </html>

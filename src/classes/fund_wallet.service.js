@@ -61,7 +61,7 @@ class FundWallet {
     
           await this.createTransaction(walletUser.id, value.transactionId, "successful", "transaction", value.amount, customer, "TOPIT", "successful", t);
     
-          await this.updateWallet(walletUser.id, value.amount, walletUser.service_id, t);
+          await this.updateWallet(walletUser.id, value.amount, user.service_id, t);
           await t.commit();
     
           return {

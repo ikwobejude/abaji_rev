@@ -1,32 +1,34 @@
 <!doctype html>
 
-<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
-  <head>
-    <%- include('../layout/head') %>
-  </head>
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr"
+  data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
 
-  <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
+<head>
+  <%- include('../layout/head') %>
+</head>
 
-       <%- include('../layout/aside') %>
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+
+      <%- include('../layout/aside') %>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
 
-         <%- include('../layout/side') %>
+          <%- include('../layout/side') %>
 
-          <!-- / Navbar -->
+            <!-- / Navbar -->
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+              <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="container-xxl flex-grow-1 container-p-y">
                 <!-- Search Form -->
                 <div class="card mb-4">
                   <div class="card-header">
@@ -56,13 +58,15 @@
                         <div class="col-md-3">
                           <div class="mb-3">
                             <label for="paymentDateFrom" class="form-label">Payment Date From</label>
-                            <input type="date" id="paymentDateFrom" name="payment_date_from" class="form-control" value="" />
+                            <input type="date" id="paymentDateFrom" name="payment_date_from" class="form-control"
+                              value="" />
                           </div>
                         </div>
                         <div class="col-md-3">
                           <div class="mb-3">
                             <label for="paymentDateTo" class="form-label">Payment Date To</label>
-                            <input type="date" id="paymentDateTo" name="payment_date_to" class="form-control" value="" />
+                            <input type="date" id="paymentDateTo" name="payment_date_to" class="form-control"
+                              value="" />
                           </div>
                         </div>
                       </div>
@@ -75,18 +79,37 @@
 
                 <!-- DataTable with Buttons -->
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-6">Payment Report</div>
-                        </div>
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <h5>Payment Report</h5>
+                      </div>
                     </div>
-                    
-                  <div class="card-datatable  table-responsive pt-0">
+                  </div>
+
+                  <!-- Summary Section -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Total Paid: <span class="text-success">
+                            <%= new Intl.NumberFormat('en-NG', { style: 'currency' , currency: 'NGN' }).format(totalPaid) %>
+                          </span></h6>
+                      </div>
+                      <div class="col-md-6">
+                        <h6>Total Outstanding: <span class="text-danger">
+                              <%= new Intl.NumberFormat('en-NG', { style: 'currency' , currency: 'NGN' }).format(totalOutstanding) %>
+                          </span></h6>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Payment Table -->
+                  <div class="card-datatable table-responsive pt-0">
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
                           <th>Payment Ref</th>
-                          <th>Invoice </th>
+                          <th>Invoice</th>
                           <th>Payment Method</th>
                           <th>Bank Name</th>
                           <th>Payment Date</th>
@@ -95,28 +118,44 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% result.forEach(item => { %>
-                            <tr>
-                                <td><%= item.PaymentLogId %></td>
-                                <td><%= item.CustReference %></td>
-                                <td><%= item.PaymentMethod %></td>
-                                <td><%= item.BankName %></td>
-                                <td><%= item.PaymentDate.toLocaleDateString() %></td>
-                                <td><%= item.PaymentCurrency %></td>
-                                <td><%= item.Amount %></td>
-                            </tr>
-                        <% }) %>
+                        <% result.forEach(item=> { %>
+                          <tr>
+                            <td>
+                              <%= item.PaymentLogId %>
+                            </td>
+                            <td>
+                              <%= item.CustReference %>
+                            </td>
+                            <td>
+                              <%= item.PaymentMethod %>
+                            </td>
+                            <td>
+                              <%= item.BankName %>
+                            </td>
+                            <td>
+                              <%= item.PaymentDate.toLocaleDateString() %>
+                            </td>
+                            <td>
+                              <%= item.PaymentCurrency %>
+                            </td>
+                            <td>
+                              <%= item.Amount %>
+                            </td>
+                          </tr>
+                          <% }) %>
                       </tbody>
                     </table>
                   </div>
                 </div>
-              
-            </div>
+
+
+              </div>
               <!-- / Content -->
 
-        <%- include('../layout/footer') %>
-         <!-- Page JS -->
-    <script src="/assets/js/tables-datatables-basic.js"></script>
-   
-  </body>
+              <%- include('../layout/footer') %>
+                <!-- Page JS -->
+                <script src="/assets/js/tables-datatables-basic.js"></script>
+
+</body>
+
 </html>

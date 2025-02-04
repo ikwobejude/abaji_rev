@@ -8,7 +8,11 @@ class ReportsController {
         service_id: req.user.service_id,
         ...req.query,
       });
-      res.status(200).render("./report/payment_report", { ...response });
+      const total = await reports.totalPaymentReport(req.user.service_id);
+      console.log({ total });
+      res
+        .status(200)
+        .render("./report/payment_report", { ...response, ...total });
     } catch (error) {
       console.error(error);
       res.status(500).send("An error occurred.");
@@ -61,4 +65,3 @@ class ReportsController {
 }
 
 module.exports = ReportsController;
-

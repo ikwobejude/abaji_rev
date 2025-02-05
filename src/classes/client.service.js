@@ -63,7 +63,7 @@ class Client {
   }
 
   async create(value) {
-    // console.log({ value });
+    console.log({ value });
     emitter.emit("beforeCreateClientService", value);
 
     // Check for duplicate email or phone
@@ -126,7 +126,7 @@ class Client {
         subject: "Client email registration notification",
       };
 
-      console.log(details)
+      // console.log(details)
 
       emitter.emit("afterCreatingClientService", details);
 
@@ -136,6 +136,7 @@ class Client {
           "Client created & email has been sent to the client registered email address",
       };
     } catch (error) {
+      console.log(error)
       if (error instanceof Sequelize.UniqueConstraintError) {
         console.error('Duplicate entry:', error.errors[0].message);
         // Handle the error, e.g., send a response or log it

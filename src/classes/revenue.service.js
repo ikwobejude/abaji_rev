@@ -285,7 +285,7 @@ class Revenue extends Bud_pay {
       where: { invoice_number: query.invoice },
       raw: true,
     });
-    console.log(tax_items)
+    // console.log(tax_items)
     return {
       revenue: revenue[0],
       items: tax_items,
@@ -303,7 +303,7 @@ class Revenue extends Bud_pay {
       // console.log(binaryData)
       fs.writeFileSync(`uploads/${fileName}`, binaryData, "binary");
       // return `${fileName}`;
-      console.log(fileName);
+      // console.log(fileName);
       return {
         status: true,
         fileName,
@@ -315,7 +315,7 @@ class Revenue extends Bud_pay {
   }
 
   async uploadCooperateBusinessData(data) {
-    console.log(data)
+    // console.log(data)
     // return
     const res = await this.base64ToExcel(data.base64url);
     // console.log(res)

@@ -52,5 +52,8 @@ Router.post('/initialize_payments', app.pushPayment)
 Router.get('/payment_notification', app.pushPayment)
 Router.post('/tcc_calculation', admin.tccCalculation)
 
+// Search user
+Router.get('/search_user', middleware.requireAuth, admin.searchSystemUsers)
+
 
 module.exports = Router

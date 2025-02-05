@@ -200,7 +200,7 @@
                   </div>
                 </div> 
 
-                <div class="col-xxl-6 col-md-6">
+                <div class="col-xxl-12 col-md-6">
                   <div class="card h-100">
                    
                     <div class="card-body pb-0">
@@ -601,7 +601,7 @@
                         <button type="button" class="btn-close" aria-label="Close" id="preventModalClose"></button>
                       </div>
                       <div class="modal-body">
-                        <p>Your state information is incomplete. Please update your details to proceed.</p>
+                        <p>Additional Information Required. Please update details to continue with the process.</p>
                         <form id="stateUpdateForm">
                           <div class="mb-3">
                             <label for="phoneNumber" class="form-label">Phone Number</label>
@@ -612,7 +612,7 @@
                           <div class="mb-3">
                             <label for="state" class="form-label">Revenue Type</label>
                             <select class="form-select" id="revenue_type" required>
-                              <option value="" disabled selected>Select your state</option>
+                              <option value="" disabled selected>Select Revenue Type</option>
                               <option value="State"> Revenue for State</option>
                               <option value="Lga"> Revenue for LGA</option>
                             </select>
@@ -677,7 +677,6 @@
           const revenue_type = document.getElementById("revenue_type");
           revenue_type.addEventListener('change', function(e) {
             const value = e.target.value;
-            console.log(value)
             if(value === "Lga") {
               $('#lga_holder').html(`
               <label for="lga" class="form-label">Local Government Area (LGA)</label>
@@ -685,6 +684,8 @@
                   <option value="" disabled selected>Select your LGA</option>
                 </select>
               `)
+            } else {
+              $('#lga_holder').html(``)
             }
           })
         </script>

@@ -22,7 +22,6 @@ class FundWallet {
     }
 
     async creditWallet(value, user) {
-        // console.log(value)
         const transactionExist = await this.transaction.findOne({
           where: { transactionId: value.transactionId },
         });
@@ -75,7 +74,7 @@ class FundWallet {
         }
       }
     
-      async validateUserWallet(id) {
+      async validateUserWallet(id, service_id) {
         const walletUser = await this.wallet.findOne({
           where: { userId: id },
           raw: true,

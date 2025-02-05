@@ -333,8 +333,7 @@
                       <table width="100%">
                         <tr>
                           <td>
-                            <div class="headings" style="color: red !important;"><span><b>ABAJI
-                                  LOCAL GOVERNMENT</b> </span></div>
+                            <div class="headings" style="color: red !important;"><span><b><%= user?.client %></b> </span></div>
                           </td>
                         </tr>
                         <tr>
@@ -645,6 +644,8 @@ Dear Queen Consolidated,
                 <%- include('../../layout/footer') %>
                   <script src="/assets/js/offcanvas-send-invoice.js"></script>
                   <script>
+                    document.getElementById("payment-date").value = new Date().toISOString().split('T')[0];
+
                     function printDiv(invoice) {
                       var printContents = document.getElementById("invoice").innerHTML;
                       var originalContents = document.body.innerHTML;

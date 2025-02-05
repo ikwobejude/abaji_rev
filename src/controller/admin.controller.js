@@ -172,6 +172,15 @@ class DashboardController {
       data: response
     })
   }
+
+  static async searchSystemUsers(req, res) {
+    try {
+      const response = await user.searchUser({...req.query, service_id: req.user.service_id})
+      res.status(200).json(response)
+    } catch (error) {
+      
+    }
+  }
 }
 
 module.exports = DashboardController;

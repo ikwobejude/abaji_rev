@@ -143,6 +143,7 @@
                               
                             </div>
                           </th>
+                          <th></th>
                           <th>Invoice</th>
                           <th>Year</th>
                           <th>Revenue Name</th>
@@ -152,7 +153,7 @@
                           <th>Ward</th>
                           <th>Street</th>
                           <th>Amount Yearly</th>
-                          <th></th>
+                          
                         </tr>
                       </thead>
                       <tbody>
@@ -161,6 +162,21 @@
                             <td>
                               <div class="form-check mb-0 ms-2">
                                 <input class="email-list-item-input form-check-input"  type="checkbox" id="single" />
+                              </div>
+                            </td>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                  data-bs-toggle="dropdown">
+                                  <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item"
+                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
+                                      class="ti ti-eye me-1"></i>View more </a>
+                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
+                                    Delete</a>
+                                </div>
                               </div>
                             </td>
                             <td>
@@ -191,21 +207,7 @@
                             <td>
                               <%= item.grand_total %>
                             </td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                  data-bs-toggle="dropdown">
-                                  <i class="ti ti-dots-vertical"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item"
-                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
-                                      class="ti ti-eye me-1"></i>View more </a>
-                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
-                                    Delete</a>
-                                </div>
-                              </div>
-                            </td>
+                            
                           </tr>
                           <% }) %>
                       </tbody>

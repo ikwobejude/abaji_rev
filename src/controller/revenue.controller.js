@@ -74,7 +74,7 @@ class RevenueController {
         type_of_property: req.query.type_of_property,
         revenue_type: req.query.revenue_type,
       };
-      console.log(query);
+      // console.log(query);
       const response = await revenue.revenuesInvoices(query);
       const street = await setup.AllStreets();
       res.status(200).render("./revenue/cooperative/revenue_invoice", {

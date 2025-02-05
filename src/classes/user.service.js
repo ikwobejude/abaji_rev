@@ -218,6 +218,38 @@ class User {
       raw: true
     })
   }
+
+  async searchUser(query) {
+    const searchTerm = query.q; // Get search term from query parameter
+    if (!searchTerm || searchTerm.length < 3) {
+        throw  Error("Search term must be at least 3 characters" );
+    }
+    try {
+        // Find products that match the search term
+
+        const users = await Users.findAll({
+            attributes: [
+                "id",
+                "name",
+                "email",
+                "user_phone"
+            ],
+            where: {
+                name: { [Op.like]: `%${searchTerm}%` },
+                service_id: query.service_id,
+            },
+            raw: true,
+            limit: 10
+        });
+
+
+        // console.log(products)
+        return users;
+    } catch (err) {
+        console.error(err);
+        throw Error(err.message)
+    }
+  }
 }
 
 module.exports = User;

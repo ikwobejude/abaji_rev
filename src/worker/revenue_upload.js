@@ -18,7 +18,7 @@ const bud_pay = new Bud_pay()
 
 const Op = Sequelize.Op;
 
-console.log(workerData);
+// console.log(workerData);
 // return
 const date = new Date();
 
@@ -115,7 +115,7 @@ const processStateServiceType = async (row, invoiceNumber, batchNumber) => {
     revenueData,
     taxOfficeId,
   });
-  console.log(items)
+  // console.log(items)
 
   return { payload, items };
 };

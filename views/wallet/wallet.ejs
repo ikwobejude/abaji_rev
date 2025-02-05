@@ -1,9 +1,8 @@
 <!doctype html>
 
 <html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
-  <head>
+  
     <%- include('../layout/head') %>
-  </head>
 
   <body>
     <!-- Layout wrapper -->
@@ -138,24 +137,21 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           <div class="text-center mb-6">
                             <h4 class="mb-2">TopUp User Wallet</h4>
-                            <p>Enter the users email to be founded.</p>
+                            <p>You can only fund the wallet of a registered user.</p>
                           </div>
                           <form id="upgradePlanForm" class="row g-4" onsubmit="return false">
                             <div class="col-sm-12">
-                              <label class="form-label" for="choosePlan">Email</label>
-                              <input type="text" name="email" id="email" class="form-control">
-                              <input type="hidden" name="owner_name" id="owner_name">
-                              <input type="hidden" name="userId" id="userId">
-                              <input type="hidden" name="owner_mobile_no" id="owner_mobile_no">
+                              <select name="user_details" id="user_details" class="custom-select form-control">
+                              </select>
                             </div>
+                            <small style="color: red">Please note that wallet funding is only available for verified and registered users. To initiate a transaction, kindly ensure that the recipient has a valid and active account.</small>
                             <div id="msg"></div>
                             <div class="col-sm-9">
                                 <label class="form-label" for="choosePlan">TopUp Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control">
+                                <input type="text" name="amount" id="amount" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                               </div>
                             <div class="col-sm-3 d-flex align-items-end">
-                              <button type="submit" class="btn btn-primary">
-                                <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp;
+                              <button type="submit" id="credit_wallet" class="btn btn-primary">
                                 TopUp
                               </button>
                             </div>
@@ -193,77 +189,87 @@
           const emailInput = document.getElementById("email");
           const message = document.getElementById("msg");
       
-          if (emailInput) {
-              emailInput.addEventListener("input", handleEmailValidation);
+          // if (emailInput) {
+          //     emailInput.addEventListener("input", handleEmailValidation);
       
-              async function handleEmailValidation() {
-                  clearTimeout(typingTimer);
-                  const email = this.value.trim();
+          //     async function handleEmailValidation() {
+          //         clearTimeout(typingTimer);
+          //         const email = this.value.trim();
       
-                  if (!validateEmailFormat(email)) {
-                      message.textContent = "Invalid email format!";
-                      message.style.color = "red";
-                      return;
-                  }
+          //         if (!validateEmailFormat(email)) {
+          //             message.textContent = "Invalid email format!";
+          //             message.style.color = "red";
+          //             return;
+          //         }
       
-                  // Delayed validation after typing stops
-                  typingTimer = setTimeout(async () => {
-                      try {
-                          $('#cover-spin').show(0); // Show spinner
-                          message.textContent = ""; // Reset message
+          //         // Delayed validation after typing stops
+          //         typingTimer = setTimeout(async () => {
+          //             try {
+          //                 $('#cover-spin').show(0); // Show spinner
+          //                 message.textContent = ""; // Reset message
       
-                          const response = await fetch(`/wallet/validate_email?email=${email}`);
-                          const data = await response.json();
-                          $('#cover-spin').hide(0); // Hide spinner
+          //                 const response = await fetch(`/wallet/validate_email?email=${email}`);
+          //                 const data = await response.json();
+          //                 $('#cover-spin').hide(0); // Hide spinner
       
-                          if (data.status) {
-                              message.textContent = "Unique email found";
-                              message.style.color = "green";
+          //                 if (data.status) {
+          //                     message.textContent = "Unique email found";
+          //                     message.style.color = "green";
       
-                              // Populate form fields
-                              document.getElementById("owner_name").value = data.name || "";
-                              document.getElementById("userId").value = data.id || "";
-                              document.getElementById("owner_mobile_no").value = data.phoneNumber || "";
-                          } else {
-                              message.textContent = "Email not found!";
-                              message.style.color = "red";
-                          }
-                      } catch (error) {
-                          $('#cover-spin').hide(0);
-                          message.textContent = "Error validating email. Try again.";
-                          message.style.color = "red";
-                          console.error("Validation Error:", error);
-                      }
-                  }, typingTimerDelay);
-              }
+          //                     // Populate form fields
+          //                     document.getElementById("owner_name").value = data.name || "";
+          //                     document.getElementById("userId").value = data.id || "";
+          //                     document.getElementById("owner_mobile_no").value = data.phoneNumber || "";
+          //                 } else {
+          //                     message.textContent = "Email not found!";
+          //                     message.style.color = "red";
+          //                 }
+          //             } catch (error) {
+          //                 $('#cover-spin').hide(0);
+          //                 message.textContent = "Error validating email. Try again.";
+          //                 message.style.color = "red";
+          //                 console.error("Validation Error:", error);
+          //             }
+          //         }, typingTimerDelay);
+          //     }
       
-              // Utility to validate email format
-              function validateEmailFormat(email) {
-                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                  return emailRegex.test(email);
-              }
-          }
+          //     // Utility to validate email format
+          //     function validateEmailFormat(email) {
+          //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          //         return emailRegex.test(email);
+          //     }
+          // }
       
           // Form Submission for Upgrade Plan
           const upgradePlanForm = document.getElementById("upgradePlanForm");
       
           if (upgradePlanForm) {
-              $(".spinner-border").hide(); // Hide spinner by default
+              // $(".spinner-border").hide(); // Hide spinner by default
+              const credit_wallet = document.getElementById("credit_wallet");
+
       
               upgradePlanForm.addEventListener("submit", async function (e) {
                   e.preventDefault(); // Prevent form submission
-      
-                  $(".spinner-border").show(); // Show spinner
-                  const formData = {
-                      email: document.getElementById("email").value,
-                      owner_name: document.getElementById("owner_name").value,
-                      userId: document.getElementById("userId").value,
-                      owner_mobile_no: document.getElementById("owner_mobile_no").value,
-                      amount: document.getElementById("amount").value,
-                      transactionId: new Date().getTime().toString(36) // Unique transaction ID
-                  };
-      
+
+                  const user_details = document.getElementById("user_details").value.split("||")
+                 
                   try {
+                      credit_wallet.innerText = "Please wait"; // Show spinner
+                      // if(!document.getElementById("amount").value) throw Error("Amount cannot be empty")
+                      if(!document.getElementById("amount").value) {
+                        throw Error("Amount cannot be empty")
+                      }
+
+                      const formData = {
+                          email: user_details[0],
+                          owner_name: user_details[3],
+                          userId: user_details[1],
+                          owner_mobile_no: user_details[2],
+                          amount: document.getElementById("amount").value,
+                          transactionId: new Date().getTime().toString(36) // Unique transaction ID
+                      };
+      
+                 
                       const response = await fetch("/wallet", {
                           method: "POST",
                           body: JSON.stringify(formData),
@@ -271,7 +277,7 @@
                       });
       
                       const result = await response.json();
-                      $(".spinner-border").hide(); // Hide spinner
+                      credit_wallet.innerText = "TopUp"
       
                       if (result.status) {
                           toastr.success("Wallet funded successfully!");
@@ -280,12 +286,51 @@
                           toastr.error(result.message || "Failed to fund wallet!");
                       }
                   } catch (error) {
-                      $(".spinner-border").hide(); // Hide spinner
+                    credit_wallet.innerText = "TopUp"; // Hide spinner
                       toastr.error("An error occurred: " + error.message);
                       console.error("Form Submission Error:", error);
                   }
               });
           }
+
+          $('.custom-select').select2({
+              placeholder: "Search for user...",
+              allowClear: true,
+              minimumInputLength: 3, // Minimum characters before search
+              width: '100%', // Ensures full width
+              ajax: {
+                  url: '/search_user', // Backend URL for product search
+                  dataType: 'json',
+                  delay: 250, // Delay to avoid flooding server with requests
+                  data: function (params) {
+                      return {
+                          q: params.term // Search term
+                      };
+                  },
+                  processResults: function (data, params) {
+                      var results = data.map(function (product) {
+                          return {
+                              id: `${product.email}||${product.id}||${product.user_phone}||${product.name}`,  // Value for select option
+                              text: `${product.name}` // Display text for option
+                          };
+                      });
+
+                      // // If no results, give an option to select the search term
+                      // if (results.length === 0) {
+                      //     results.push({
+                      //         id: params.term, // Assign the search term as the id
+                      //         text: `${params.term}` // Display the search term as a selectable option
+                      //     });
+                      // }
+
+                      return {
+                          results: results
+                      };
+                  },
+                  cache: true
+              },
+              dropdownParent: $('#upgradePlanModal') 
+          });
       </script>
       
   </body>

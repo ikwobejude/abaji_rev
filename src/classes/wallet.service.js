@@ -325,144 +325,109 @@ class Wallet {
 
 
     async clearRevenueUploadPayment(data, t) {
-        // console.log({data})
-        // return
-        let assessment = await this.revenue_upload.findOne({where: {bill_ref_no:  data.invoice }, raw:true})
-        // console.log(assessment)
-        const outstanding = parseFloat(assessment.grand_total - assessment.amount_paid);
+        const assessment = await this.revenue_upload.findOne({
+          where: { bill_ref_no: data.invoice },
+          raw: true,
+        });
+      
+        if (!assessment) {
+          throw new Error(`Invoice ${data.invoice} not found`); // Handle missing invoice
+        }
+      
+        const outstanding = parseFloat(assessment.grand_total) - parseFloat(assessment.amount_paid);
         const previousAmount = parseFloat(assessment.amount_paid);
         const amountPaid = parseFloat(data.amount);
-        console.log({outstanding, previousAmount, amountPaid})
-        // return
-        if(amountPaid >= outstanding) {
-            const newPayment = previousAmount + parseFloat(data.amount);
-            this.revenue_upload.update(
-                {payment_status: 1,invoice_status: 1,invoice: data.invoice,amount_paid:  newPayment,payment_date:  new Date()}, 
-                {where: {bill_ref_no: data.invoice }}, 
-                {transaction: t}
-            )
-            const payment =  await this.api_payments.create({
-                PaymentLogId: new Date().getTime().toString(36) ,
-                service_id: data.service_id,
-                CustReference: data.invoice,
-                AlternateCustReference:  data.AlternateCustReference,
-                Amount:  data.amount,
-                PaymentMethod:"AGENT", 
-                PaymentReference: data.PaymentReference,
-                ChannelName: "cash",
-                PaymentDate: new Date(),
-                BankName: "",
-                CustomerName: data.customerName,
-                BankCode: "",
-                PaymentCurrency: "NGN",
-                invoice_no: data.AlternateCustReference,
-                sources: "OFFLINE"
-            }, {transaction: t})
-            const taxItems = await this.tax_items.findAll({
-                where: {
-                    invoice_number: data.invoice,
-                    [Op.or]: {
-                        payment_status: 0,
-                        payment_status: 2
-                    }
-                },
-                raw:true
-            });
-
-            for (const m of taxItems) {
-                const taxUpdate = {
-                    payment_status: 1,
-                    amount_paid: parseFloat(m.amount) - parseFloat(m.discount)
-                }
-                await this.tax_items.update(taxUpdate, 
-                    {
-                        where: {
-                            id: m.id
-                        }
-                    }, 
-                    {new:true}, 
-                    {transaction: t}
-                );
-            }
-
-            return payment;
+      
+        if (isNaN(outstanding) || isNaN(previousAmount) || isNaN(amountPaid)) {
+          throw new Error("Invalid amount values. Please check your input."); // Handle invalid numbers
         }
-
-        if(amountPaid < outstanding) {
-            // console.log(data)
-            const amountAfterPayment = outstanding - amountPaid;
-            // console.log({amountPaid, outstanding, amountAfterPayment})
-            const payment =  await this.api_payments.create({
-                PaymentLogId: new Date().getTime().toString(36),
-                service_id: data.service_id,
-                CustReference: data.invoicee,
-                AlternateCustReference:  data.AlternateCustReference,
-                Amount:  data.amount,
-                PaymentMethod:"AGENT", 
-                PaymentReference: data.PaymentReference,
-                ChannelName: "cash",
-                PaymentDate: new Date(),
-                BankName: "",
-                CustomerName: data.customerName,
-                BankCode: "",
-                PaymentCurrency: "NGN",
-                invoice_no: data.AlternateCustReference,
-                sources: "OFFLINE"
-            }, {transaction: t})
-
-
-            this.revenue_upload.update({
-                payment_status: 2,
-                invoice_status: 1,
-                invoice: data.invoice,
-                amount_paid:  previousAmount + amountPaid,
-                payment_date:  new Date(),
-            }, {where: {bill_ref_no: data.invoice }}, {transaction: t})
-
-            console.log({amountAfterPayment})
-
-            const taxItems = await this.tax_items.findAll({
-                attributes: ['id', 'amount', 'amount_paid', 'invoice_number', 'payment_status', 'discount'],
-                where: {
-                    invoice_number: data.invoice,
-                    payment_status: [0,2]
-                },
-                raw:true
-            });
-
-            // console.log(taxItems)
-
-            let deductAble = amountPaid;
-            for (const m of taxItems) {
-                const itemOutstanding = parseFloat(m.amount - m.amount_paid);
-                let amt = deductAble > itemOutstanding ? deductAble - itemOutstanding :  deductAble;
-                // console.log({amt, itemOutstanding})
-        
-                const paymentStatus = deductAble >= itemOutstanding ? 1 :  2
-                const taxUpdate = {
-                    payment_status:  paymentStatus,
-                    amount_paid: paymentStatus == 1 
-                    ? parseFloat(itemOutstanding) + parseFloat(m.amount_paid) 
-                    : parseFloat(deductAble) + parseFloat(m.amount_paid)
-                }
-                
-                await this.tax_items.update(taxUpdate, {
-                    where: {
-                        id: m.id
-                    }}, 
-                    {new:true}, 
-                    {transaction: t}
-                );
-
-                // console.log(taxUpdate)
-                deductAble = amt;
-            }
-
-            return payment;
+      
+        if (amountPaid <= 0) {
+          throw new Error("Payment amount must be greater than zero."); // Prevent zero or negative payments
         }
-            
-        
-    }
+      
+      
+        const newPayment = previousAmount + amountPaid;
+      
+        // Create payment record first. This is crucial for data integrity.
+        const payment = await this.api_payments.create(
+          {
+            PaymentLogId: new Date().getTime().toString(36),
+            service_id: data.service_id,
+            CustReference: data.invoice, // Use data.invoice consistently
+            AlternateCustReference: data.AlternateCustReference,
+            Amount: data.amount,
+            PaymentMethod: "AGENT",
+            PaymentReference: data.PaymentReference,
+            ChannelName: "cash",
+            PaymentDate: new Date(),
+            BankName: "",
+            CustomerName: data.customerName,
+            BankCode: "",
+            PaymentCurrency: "NGN",
+            invoice_no: data.AlternateCustReference,
+            sources: "OFFLINE",
+          },
+          { transaction: t }
+        );
+      
+        // Only update revenue_upload *after* successful payment creation
+        await this.revenue_upload.update(
+          {
+            payment_status: amountPaid >= outstanding ? 1 : 2, // Simplified payment status
+            invoice_status: 1,
+            amount_paid: newPayment,
+            payment_date: new Date(),
+          },
+          { where: { bill_ref_no: data.invoice } },
+          { transaction: t }
+        );
+      
+        const taxItems = await this.tax_items.findAll({
+          where: {
+            invoice_number: data.invoice,
+            payment_status: [0, 2], // Use array for multiple statuses
+          },
+          raw: true,
+        });
+      
+        if (amountPaid >= outstanding) {
+          // Full Payment Logic
+          for (const taxItem of taxItems) {  // Use for...of loop for clarity
+            await this.tax_items.update(
+              {
+                payment_status: 1,
+                amount_paid: parseFloat(taxItem.amount) - parseFloat(taxItem.discount),
+              },
+              { where: { id: taxItem.id } },
+              { transaction: t }
+            );
+          }
+        } else {
+          // Partial Payment Logic
+          let remainingPayment = amountPaid;
+          for (const taxItem of taxItems) {
+            const itemOutstanding = parseFloat(taxItem.amount) - parseFloat(taxItem.amount_paid);
+            const paymentAmount = Math.min(remainingPayment, itemOutstanding); // Use Math.min to prevent overpayment
+      
+            const paymentStatus = paymentAmount === itemOutstanding ? 1 : 2;
+      
+            await this.tax_items.update(
+              {
+                payment_status: paymentStatus,
+                amount_paid: parseFloat(taxItem.amount_paid) + paymentAmount,
+              },
+              { where: { id: taxItem.id } },
+              { transaction: t }
+            );
+      
+            remainingPayment -= paymentAmount;
+            if (remainingPayment <= 0) break; // Exit the loop if the payment is exhausted
+          }
+        }
+      
+        return payment;
+      }
     
 }
 

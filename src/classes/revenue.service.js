@@ -439,7 +439,7 @@ class Revenue extends Bud_pay {
   async upload_payments(data) {
     const res = await this.base64ToExcel(data.base64url);
 
-    // return
+    // delete the base4 file url
     delete data.base64url;
     // console.log(data)
     if (res.status == true) {

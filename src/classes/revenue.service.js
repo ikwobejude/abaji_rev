@@ -6,17 +6,15 @@ const Sequelize = require("sequelize");
 const db = require("../db/connection");
 const Tax_items = require("../model/Tax_items");
 const Revenues_invoices = require("../model/Revenue_invoice");
-const Bud_pay = require('../classes/budpay.service')
-
-
+const Bud_pay = require("../classes/budpay.service");
 
 class Revenue extends Bud_pay {
   constructor() {
-    super()
+    super();
     this.revenueUpload = Revenue_upload;
     this.tax_item = Tax_items;
     this.db = db;
-    this.Op = Sequelize.Op
+    this.Op = Sequelize.Op;
   }
 
   async revenueByYear(data) {
@@ -26,7 +24,7 @@ class Revenue extends Bud_pay {
         [Sequelize.fn("COUNT", Sequelize.col("*")), "total"],
       ],
       where: {
-        service_id: data.service_id
+        service_id: data.service_id,
       },
       group: ["rate_year"],
       raw: true,
@@ -38,25 +36,28 @@ class Revenue extends Bud_pay {
         [Sequelize.fn("SUM", Sequelize.col("ass_status")), "status_count"],
       ],
       where: {
-        service_id: data.service_id
+        service_id: data.service_id,
       },
       group: ["batch"],
       raw: true,
     });
-   
+
     return {
-      revenue, batchRevenue
+      revenue,
+      batchRevenue,
     };
   }
 
   // async revenueByBatch(data) {
-    
+
   // }
 
   async truncateYearlyRecord(data) {
     try {
       await this.revenueUpload.destroy({
-        where: { [this.Op.or]: [{  rate_year: data.year }, { batch: data.year }] },
+        where: {
+          [this.Op.or]: [{ rate_year: data.year }, { batch: data.year }],
+        },
       });
 
       return {
@@ -71,64 +72,72 @@ class Revenue extends Bud_pay {
   async generate_pay_code_bud_pay(data) {
     try {
       const assessments = await this.revenueUpload.findAll({
-        where: { 
+        where: {
           ass_status: 0,
-          [this.Op.or]: [
-            {  rate_year: data.id }, 
-            { batch: data.id }
-          ] 
+          [this.Op.or]: [{ rate_year: data.id }, { batch: data.id }],
         },
       });
 
-
       while (assessments.length > 0) {
-          const batch = assessments.splice(0, 10);
-          // console.log(`Processing batch of size: ${batch.length}`);
-          // Your processing code here
-          for (const assessment of batch) {
-            const date = new Date(assessment.date_uploaded);
-             date.setMonth(date.getMonth() + 2);
-            const bud_pay_payload = {
-                title: assessment.revenue_code,
-                // duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
-                 duedate: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
-                currency:"NGN",
-                invoicenumber: assessment.invoice_number, // optional
-                reminder:"", // optional
-                email: process.env.MAIL_FROM_ADDRESS,
-                first_name: assessment.name_of_business, // optional but neccessary
-                last_name:"", // optional but neccessary
-                billing_address: assessment.address_of_property,
-                billing_city:"ABAJI",
-                billing_state:"ABUJA",
-                billing_country:"Nigeria",
-                billing_zipcode:"234",
-                items:[
-                    {
-                        description: assessment.type_of_property || assessment.name_of_business,
-                        quantity: "1",
-                        unit_price: assessment.grand_total,
-                        meta_data:""
-                    }
-                ]
-            }
-    
-          //  console.log(bud_pay_payload)
-        
-            const data = await this.createInvoice(bud_pay_payload)
-            await this.revenueUpload.update({
-              biller_accountid: data.success == true ? data.data.paycode: assessment.biller_accountid,
-              invoice_number: data.success == true ? data.data.ref_id : assessment.invoice_number,
-              state_tin: data.success == true ? data.data.invoice_id : assessment.state_tin,
-              ass_status: data.success == true ? 1: 0,
-            }, 
-            { where: {bill_ref_no: assessment.bill_ref_no }}, 
-            {new: true})
-          // return
-          }
-      }
+        const batch = assessments.splice(0, 10);
+        // console.log(`Processing batch of size: ${batch.length}`);
+        // Your processing code here
+        for (const assessment of batch) {
+          const date = new Date(assessment.date_uploaded);
+          date.setMonth(date.getMonth() + 2);
+          const bud_pay_payload = {
+            title: assessment.revenue_code,
+            // duedate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ,
+            duedate: `${date.getFullYear()}-${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`,
+            currency: "NGN",
+            invoicenumber: assessment.invoice_number, // optional
+            reminder: "", // optional
+            email: process.env.MAIL_FROM_ADDRESS,
+            first_name: assessment.name_of_business, // optional but neccessary
+            last_name: "", // optional but neccessary
+            billing_address: assessment.address_of_property,
+            billing_city: "ABAJI",
+            billing_state: "ABUJA",
+            billing_country: "Nigeria",
+            billing_zipcode: "234",
+            items: [
+              {
+                description:
+                  assessment.type_of_property || assessment.name_of_business,
+                quantity: "1",
+                unit_price: assessment.grand_total,
+                meta_data: "",
+              },
+            ],
+          };
 
-      
+          //  console.log(bud_pay_payload)
+
+          const data = await this.createInvoice(bud_pay_payload);
+          await this.revenueUpload.update(
+            {
+              biller_accountid:
+                data.success == true
+                  ? data.data.paycode
+                  : assessment.biller_accountid,
+              invoice_number:
+                data.success == true
+                  ? data.data.ref_id
+                  : assessment.invoice_number,
+              state_tin:
+                data.success == true
+                  ? data.data.invoice_id
+                  : assessment.state_tin,
+              ass_status: data.success == true ? 1 : 0,
+            },
+            { where: { bill_ref_no: assessment.bill_ref_no } },
+            { new: true }
+          );
+          // return
+        }
+      }
 
       return {
         status: true,
@@ -139,73 +148,110 @@ class Revenue extends Bud_pay {
     }
   }
 
+  async revenue_invoice(query) {
+    let perPage = 20;
+    let page = query.page || 1;
+    let offset = perPage * (page - 1);
+    let queryParams = [perPage, offset];
 
-  
+    try {
+      // Count total records
+      const countSql = `SELECT COUNT(*) AS total FROM revenue_upload WHERE payment_status IN (1, 2)`;
+      const countResult = await this.db.query(countSql, {
+        type: Sequelize.QueryTypes.SELECT,
+      });
+      const totalRecords = countResult[0].total;
+      const totalPages = Math.ceil(totalRecords / perPage);
 
+      // Fetch paginated records
+      const sql = `
+            SELECT * FROM revenue_upload 
+            WHERE payment_status IN (1, 2)
+            LIMIT ? OFFSET ?
+        `;
+      const revenue = await this.db.query(sql, {
+        replacements: queryParams,
+        type: Sequelize.QueryTypes.SELECT,
+      });
+
+      return {
+        revenue,
+        currentPage: page,
+        perPage,
+        totalRecords,
+        totalPages,
+      };
+    } catch (error) {
+      console.error("Error fetching revenue invoices:", error);
+      throw error;
+    }
+  }
 
   async revenuesInvoices(query) {
     let perPage = 20; // Number of records per page
     var page = query.page || 1;
     let offset = perPage * (page - 1);
-  
+
     let condition = [];
     let queryParams = [];
-  
+
     if (query.year) {
       condition.push("r.rate_year = ?");
       queryParams.push(query.year);
     }
-  
+
     if (query.street) {
       condition.push("r.street = ?");
       queryParams.push(query.street);
     }
-  
+
     if (query.assessment_no) {
       condition.push("r.assessment_no = ?");
       queryParams.push(query.assessment_no);
     }
-  
+
     if (query.revenue_code) {
       condition.push("r.revenue_code = ?");
       queryParams.push(query.revenue_code);
     }
-  
+
     if (query.bill_ref_no) {
       condition.push("r.bill_ref_no = ?");
       queryParams.push(query.bill_ref_no);
     }
-  
+
     if (query.name_of_business) {
       condition.push("r.name_of_business LIKE ?");
       queryParams.push(`%${query.name_of_business}%`);
     }
-  
+
     if (query.address_of_property) {
       condition.push("r.address_of_property LIKE ?");
       queryParams.push(`%${query.address_of_property}%`);
     }
-  
+
     if (query.type_of_property) {
       condition.push("r.type_of_property LIKE ?");
       queryParams.push(`%${query.type_of_property}%`);
     }
-  
+
     if (query.revenue_type) {
       condition.push("r.revenue_type LIKE ?");
       queryParams.push(`%${query.revenue_type}%`);
     }
-  
+
     if (query.batch) {
       condition.push("r.batch = ?");
       queryParams.push(query.batch);
     }
-  
+
     // Clean up any null conditions
     condition = condition.filter((cond) => cond !== null);
-  
-    let whereClause = condition.length ? `WHERE ${condition.join(" AND ")}` : "";
-  
+
+    let whereClause = condition.length
+      ? `WHERE ${condition.join(" AND ")}`
+      : "";
+
     let sql = `
       SELECT 
           r.assessment_no,
@@ -225,16 +271,16 @@ class Revenue extends Bud_pay {
       ${whereClause} 
       LIMIT ? OFFSET ?
     `;
-  
+
     // Add LIMIT and OFFSET to queryParams
     queryParams.push(perPage, offset);
-  
+
     try {
       const revenue = await this.db.query(sql, {
         replacements: queryParams,
         type: Sequelize.QueryTypes.SELECT,
       });
-  
+
       return {
         revenue,
       };
@@ -269,11 +315,10 @@ class Revenue extends Bud_pay {
             WHERE r.rate_year = :rate_year AND r.bill_ref_no= :bill_ref_no
         `;
 
-
     const revenue = await this.db.query(sql, {
       replacements: {
         bill_ref_no: query.invoice,
-        rate_year: query.year
+        rate_year: query.year,
       },
       type: Sequelize.QueryTypes.SELECT,
     });
@@ -324,12 +369,14 @@ class Revenue extends Bud_pay {
       const res1 = new Promise((resolve, reject) => {
         const file = res.fileName;
         console.log(file);
-        const worker = new Worker(path.join(__dirname, `../worker/revenue_upload.js`),{
+        const worker = new Worker(
+          path.join(__dirname, `../worker/revenue_upload.js`),
+          {
             workerData: {
               file,
               service_id: data.service_id,
               service_type: data.service_type,
-              service_code: data.service_code
+              service_code: data.service_code,
             },
           }
         );

@@ -27,6 +27,7 @@ Router.get("/generate_budpay_pay_code", revenue.generatePayCode)
 
 Router.route("/revenue_upload/view/:year")
 .get(revenue.viewAssessmentInvoice);
+Router.route("/revenue_invoice").get(revenue.revenueInvoice);
 Router.route("/revenue_upload/view/batch/:batch").get(
   revenue.viewBatchAssessmentInvoice
 );

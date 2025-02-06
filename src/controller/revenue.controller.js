@@ -25,7 +25,7 @@ class RevenueController {
         ...req.body,
         service_id: req.user.service_id,
         service_type: req.user.service_type,
-        service_code: req.user.service_code
+        service_code: req.user.service_code,
       });
       res.status(200).json(response);
     } catch (error) {
@@ -58,6 +58,15 @@ class RevenueController {
       });
     } catch (error) {
       res.status(500).send({ error: error.message });
+    }
+  }
+  static async revenueInvoice(req, res) {
+    try {
+      const response = await revenue.revenue_invoice(req.query);
+      // console.log(response)
+      res.status(200).render("./revenue/cooperative/revenueInvoice", { ...response });
+    } catch (error) {
+      res.status(500).send({error:error.message})
     }
   }
 
@@ -187,7 +196,9 @@ class RevenueController {
     const usergroup = await user.userGroup();
     const users = await user.getUser(req.user.service_id);
     const perm = await permission.retrieve();
-    res.status(200).render("./users/users", { ...usergroup, ...users, ...perm });
+    res
+      .status(200)
+      .render("./users/users", { ...usergroup, ...users, ...perm });
   }
 
   static async addPermissionsToUser(req, res) {
@@ -294,4 +305,3 @@ class RevenueController {
 }
 
 module.exports = RevenueController;
-

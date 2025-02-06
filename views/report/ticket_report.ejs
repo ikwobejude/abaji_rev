@@ -110,15 +110,29 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <!-- Pagination -->
+                                    <%- include('pagination') %>
                                 </div>
-
                             </div>
                             <!-- / Content -->
 
                             <%- include('../layout/footer') %>
                                 <!-- Page JS -->
                                 <script src="/assets/js/tables-datatables-basic.js"></script>
+                                <script>
+                                    $(document).ready(function () {
+                                        $('.datatables-basic').DataTable({
+                                            paging: false,
+                                            ordering: false,
+                                            searching: false,
+                                            info: false,
+                                            lengthChange: false,
+                                            destroy: true
+                                        });
 
+                                    });
+
+                                </script>
 </body>
 
 </html>

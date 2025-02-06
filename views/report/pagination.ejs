@@ -1,0 +1,105 @@
+<style>
+.pagination .page-link {
+    color: #7367f0;          
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 0.375rem;      
+    border: 1px solid #dee2e6; 
+    padding: 8px 12px;           
+    margin: 0 2px;            
+}
+
+
+
+.pagination .page-item.active .page-link:hover {
+    background-color: #292086 ;    
+    border-color: #7aa1ca;
+    color: #dee2e6;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #7367f0 ;   
+    color: #fff;               
+    border-color: #dee2e6;
+    cursor: not-allowed;         
+    pointer-events: none;         
+}
+
+.pagination .page-link:hover {
+    background-color: #f8f9fa;   
+    color: #7367f0;               
+}
+
+
+</style>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <!-- First Button -->
+        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage === 1 ? 'javascript:void(0)' : '?page=1' %>" aria-label="First">
+                <span aria-hidden="true">First</span>
+            </a>
+        </li>
+
+        <!-- Previous Button -->
+        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage === 1 ? 'javascript:void(0)' : '?page=' + (currentPage - 1) %>" aria-label="Previous">
+                <span aria-hidden="true">Previous</span>
+            </a>
+        </li>
+
+        <!--  Page Numbers with Ellipses -->
+        <% 
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+
+            if (startPage > 1) {
+        %>
+            <li class="page-item">
+                <a class="page-link" href="?page=1">1</a>
+            </li>
+            <% if (startPage > 2) { %>
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            <% } %>
+        <% } %>
+
+        <!-- Page Numbers -->
+        <% for (let i = startPage; i <= endPage; i++) { %>
+            <li class="page-item <%= i== currentPage ? 'active disabled' : '' %>">
+                <a class="page-link" href="<%= i === currentPage ? 'javascript:void(0)' : '?page=' + i %>"><%= i %></a>
+            </li>
+        <% } %>
+
+        <!-- Show last page and ellipses if needed -->
+        <% if (endPage < totalPages) { %>
+            <% if (endPage < totalPages - 1) { %>
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            <% } %>
+            <li class="page-item <%= currentPage === totalPages ? 'active disabled' : '' %>">
+                <a class="page-link" href="<%= currentPage === totalPages ? 'javascript:void(0)' : '?page=' + totalPages %>"><%= totalPages %></a>
+            </li>
+        <% } %>
+
+        <!-- Next Button -->
+        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage === totalPages ? 'javascript:void(0)' : '?page=' + (currentPage + 1) %>" aria-label="Next">
+                <span aria-hidden="true">Next </span>
+            </a>
+        </li>
+
+        <!-- Last Button -->
+        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage === totalPages ? 'javascript:void(0)' : '?page=' + totalPages %>" aria-label="Last">
+                <span aria-hidden="true">Last</span>
+            </a>
+        </li>
+    </ul>
+</nav>

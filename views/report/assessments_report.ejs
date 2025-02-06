@@ -55,6 +55,56 @@
             <div class="container-xxl flex-grow-1 container-p-y">
                 <!-- DataTable with Buttons -->
                 <div class="card">
+                  <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0">Search Payments</h5>
+                    </div>
+                    <div class="card-body">
+                <form method="GET" action="">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label for="bill_ref" class="form-label">Bill Ref</label>
+                        <input type="text" id="bill_ref" name="bill_ref" class="form-control"  />
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label for="business_name" class="form-label">Business Name</label>
+                        <input type="text" id="business_name" name="business_name" class="form-control"
+                         />
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method</label>
+                        <input type="text" id="paymentMethod" name="payment_method" class="form-control"
+                         />
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label for="paymentDateFrom" class="form-label">Payment Date From</label>
+                        <input type="date" id="paymentDateFrom" name="payment_date_from" class="form-control"
+                          />
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label for="paymentDateTo" class="form-label">Payment Date To</label>
+                        <input type="date" id="paymentDateTo" name="payment_date_to" class="form-control"
+                         />
+                      </div>
+                    </div>
+                  </div>
+                
+                  <div class="text-end">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                  </div>
+                </form>
+
+                    </div>
+                  </div>
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-6">
@@ -63,52 +113,79 @@
                           </span></h6>
                       </div>
                       <div class="col-md-6">
-                        <h6>Total Outstanding: <span class="text-danger">
-                            <%= new Intl.NumberFormat('en-NG', { style: 'currency' , currency: 'NGN' }).format(totalOutstanding) %>
-                          </span></h6>
+                      <h6 class="text-end">
+                        Total Outstanding:
+                        <span class="text-danger">
+                          <%= new Intl.NumberFormat('en-NG', { style: 'currency' , currency: 'NGN' }).format(totalOutstanding) %>
+                        </span>
+                      </h6>
+
                       </div>
                     </div>
                   </div>
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">Revenue assessment payment report</div>
+                            <div class="col-6" style="text-align: right;">Page Count (<%= totalPages %>)</div>
+
                         </div>
                     </div>
                     
-                  <div class="card-datatable  table-responsive pt-0">
+                  <div class="card-datatable table-responsive pt-0">
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
-                          <!-- <th></th> -->
                           <th>Bill Ref</th>
-                          <th>Item(s) </th>
+                          <th>Item(s)</th>
                           <th>Name of business</th>
                           <th>Type of property</th>
                           <th>Payment Date</th>
                           <th>Amount</th>
                           <th>Amount Paid</th>
                           <th>Outstanding</th>
-                          <th>Arears</th>
-                          <!-- <th></th> -->
+                          <th>Arrears</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% result.forEach(item => { %>
-                            <tr>
-                                <td><%= item.bill_ref_no %></td>
-                                <td><%= item.revenue_code %></td>
-                                <td><%= item.name_of_business %></td>
-                                <td><%= item.type_of_property %></td>
-                                <td><%= item?.payment_date?.toLocaleDateString() %></td>
-                                <td><%= formatNumber(safeParseFloat(item.grand_total)) %></td>
-                                <td><%= formatNumber(safeParseFloat(item.amount_paid))  %></td>
-                                <td><%= formatNumber(safeParseFloat(item.amount_paid) - safeParseFloat(item.grand_total))  %></td>
-                                <td><%= formatNumber(safeParseFloat(item.arrears)) %></td>
-                            </tr>
-                        <% }) %>
+                        <% result.forEach(item=> { %>
+                          <tr>
+                            <td>
+                              <%= item.bill_ref_no %>
+                            </td>
+                            <td>
+                              <%= item.revenue_code %>
+                            </td>
+                            <td>
+                              <%= item.name_of_business %>
+                            </td>
+                            <td>
+                              <%= item.type_of_property %>
+                            </td>
+                            <td>
+                              <%= item?.payment_date?.toLocaleDateString() %>
+                            </td>
+                            <td>
+                              <%= formatNumber(safeParseFloat(item.grand_total)) %>
+                            </td>
+                            <td>
+                              <%= formatNumber(safeParseFloat(item.amount_paid)) %>
+                            </td>
+                            <td>
+                              <%= formatNumber(safeParseFloat(item.grand_total) - safeParseFloat(item.amount_paid)) %>
+                            </td>
+                            <td>
+                              <%= formatNumber(safeParseFloat(item.arrears)) %>
+                            </td>
+                          </tr>
+                          <% }) %>
                       </tbody>
                     </table>
                   </div>
+                  
+                  <!-- Pagination -->
+                
+                <%- include('pagination') %>
+
                 </div>
               
                
@@ -123,10 +200,15 @@
     <script src="/assets/js/tables-datatables-basic.js"></script>
    <script>
     $(document).ready(function () {
-    $('.datatables-basic').DataTable({
+ $('.datatables-basic').DataTable({
+        paging: false,      
         ordering: false,  
-         destroy: true 
-    });
+        searching: false,   
+        info: false,      
+        lengthChange: false, 
+        destroy: true       
+      });
+
 }); 
 
    </script>

@@ -33,6 +33,7 @@ module.exports = {
   },
   viewAssessmentInvoice: async function (req, res) {
     try {
+     
       const query = {
         year: req.query.year || req.params.year,
         street: req.query.street,
@@ -45,11 +46,14 @@ module.exports = {
         revenue_type: req.query.revenue_type,
       };
 
+      
       const response = await revenue.revenuesInvoices(query);
+      // console.log({response})
       const street = await setup.AllStreets();
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,
+        url: req.originalUrl,
       });
     } catch (error) {
       res.status(500).send({ error: error.message });

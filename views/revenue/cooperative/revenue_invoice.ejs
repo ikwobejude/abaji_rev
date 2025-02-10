@@ -105,7 +105,7 @@
                     <table class="datatables-basic table">
                       <thead>
                         <tr>
-                          <!-- <th></th> -->
+                          <th></th>
                           <th>Invoice</th>
                           <th>Year</th>
                           <th>Revenue Name</th>
@@ -116,12 +116,27 @@
                           <th>Ward</th>
                           <th>Street</th>
                           <th>Amount Yearly</th>
-                          <th></th>
+                          
                         </tr>
                       </thead>
                       <tbody>
                         <% revenue.forEach(item=> { %>
                           <tr>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                  data-bs-toggle="dropdown">
+                                  <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item"
+                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
+                                      class="ti ti-eye me-1"></i>View more </a>
+                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
+                                    Delete</a>
+                                </div>
+                              </div>
+                            </td>
                             <td>
                               <%= item.bill_ref_no %>
                             </td>
@@ -153,25 +168,62 @@
                             <td>
                               <%= item.grand_total %>
                             </td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                  data-bs-toggle="dropdown">
-                                  <i class="ti ti-dots-vertical"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item"
-                                    href="/admin/demand_notice/<%= item.rate_year %>/<%= item.bill_ref_no %>"><i
-                                      class="ti ti-eye me-1"></i>View more </a>
-                                  <a class="dropdown-item" href="javascript:void(0);"><i class="ti ti-trash me-1"></i>
-                                    Delete</a>
-                                </div>
-                              </div>
-                            </td>
+                            
                           </tr>
                           <% }) %>
                       </tbody>
                     </table>
+
+                    <% if (pages > 0) { %>
+                      <nav aria-label="Page navigation" style="margin: 5px;">
+                        <ul class="pagination pagination-primary">
+                        <% if (current==1) { %>
+                          <!-- <a  class="btn btn-primary ">First</a> -->
+                          <li class="page-item first">
+                            <a class="page-link" href="javascript:void(0);"><i class="ti ti-chevrons-left ti-sm"></i></a>
+                          </li>
+                          <% } else { %>
+                            <li class="page-item prev">
+                              
+                              <a class="page-link" href="<%= url %>?page=1"><i class="ti ti-chevron-left ti-sm"></i></a>
+                            </li>
+                            <% } %>
+                              <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                                <% if (i !==1) { %>
+                                  <li class="page-item">
+                                    <a class="page-link disabled" href="javascript:void(0);">..</a>
+                                  </li>
+                                  <!-- <a class="btn btn-primary disabled">...</a> -->
+                                  <% } %>
+                                    <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
+                                      <% if (i==current) { %>
+                                        <li class="page-item active">
+                                          <a class="page-link" href="javascript:void(0);"><%= i %></a>
+                                        </li>
+                                        <% } else { %>
+                                          <li class="page-item">
+                                            <a class="page-link" href="<%= url %>?page=<%= i %>"><%= i %></a>
+                                          </li>
+                                      <% } %>
+                                      <% if (i==Number(current) + 4 && i < pages) { %>
+                                        <li class="page-item">
+                                          <a class="page-link disabled" href="javascript:void(0);">..</a>
+                                        </li>
+                                   <% } %>
+                              <% } %>
+                          <% if (current==pages) { %>
+                            <li class="page-item next">
+                              <a class="page-link disabled" href="javascript:void(0);"><i class="ti ti-chevron-right ti-sm"></i></a>
+                            </li>
+                              <!-- <a  class="btn btn-primary disabled">Last</a> -->
+                          <% } else { %>
+                            <li class="page-item last">
+                              <a class="page-link" href="<%= url %>?page=<%= pages %>"><i class="ti ti-chevrons-right ti-sm"></i></a>
+                            </li>
+                          <% } %>
+                          </ul>
+                      </nav>
+                    <% } %>
                   </div>
                 </div>
                 <!-- Modal to add new record -->
@@ -231,8 +283,6 @@
                       const payload = {
                         base64url: data.get("base64url"),
                       }
-
-                      console.log(payload)
 
                       try {
                         const request = await fetch('/admin/revenue_upload', {

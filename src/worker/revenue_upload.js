@@ -17,6 +17,13 @@ const bud_pay = new Bud_pay()
 
 const Op = Sequelize.Op;
 
+const safeParseFloat = (value) => {
+  if (value === null || isNaN(value)) {
+      return 0;
+  }
+  return parseFloat(value);
+};
+
 // console.log({workerData});
 // return
 const date = new Date();
@@ -69,8 +76,9 @@ const run = async () => {
     const rv = typeof row[1] === "string" ? row[1].split('/') : [row[1]];
     const amt = typeof row[6] === "string" ? row[6].split('/') : [row[6]];
     const sum = amt.reduce((accumulator, currentValue) => {
-      return accumulator + parseFloat(currentValue);
-    }, 0);
+      const num = safeParseFloat(currentValue); // Call the function!
+      return accumulator + num; // Use the parsed number
+  }, 0);
     // console.log(amt, sum)
     // return 
     const bud_pay_payload = {
@@ -110,7 +118,7 @@ const run = async () => {
       name_of_business: row[2], // Name Of Rate Payers
       revenue_type: row[1], // Revenue Name
       address_of_property: row[3] /* Address Of Business */,
-      type_of_property: row[5] /* Business Operation */,
+      type_of_property: row[5] || '' /* Business Operation */,
       annaul_value: sum,
       rate_payable: sum, // item price
       grand_total: sum,

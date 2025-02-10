@@ -138,99 +138,130 @@ class Revenue extends Bud_pay {
 
 
   async revenuesInvoices(query) {
+    let perPage = 20; // number of records per page
+    var page = query.page || 1;
+    let offset = perPage * page - perPage;
+    
     let condition = [];
     let queryParams = [];
 
     if (query.year) {
-      condition.push("r.rate_year = ?");
-      queryParams.push(query.year);
+        condition.push("r.rate_year = ?");
+        queryParams.push(query.year);
     }
 
     if (query.street) {
-      condition.push("r.street = ?");
-      queryParams.push(query.street);
+        condition.push("r.street = ?");
+        queryParams.push(query.street);
     }
 
     if (query.assessment_no) {
-      condition.push("r.assessment_no = ?");
-      queryParams.push(query.assessment_no);
+        condition.push("r.assessment_no = ?");
+        queryParams.push(query.assessment_no);
     }
 
     if (query.revenue_code) {
-      condition.push("r.revenue_code = ?");
-      queryParams.push(query.revenue_code);
+        condition.push("r.revenue_code = ?");
+        queryParams.push(query.revenue_code);
     }
 
     if (query.bill_ref_no) {
-      condition.push("r.bill_ref_no = ?");
-      queryParams.push(query.bill_ref_no);
+        condition.push("r.bill_ref_no = ?");
+        queryParams.push(query.bill_ref_no);
     }
 
     if (query.name_of_business) {
-      condition.push("r.name_of_business LIKE ?");
-      queryParams.push(`%${query.name_of_business}%`);
+        condition.push("r.name_of_business LIKE ?");
+        queryParams.push(`%${query.name_of_business}%`);
     }
 
     if (query.address_of_property) {
-      condition.push("r.address_of_property LIKE ?");
-      queryParams.push(`%${query.address_of_property}%`);
+        condition.push("r.address_of_property LIKE ?");
+        queryParams.push(`%${query.address_of_property}%`);
     }
 
     if (query.type_of_property) {
-      condition.push("r.type_of_property LIKE ?");
-      queryParams.push(`%${query.type_of_property}%`);
+        condition.push("r.type_of_property LIKE ?");
+        queryParams.push(`%${query.type_of_property}%`);
     }
 
     if (query.revenue_type) {
-      condition.push("r.revenue_type LIKE ?");
-      queryParams.push(`%${query.revenue_type}%`);
+        condition.push("r.revenue_type LIKE ?");
+        queryParams.push(`%${query.revenue_type}%`);
     }
 
     if (query.batch) {
-      condition.push("r.batch = ?");
-      queryParams.push(query.batch);
+        condition.push("r.batch = ?");
+        queryParams.push(query.batch);
     }
 
     // Clean up any null conditions
     condition = condition.filter((cond) => cond !== null);
 
     let whereClause = condition.length
-      ? `WHERE ${condition.join(" AND ")}`
-      : "";
+        ? `WHERE ${condition.join(" AND ")}`
+        : "";
 
     let sql = `
-      SELECT 
-          r.assessment_no,
-          r.revenue_code,
-          r.bill_ref_no,
-          r.name_of_business,
-          r.address_of_property,            
-          r.type_of_property,
-          r.revenue_type,
-          r.grand_total,
-          r.rate_year,
-          c.city,
-          s.street
-      FROM revenue_upload AS r
-      LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
-      LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
-      ${whereClause}
-  `;
+        SELECT 
+            r.assessment_no,
+            r.revenue_code,
+            r.bill_ref_no,
+            r.name_of_business,
+            r.address_of_property,        
+            r.type_of_property,
+            r.revenue_type,
+            r.grand_total,
+            r.rate_year,
+            c.city,
+            s.street
+        FROM revenue_upload AS r
+        LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
+        LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
+        ${whereClause}
+    `;
 
+    let countSql = `
+        SELECT COUNT(*) AS totalCount
+        FROM revenue_upload AS r
+        LEFT JOIN _cities AS c ON c.city_id = r.rate_district OR c.city = r.rate_district
+        LEFT JOIN _streets AS s ON s.idstreet = r.street OR s.street = r.street
+        ${whereClause}
+    `;
+    // Add limit and offset
+
+    sql += ` LIMIT ? OFFSET ?`;
+    queryParams.push(perPage);
+    queryParams.push(offset);
+
+   
     try {
-      const revenue = await this.db.query(sql, {
-        replacements: queryParams,
-        type: Sequelize.QueryTypes.SELECT,
-      });
 
-      return {
-        revenue,
-      };
+      const [ revenue, count ] = await Promise.all([
+        this.db.query(sql, {
+            replacements: queryParams,
+            type: Sequelize.QueryTypes.SELECT,
+        }),
+        this.db.query(countSql, {
+            replacements: queryParams,
+            type: Sequelize.QueryTypes.SELECT,
+        }),
+      ])
+        
+
+      // console.log(count)
+
+        return {
+            revenue,
+            current: page,
+            count,
+            pages: Math.ceil(count[0].totalCount / perPage),
+        };
     } catch (error) {
-      console.error("Database query error:", error);
-      throw error;
+        console.error("Database query error:", error);
+        throw error;
     }
-  }
+}
 
   async demandNotice(query) {
     let sql = `

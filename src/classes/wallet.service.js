@@ -271,27 +271,40 @@ class Wallet {
     }
 
     async walletBalance(userId) {
-        const result = await this.wallet.findOne({
-            where: {
-                userId: userId
-            },
-            raw: true
-        })
-
-        // console.log(result)
-        if(result) {
-            return {
-                status: true,
-                balance: parseFloat(result.balance).toFixed(2),
-                walletId: result.idwallent,
+        try {
+            const result = await this.wallet.findOne({
+                where: { userId }, // Shorthand for { userId: userId }
+                raw: true, // Good practice for simpler object access
+            });
+    
+            if (result) {
+                const balance = parseFloat(result.balance); // Parse once
+                if (isNaN(balance)) { // Check if parsing failed
+                    console.error(`Invalid balance value for userId ${userId}:`, result.balance);
+                    return {
+                        status: false,
+                        message: "Invalid wallet balance data. Contact system admin."
+                    };
+                }
+    
+                return {
+                    status: true,
+                    balance: balance.toFixed(2), // Format the balance after parsing
+                    walletId: result.idwallent,
+                };
+            } else {
+                return {
+                    status: false,
+                    message: "No wallet found for this user." // More user-friendly message
+                };
             }
-        } else {
+        } catch (error) {
+            console.error("Error fetching wallet balance:", error); // Log the actual error
             return {
                 status: false,
-                message: "No wallet found, contact the system admin for help"
-            }
+                message: "Error fetching wallet balance. Please try again later." // Generic message for the user
+            };
         }
-        
     }
 
 

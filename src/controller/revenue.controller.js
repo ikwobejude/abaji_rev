@@ -79,6 +79,7 @@ module.exports = {
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,
+        url: req.originalUrl,
       });
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -119,8 +120,13 @@ module.exports = {
   },
 
   getWalletBalance: async function (req, res) {
-    const balance = await wallet.walletBalance(req.user.id);
-    res.status(200).json(balance);
+   try {
+     const balance = await wallet.walletBalance(req.user.id);
+     res.status(200).json(balance);
+    } catch (error) {
+      console.error("Error in getWalletBalance:", error); // Log the error
+      res.status(500).json({ status: false, message: "An error occurred. Please try again later." }); // Send a generic error response
+    }
   },
 
   walletPayment: async function (req, res) {},

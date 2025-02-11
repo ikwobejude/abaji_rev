@@ -176,54 +176,69 @@
 
                     <% if (pages > 0) { %>
                       <nav aria-label="Page navigation" style="margin: 5px;">
-                        <ul class="pagination pagination-primary">
-                        <% if (current==1) { %>
-                          <!-- <a  class="btn btn-primary ">First</a> -->
-                          <li class="page-item first">
-                            <a class="page-link" href="javascript:void(0);"><i class="ti ti-chevrons-left ti-sm"></i></a>
-                          </li>
-                          <% } else { %>
-                            <li class="page-item prev">
-                              
-                              <a class="page-link" href="<%= url %>?page=1"><i class="ti ti-chevron-left ti-sm"></i></a>
-                            </li>
-                            <% } %>
-                              <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
-                                <% if (i !==1) { %>
-                                  <li class="page-item">
-                                    <a class="page-link disabled" href="javascript:void(0);">..</a>
-                                  </li>
-                                  <!-- <a class="btn btn-primary disabled">...</a> -->
-                                  <% } %>
-                                    <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
-                                      <% if (i==current) { %>
-                                        <li class="page-item active">
-                                          <a class="page-link" href="javascript:void(0);"><%= i %></a>
+                          <ul class="pagination pagination-primary">
+                  
+                              <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+                                  <a class="page-link" href="<%= current === 1 ? 'javascript:void(0);' : url + '?page=1' %>" aria-label="First">
+                                      <i class="ti ti-chevrons-left ti-sm"></i>
+                                  </a>
+                              </li>
+                  
+                              <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+                                  <a class="page-link" href="<%= current === 1 ? 'javascript:void(0);' : url + '?page=' + (current - 1) %>" aria-label="Previous">
+                                      <i class="ti ti-chevron-left ti-sm"></i>
+                                  </a>
+                              </li>
+                  
+                              <% 
+                                  let startPage = Math.max(1, current - 4);
+                                  let endPage = Math.min(pages, current + 4);
+                               if (startPage > 1) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="<%= url + '?page=1' %>">1</a>
+                                    </li>
+                                    <% if (startPage > 2) { %>
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0);">...</a>
                                         </li>
-                                        <% } else { %>
-                                          <li class="page-item">
-                                            <a class="page-link" href="<%= url %>?page=<%= i %>"><%= i %></a>
-                                          </li>
-                                      <% } %>
-                                      <% if (i==Number(current) + 4 && i < pages) { %>
-                                        <li class="page-item">
-                                          <a class="page-link disabled" href="javascript:void(0);">..</a>
+                                    <% } %>
+                                <% } %>
+                                
+                                <% for (let i = startPage; i <= endPage; i++) { %>
+                                    <li class="page-item <%= i === current ? 'active' : '' %>">
+                                        <a class="page-link" href="<%= i === current ? 'javascript:void(0);' : url + '?page=' + i %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                                
+                                <% if (endPage < pages) { %>
+                                    <% if (endPage < pages - 1) { %>
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0);">...</a>
                                         </li>
-                                   <% } %>
-                              <% } %>
-                          <% if (current==pages) { %>
-                            <li class="page-item next">
-                              <a class="page-link disabled" href="javascript:void(0);"><i class="ti ti-chevron-right ti-sm"></i></a>
-                            </li>
-                              <!-- <a  class="btn btn-primary disabled">Last</a> -->
-                          <% } else { %>
-                            <li class="page-item last">
-                              <a class="page-link" href="<%= url %>?page=<%= pages %>"><i class="ti ti-chevrons-right ti-sm"></i></a>
-                            </li>
-                          <% } %>
+                                    <% } %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="<%= url + '?page=' + pages %>"><%= pages %></a>
+                                    </li>
+                                <% } %>
+                                
+                  
+                              <li class="page-item <%= current === pages ? 'disabled' : '' %>">
+                                  <a class="page-link" href="<%= current === pages ? 'javascript:void(0);' : url + '?page=' + (current + 1) %>" aria-label="Next">
+                                      <i class="ti ti-chevron-right ti-sm"></i>
+                                  </a>
+                              </li>
+                  
+                              <li class="page-item <%= current === pages ? 'disabled' : '' %>">
+                                  <a class="page-link" href="<%= current === pages ? 'javascript:void(0);' : url + '?page=' + pages %>" aria-label="Last">
+                                      <i class="ti ti-chevrons-right ti-sm"></i>
+                                  </a>
+                              </li>
+                  
                           </ul>
                       </nav>
-                    <% } %>
+                  <% } %>
+                  
+                  
                   </div>
                 </div>
                 <!-- Modal to add new record -->

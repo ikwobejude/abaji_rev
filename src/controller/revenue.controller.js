@@ -53,7 +53,7 @@ module.exports = {
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,
-        url: req.originalUrl,
+        url:  removeFirstPageParam(req),
       });
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -79,9 +79,10 @@ module.exports = {
       res.status(200).render("./revenue/cooperative/revenue_invoice", {
         ...response,
         ...street,
-        url: req.originalUrl,
+        url:  removeFirstPageParam(req),
       });
     } catch (error) {
+      console.log(error)
       res.status(500).send({ error: error.message });
     }
   },
@@ -305,3 +306,15 @@ module.exports = {
     }
   },
 };
+
+function removeFirstPageParam(req) {
+  const url = req.originalUrl.split('?')[0]; // Get base URL without query params
+  const query = { ...req.query }; // Copy query parameters
+
+  // Remove the 'page' parameter
+  delete query.page;
+
+  // Construct the new URL with the updated query parameters
+  const queryString = new URLSearchParams(query).toString();
+  return `${url}${queryString ? '?' + queryString : ''}`;
+}

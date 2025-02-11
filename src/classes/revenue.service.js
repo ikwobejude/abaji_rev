@@ -138,7 +138,7 @@ class Revenue extends Bud_pay {
 
 
   async revenuesInvoices(query) {
-    let perPage = 20; // number of records per page
+    let perPage = 1000; // number of records per page
     var page = query.page || 1;
     let offset = perPage * page - perPage;
     

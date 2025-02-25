@@ -6,12 +6,13 @@ const { QueryTypes } = require('sequelize');
 const { building, building_categories, building_types } = require('../model/Buildings');
 const Areas = require('../model/location.model');
 const emitter = new eventEmitter();
-
+const Users = require('../model/Users')
 require('../events/validation/schema')(emitter)
 
 class Buildings {
     constructor(){
         this.db = sequelize
+        this.users = Users
      }
 
     // get building categories
@@ -23,7 +24,7 @@ class Buildings {
     }
 
     // add categories
-    async add_building_category(data) {
+    async add_building_category(data, user_id) {
         console.log(data)
         emitter.emit('before_creating_building_categories', data)
         const category = data.categories?.split(',')
@@ -37,6 +38,15 @@ class Buildings {
         })
 
         await building_categories.bulkCreate(arr)
+        const user = await this.users.findOne({ where: { id: user_id } });
+        if (user) {
+            let newAuthStep = user.authStep;
+            
+            if (user.authStep === 6) {
+                newAuthStep += 1;
+            }
+            await this.users.update({ authStep: newAuthStep }, { where: { id: user_id } });
+        }
         return {
             status: true,
             message: "Created!"
@@ -72,7 +82,7 @@ class Buildings {
     }
     
     // add building type
-    async addBuildingType(data) {
+    async addBuildingType(data, user_id) {
         console.log(data);
         emitter.emit('before_create_building_type', data)
         const type = data.type.split(',')
@@ -88,6 +98,15 @@ class Buildings {
         // console.log(arr)
 
         await building_types.bulkCreate(arr);
+        const user = await this.users.findOne({ where: { id: user_id } });
+        if (user) {
+            let newAuthStep = user.authStep;
+            
+            if (user.authStep === 7) {
+                newAuthStep += 1;
+            }
+            await this.users.update({ authStep: newAuthStep }, { where: { id: user_id } });
+        }
         return {
             status: true,
             message: "Created1"

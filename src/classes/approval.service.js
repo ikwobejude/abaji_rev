@@ -1,19 +1,33 @@
 const ApprovalLevels = require("../model/Approval_level");
 const ApprovalTypes = require("../model/Approval_type");
 const { Sequelize } = require("sequelize");
-
+const Users = require('../model/Users')
 class Approval {
   constructor() {
     this.approvalLevels = ApprovalLevels;
     this.approvalTypes = ApprovalTypes;
+    this.users = Users
   }
 
   async createApprovalTypes(data) {
-    return await this.approvalTypes.create({
+     await this.approvalTypes.create({
       approval_type: data.approvalType,
       total_number_of_approval: data.totalApprovals,
       service_id: data.service_id,
     });
+    const user = await this.users.findOne({ where: { id: data.user_id } });
+    if (user) {
+        let newAuthStep = user.authStep;
+        
+        if (user.authStep === 5) {
+            newAuthStep += 1;
+        }
+        await this.users.update({ authStep: newAuthStep }, { where: { id: data.user_id } });
+    }
+    return {
+      success:true,
+      message: "Approval Type added successfully"
+    }
   }
   async updateApprovalType(id) {
      const approvalType = await this.approvalTypes.findByPk(id);
@@ -72,6 +86,13 @@ class Approval {
       },
     });
     return level;
+  }
+  async endOnboarding(user_id) {
+    return await this.users.update( { authStep: 14,
+      ended_onboarding: true,
+      finished_onboarding:true
+     },
+    { where: { id: user_id } } )
   }
 }
 

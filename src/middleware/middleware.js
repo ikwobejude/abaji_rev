@@ -3,6 +3,7 @@ const { Sequelize, QueryTypes } = require("sequelize");
 const db = require("../db/connection");
 const Users = require("../model/Users");
 const clientService = require("../model/Client");
+const OnboardingStep = require('../model/Onboarding_Step')
 const Op = Sequelize.Op;
 
 const excl = ['password', 'admin_ministry_id',  'ministry_supervisor', 'supervisor_ministry_id', "is_admin", "is_supervisor", "prev_username", "updated_by", "registered_on"]
@@ -65,10 +66,10 @@ class AuthMiddleware {
         );
         return res.redirect("/login");
       }
-
+      const onboardingSteps = await OnboardingStep.findAll({raw:true})
       const client = await this.getClientDetails(user?.service_id); // `this` works correctly now.
-      res.locals.user = { ...user, ...client };
-      req.user = { ...user, ...client };
+      res.locals.user = { ...user, ...client , onboardingSteps};
+      req.user = { ...user, ...client, onboardingSteps };
       next();
     } catch (error) {
       console.error("Authentication error:", error);

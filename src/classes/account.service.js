@@ -1,7 +1,9 @@
 const Accounts = require("../model/Account");
+const Users = require('../model/Users')
 class Account {
   constructor() {
     this.account = Accounts;
+    this.users = Users
   }
 
   async createAccount(data) {
@@ -20,6 +22,15 @@ class Account {
       created_by: data.user,
       approval_status: false,
     });
+    const user = await this.users.findOne({ where: { id: data.user_id } });
+    if (user) {
+        let newAuthStep = user.authStep;
+        
+        if (user.authStep === 4) {
+            newAuthStep += 1;
+        }
+        await this.users.update({ authStep: newAuthStep }, { where: { id: data.user_id } });
+    }
     return {
       success: true,
       message: "Account created successfully",

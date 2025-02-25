@@ -10,6 +10,7 @@ const Setups = require("../model/Client");
 const Users = require("../model/Users");
 const State = require("../model/State");
 const Lga = require("../model/LGA");
+
 const emitter = new eventEmitter();
 
 // register events
@@ -22,6 +23,7 @@ class Client {
     this.initial_setup = Setups;
     this.state = State;
     this.Lga = Lga;
+    this.user = Users;
   }
 
   password() {
@@ -193,23 +195,43 @@ class Client {
       },
     });
   }
-  async updateClientStateAndLga(data, clientId) {
-   await clientService.update(
-     {
-       state: data.state,
-       lga: data.lga,
-       client_admin_phone: data.phone_number,
-       service_type: data.service_type
-     },
-     {
-       where: { service_id: clientId },
-     }
-   );
+async updateClientStateAndLga(data, clientId) {
+  console.log('this service is being triggered')
+  const updateResult = await clientService.update(
+    {
+      state: data.state,
+      lga: data.lga,
+      client_admin_phone: data.phone_number,
+      service_type: data.service_type,
+    },
+    {
+      where: { service_id: clientId },
+    }
+  );
+  console.log(updateResult)
+  if (updateResult[0] > 0) {
+    await Users.update(
+      {
+        started_onboarding: true,
+        authStep: 1,
+      },
+      {
+        where: { service_id: clientId },
+      }
+    );
+
     return {
       success: true,
-      message: "Client state and LGA updated successfully",
+      message: "Client state and LGA updated successfully, onboarding started",
     };
   }
+
+  return {
+    success: false,
+    message: "No records updated. Client not found or no changes detected.",
+  };
+}
+
   async getClientDetails(serviceId) {
     return await clientService.findOne({
       where: { service_id: serviceId },

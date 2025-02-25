@@ -93,13 +93,17 @@
                                                     <td>
                                                         <%= account.lga_bank_name %>
                                                     </td>
-                                                    <td>
-                                                        <span
-                                                            class="badge <%= account.approved_status ? 'badge-success' : 'badge-pending' %>">
-                                                            <%= account.approved_status ? 'Approved' : 'Pending' %>
-                                                        </span>
-                                                    </td>
-
+                                                    <% if (typeof account !== "undefined" && account !== null) { %>
+                                                        <td>
+                                                            <span class="badge <%= account.approved_status ? 'badge-success' : 'badge-pending' %>">
+                                                                <%= account.approved_status ? 'Approved' : 'Pending' %>
+                                                            </span>
+                                                        </td>
+                                                    <% } else { %>
+                                                        <td>
+                                                            <span class="badge badge-secondary">N/A</span>
+                                                        </td>
+                                                    <% } %>
                                                 </tr>
 
                                             </tbody>

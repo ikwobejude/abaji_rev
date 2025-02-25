@@ -14,6 +14,15 @@ class paymentSetup {
       abortEarly: false,
     });
     await this.inter_switch.create(validatedData);
+    const user = await this.users.findOne({ where: { id: data.created_by } });
+    if (user) {
+        let newAuthStep = user.authStep;
+        
+        if (user.authStep === 3) {
+            newAuthStep += 1;
+        }
+        await this.users.update({ authStep: newAuthStep }, { where: { id: data.created_by } });
+    }
     return {
       success: true,
       message: "Payment setup successful",

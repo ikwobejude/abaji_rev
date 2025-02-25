@@ -2,7 +2,7 @@
     const userState = <%- JSON.stringify(datatoPass) %>;
 
     const stateModal = new bootstrap.Modal(document.getElementById('stateModal'));
-        if (userState.state === '0' || userState.state === 0) {
+        if (userState.authStep === '0' || userState.authStep === 0) {
                 stateModal.show();
             } else {
                stateModal.hide()
@@ -128,3 +128,32 @@
 </script>
 
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const userState = <%- JSON.stringify(datatoPass) %>;
+  
+      // Extract setup steps from datatoPass
+      const setupSteps = Object.keys(userState)
+        .filter(key => !isNaN(key))
+        .map(key => userState[key])
+        .sort((a, b) => a.step_no - b.step_no); 
+  
+      
+      if (userState.started_onboarding && userState.authStep !== 0) {
+        const currentStepIndex = setupSteps.findIndex(step => step.step_no === userState.authStep);
+  
+        if (currentStepIndex !== -1 && currentStepIndex + 1 < setupSteps.length) {
+          const nextStep = setupSteps[currentStepIndex + 1];
+  
+          // Show the modal
+          const onboardingModal = new bootstrap.Modal(document.getElementById('onboardingModal'));
+          document.getElementById('onboardingMessage').textContent = `Next Step: ${nextStep.setup_name}`;
+          document.getElementById('continueSetupBtn').href = nextStep.path_url;
+          onboardingModal.show();
+        }
+      }
+    });
+  </script>
+  
+  
+  

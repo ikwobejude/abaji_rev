@@ -15,11 +15,13 @@ class DashboardController {
       const stateId = req.query.state_id; 
       const lgas = stateId ? await setup.lga(stateId) : []; 
       const userDetails = await Client.getClientDetails(req.user.service_id);
-     
+     const steps = await setup.fetchSteps()
       const datatoPass = {
         ...userDetails,
         ...req.user,
+        ...steps
       };
+      console.log({datatoPass})
       const data = await admin.adminDashboard(req.user.service_id);
       res
         .status(200)
@@ -145,6 +147,7 @@ class DashboardController {
 
   static async updateClientDetails(req, res) {
     try {
+      console.log(req.body)
       const clientId = req.user.service_id;
       const response = await Client.updateClientStateAndLga(req.body, clientId);
       res.status(200).json(response);

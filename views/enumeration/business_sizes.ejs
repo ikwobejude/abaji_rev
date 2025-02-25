@@ -165,8 +165,14 @@
         // Handle adding new business size
         $('#add-business-size-form').on('submit', function (e) {
             e.preventDefault();
-            var business_size_id = $('#business_size_id').val();
-            var business_size = $('#business_size').val();
+
+            var business_size_id = $('#business_size_id').val().trim();
+            var business_size = $('#business_size').val().trim();
+
+            if (!business_size_id || !business_size) {
+                toastr.error('Please fill in all required fields');
+                return;
+            }
 
             fetch('/setup/business_sizes', {
                 method: 'POST',
@@ -180,18 +186,25 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    console.log("Response from server:", data);  
+
+                    if (data.success || data.status === true || data.status === "success") {
                         $('#add-new-record').modal('hide');
                         toastr.success('Business size added successfully');
-                        window.location.reload();
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500);
                     } else {
-                        toastr.error('Error adding business size');
+                        toastr.error(data.message || 'Error adding business size');
                     }
                 })
                 .catch(err => {
-                    toastr.error('Error adding business size');
+                    console.error("Error adding business size:", err);
+                    toastr.error('Network error. Please try again.');
                 });
         });
+
 
         // Handle deletion of business size
         $(document).on('click', '.delete-btn', function () {

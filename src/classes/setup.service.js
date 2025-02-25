@@ -8,6 +8,8 @@ const { groupBy } = require("../helper/helper");
 const Wards = require("../model/Ward");
 const Streets = require("../model/Street");
 const Areas = require("../model/Area");
+const OnboardingStep = require('../model/Onboarding_Step')
+const Users = require('../model/Users')
 class Setup {
   constructor() {
     this.revenue_item = Revenue_item;
@@ -18,6 +20,8 @@ class Setup {
     this.streets = Streets;
     this.db = db;
     this.areas = Areas;
+    this.onboarding = OnboardingStep;
+    this.user = Users
   }
 
   validation(body) {
@@ -25,28 +29,46 @@ class Setup {
     if (error) throw Error(error.message);
     return value;
   }
-
-  async addItem(data, service_id) {
+ async endOnboarding (user_id) {
+  await this.users.update({
+    ended_onboarding:true
+  }, {where:{id:user_id}})
+ }
+  async addItem(data, service_id, user_id) {
     // console.log({ data });
     const value = this.validation(data);
     if (value) {
-      await this.revenue_item.create({
-        code: value.revenue_line == "Ticket" ? 11111111 : 232233322,
-        revenue_line: value.revenue_line,
-        item_code: value.item_code,
-        timeline: value.timeline,
-        revenue_item: value.name,
-        amount: value.Amount,
-        service_id: service_id,
-        // rate_year: value.rate_year
-      });
+        await this.revenue_item.create({
+            code: value.revenue_line == "Ticket" ? 11111111 : 232233322,
+            revenue_line: value.revenue_line,
+            item_code: value.item_code,
+            timeline: value.timeline,
+            revenue_item: value.name,
+            amount: value.Amount,
+            service_id: service_id,
+            // rate_year: value.rate_year
+        });
+        console.log(user_id)
+        const user = await this.user.findByPk(user_id);
 
-      return {
-        status: true,
-        message: "Item added",
-      };
+        if (user) {
+            let newAuthStep = user.authStep;
+            
+            // If authStep is 1, increment it by 1
+            if (user.authStep === 1) {
+                newAuthStep += 1;
+            }
+            // Update authStep
+            await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
+        }
+
+        return {
+            status: true,
+            message: "Item added",
+        };
     }
-  }
+}
+
   async editItem(id, data) {
     const item = await this.revenue_item.findByPk(id);
     if (!item) throw new Error("Item not found");
@@ -90,22 +112,37 @@ class Setup {
   }
 
   async lga(query) {
-    // console.log(query);
     const conditions = [];
+   console.log({query})
 
-    if (query.service_type === "State") {
-      conditions.push({ state_id: query.state.split(",")[0] });
-    } else {
-      conditions.push({ lga_id: query.lga.split(",")[0] });
+    if (query.state_id) {
+        conditions.push({ state_id: query.state_id });
+    }
+
+    if (query.lga && query.lga.trim() !== "") {  
+        conditions.push({ lga_id: query.lga.split(",")[0] });
+    }
+
+    if (query.state && !query.lga) {
+        return await this.lgas.findAll({
+            where: { state_id: query.state },
+            raw: true,
+        });
+    }
+
+    if (conditions.length === 0) {
+        throw new Error("State or LGA parameter is missing");
     }
 
     return await this.lgas.findAll({
-      where: {
-        [Op.and]: conditions,
-      },
-      raw: true,
+        where: {
+            [Op.and]: conditions,
+        },
+        raw: true,
     });
-  }
+}
+
+
 
   async ward(user) {
     // console.log(user);
@@ -294,17 +331,30 @@ class Setup {
     };
   }
 
-  async createStreet(data, service_id) {
+  async createStreet(data, service_id, user_id) {
     await this.streets.create({
       street: data.street,
       city_id: data.ward,
       service_id: service_id,
     });
-
+    const user = await this.user.findOne({ where: { id: user_id } });
+    if (user) {
+        let newAuthStep = user.authStep;
+        
+        if (user.authStep === 2) {
+            newAuthStep += 1;
+        }
+        await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
+    }
     return {
       status: true,
       message: "Created",
     };
+  }
+  async fetchSteps() {
+    return await this.onboarding.findAll({
+      raw:true
+    })
   }
 }
 

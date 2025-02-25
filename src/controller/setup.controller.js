@@ -13,7 +13,19 @@ const { createOffice, allOffices } = require("../classes/super.service");
 const setup = new Setup();
 const payment = new paymentSetup();
 module.exports = {
+  endOnboarding: async function () {
+    try {
+      const response = await setup.endOnboarding(req.user.id)
+      res.status(200).json(response)
+    } catch (error) {
+      res.status(500).json({
+        success:false,
+        message:"an error occured"
+      })
+    }
+  },
   getTicketItem: async function (req, res) {
+    console.log(req.user)
     const response = await setup.Items(req.query);
     res
       .status(200)
@@ -22,7 +34,7 @@ module.exports = {
 
   postTicketItem: async function (req, res) {
     try {
-      const response = await setup.addItem(req.body, req.user.service_id);
+      const response = await setup.addItem(req.body, req.user.service_id, req.user.id);
       res.status(201).json(response);
     } catch (error) {
       console.error(error);
@@ -75,6 +87,7 @@ module.exports = {
   },
 
   getLgaWithOutRender: async function (req, res) {
+    // console.log(req.query)
     const response = await setup.lga(req.query);
     return res.json(response);
   },
@@ -122,6 +135,8 @@ module.exports = {
     }
   },
   getStreets: async function (req, res) {
+    // const state = req.user.state
+    // const lga = await setup.lga({state})
     const response = await setup.AllStreets(req.query);
     res.status(200).render("./setup/location/street", { ...response });
   },
@@ -134,7 +149,7 @@ module.exports = {
   postStreet: async function (req, res) {
     try {
       // console.log(req.body);
-      const response = await setup.createStreet(req.body, req.user.service_id);
+      const response = await setup.createStreet(req.body, req.user.service_id,req.user.id);
       res.status(201).json(response);
     } catch (error) {
       console.error(error);
@@ -189,7 +204,7 @@ module.exports = {
   },
   create_building_category: async function (req, res) {
     try {
-      await buildingService.add_building_category(req.body);
+      await buildingService.add_building_category(req.body, req.user.id);
       res.status(200).json({ success: true, message: "Created Successfully" });
     } catch (error) {
       res.status(500).json({
@@ -216,7 +231,7 @@ module.exports = {
   createBuildingType: async function (req, res) {
     try {
       // console.log(req.body)
-      await buildingService.addBuildingType(req.body);
+      await buildingService.addBuildingType(req.body, req.user.id);
       res
         .status(200)
         .json({ success: true, message: "Building Type created successfully" });
@@ -230,7 +245,7 @@ module.exports = {
   },
   addBusinessCategory: async function (req, res) {
     try {
-      await businessService.add_business_category(req.body);
+      await businessService.add_business_category(req.body, req.user.id);
       res.status(200).json({ success: true, message: "Created Successfully" });
     } catch (error) {
       res.status(500).json({
@@ -252,11 +267,15 @@ module.exports = {
   },
   addBusinessTypes: async function (req, res) {
     try {
-      await businessService.add_business_types(req.body);
+      console.log('triggered');
+      await businessService.add_business_types(req.body, req.user.id);
+      res.status(200).json({ success: true, message: "Business types added successfully" }); 
     } catch (error) {
+      console.error("Error adding business types:", error);
       res.status(500).json({ success: false, message: error.message });
     }
-  },
+  }
+,  
   getBusinessTypes: async function (req, res) {
     try {
       const response = await businessService._business_type(req.query);
@@ -275,7 +294,7 @@ module.exports = {
   },
   addBusinessSizes: async function (req, res) {
     try {
-      await businessService.add_business_sizes(req.body);
+       await businessService.add_business_sizes(req.body, req.user.id);
       res.status(201).json({ status: true, message: "Created Successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -284,6 +303,7 @@ module.exports = {
   getBusinessSector: async function (req, res) {
     try {
       const response = await businessService._business_sector(req.query);
+      // console.log(response)
       res.status(200).render("./enumeration/business_sector", { response });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -291,7 +311,8 @@ module.exports = {
   },
   addBusinessSector: async function (req, res) {
     try {
-      await businessService.add_business_sector(req.body);
+      // console.log(req.user.id)  
+      await businessService.add_business_sector(req.body, req.user.id);
       res.status(201).json({ success: true, message: "Created Successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -308,7 +329,7 @@ module.exports = {
   },
   addBusinessOperations: async function (req, res) {
     try {
-      await businessService.add_business_operation(req.body);
+      await businessService.add_business_operation(req.body, req.user.id);
       res.status(201).json({ success: true, message: "Created Successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -316,13 +337,14 @@ module.exports = {
   },
   createAccount: async function (req, res) {
     try {
-      const { service_id, name } = req.user;
+      const { service_id, name, id } = req.user;
       console.log(req.user);
 
       const data = {
         ...req.body,
         service_id: service_id,
         user: name,
+        user_id: id
       };
 
       await accountService.createAccount(data);
@@ -347,10 +369,11 @@ module.exports = {
   },
   createApproval_types: async function (req, res) {
     try {
-      const { service_id } = req.user;
+      const { service_id, id } = req.user;
       const data = {
         ...req.body,
         service_id: service_id,
+        user_id:id
       };
       await approvalService.createApprovalTypes(data);
       res
@@ -378,7 +401,17 @@ module.exports = {
       });
     }
   },
-
+  end_onboarding: async function (req,res) {
+    try{
+      resp = await approvalService.endOnboarding(req.user.id)
+      res.status(200).json({success:true, message:'Onboarding ended'})
+    }catch (error){
+      res.status(500).json({
+        success:false,
+        message : `an error occured ${error.message}`
+      })
+    }
+  },
   create_approval_level: async function (req, res) {
     try {
       await approvalService.create;

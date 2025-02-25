@@ -130,6 +130,22 @@ const Users = db.define(
     permissions: {
       type: Sequelize.STRING(255),
     },
+    started_onboarding: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    ended_onboarding: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    finished_onboarding: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    authStep: {
+      type: Sequelize.INTEGER,
+      defaultValue: 1,
+    },
   },
 
   {

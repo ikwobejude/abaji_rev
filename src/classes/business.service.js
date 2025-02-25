@@ -15,7 +15,7 @@ const { QueryTypes } = require("sequelize");
 const { query } = require("express");
 const Areas = require("../model/location.model");
 const Revenues_invoices = require("../model/Revenue_invoice");
-
+const Users = require('../model/Users')
 const emitter = new eventEmitter();
 
 require("../events/validation/schema")(emitter);
@@ -23,6 +23,7 @@ require("../events/validation/schema")(emitter);
 class Business {
   constructor() {
     this.db = sequelize;
+    this.users = Users
   }
 
   // get building categories
@@ -37,23 +38,39 @@ class Business {
   }
 
   // add categories
-  async add_business_category(data) {
-    emitter.emit("before_building_categories", data);
-    const category = data.business_category?.split(",");
-
-    let arr = [];
-
-    category.map((cat) => {
-      arr.push({ business_category: cat });
-    });
-
-    await business_categories.bulkCreate(arr);
-    return {
-      status: true,
-      message: "Created!",
-    };
+  async add_business_category(data, user_id) {
+    try {
+      emitter.emit("before_building_categories", data);
+      
+      const categories = data.business_category?.split(",") || [];
+      
+      let arr = categories.map(cat => ({ business_category: cat.trim() }));
+  
+      await business_categories.bulkCreate(arr);
+      
+      const user = await this.users.findOne({ where: { id: user_id } });
+  
+      if (user) {
+        let newAuthStep = user.authStep;
+        if (user.authStep === 9) {
+          newAuthStep += 1;
+        }
+        await this.users.update({ authStep: newAuthStep }, { where: { id: user_id } });
+      }
+  
+      return {
+        status: true,
+        message: "Created!",
+      };
+    } catch (error) {
+      console.error("Error in add_business_category:", error);
+      return {
+        status: false,
+        message: "An error occurred while creating business categories.",
+      };
+    }
   }
-
+  
   // edit category
   async edit_business_category(data) {
     emitter.emit("before_building_categories", data);
@@ -88,7 +105,7 @@ class Business {
   }
 
   // add
-  async add_business_operation(data) {
+  async add_business_operation(data, user_id) {
     emitter.emit("before_building_operation", data);
     const operations = data?.business_operation?.split(",");
 
@@ -99,6 +116,23 @@ class Business {
     });
 
     await business_operations.bulkCreate(arr);
+    const user = await this.users.findOne({ where: { id: user_id } });
+
+    if (user) {
+      // console.log("Current authStep:", user.authStep);
+
+      let newAuthStep = user.authStep;
+      if (user.authStep === 12) {
+        newAuthStep += 1;
+      }
+      await this.users.update(
+        { authStep: newAuthStep },
+        { where: { id: user_id } }
+      );
+
+      // console.log("Update result:", updateResult);
+
+    }
     return {
       status: true,
       message: "Created!",
@@ -137,17 +171,35 @@ class Business {
     });
   }
 
-  async add_business_sector(data) {
+  async add_business_sector(data, user_id) {
     emitter.emit("before_building_sector", data);
-    const business_sectors = data.sector?.split(",");
-    console.log(business_sectors);
+    const business = data.sector?.split(",");
+    console.log(business);
     let arr = [];
 
-    business_sectors.map((cat) => {
+    business.map((cat) => {
       arr.push({ business_operation: cat });
     });
 
     await business_sectors.bulkCreate(arr);
+    const user = await this.users.findOne({ where: { id: user_id } });
+
+    if (user) {
+      // console.log("Current authStep:", user.authStep);
+
+      let newAuthStep = user.authStep;
+      if (user.authStep === 11) {
+        newAuthStep += 1;
+      }
+
+      const updateResult = await this.users.update(
+        { authStep: newAuthStep },
+        { where: { id: user_id } }
+      );
+
+      // console.log("Update result:", updateResult);
+
+    }
     return {
       status: true,
       message: "Created!",
@@ -186,23 +238,24 @@ class Business {
     });
   }
 
-  async add_business_sizes(data) {
-    console.log("Data recieved", data);
-    emitter.emit("before_building_sizes", data);
-    const business_size = data.sizes?.split(",");
-    console.log({ business_size });
-    let arr = [];
+  // async add_business_sizes(data, user_id) {
+  //   conosole.loh({user_id})
+  //   emitter.emit("before_building_sizes", data);
+  //   const business_size = data.sizes?.split(",");
+  //   console.log({ business_size });
 
-    business_size.map((cat) => {
-      arr.push({ business_size: cat });
-    });
+  //   let arr = business_size.map((cat) => ({ business_size: cat }));
 
-    await business_sizes.bulkCreate(arr);
-    return {
-      status: true,
-      message: "Created!",
-    };
-  }
+  //   await business_sizes.bulkCreate(arr);
+
+
+
+  //   return {
+  //     status: "success",
+  //     message: "Created!",
+  //   };
+  // }
+
 
   async edit_business_sizes(data) {
     emitter.emit("before_building_sizes", data);
@@ -236,7 +289,7 @@ class Business {
     });
   }
 
-  async add_business_sizes(data) {
+  async add_business_sizes(data, user_id) {
     emitter.emit("before_building_sizes", data);
     const business_size = data.sizes?.split(",");
 
@@ -247,6 +300,29 @@ class Business {
     });
 
     await business_sizes.bulkCreate(arr);
+    const user = await this.users.findOne({ where: { id: user_id } });
+
+    if (user) {
+      console.log("Current authStep:", user.authStep);
+
+      let newAuthStep = user.authStep;
+      if (user.authStep === 10) {
+        newAuthStep += 1;
+      }
+
+      const updateResult = await this.users.update(
+        { authStep: newAuthStep },
+        { where: { id: user_id } }
+      );
+
+      console.log("Update result:", updateResult);
+
+      if (updateResult[0] > 0) {
+        console.log("authStep updated successfully");
+      } else {
+        console.error("Failed to update authStep");
+      }
+    }
     return {
       status: true,
       message: "Created!",
@@ -285,21 +361,37 @@ class Business {
     });
   }
 
-  async add_business_types(data) {
-    emitter.emit("before_building_types", data);
-    const types = data.business_type?.split(",");
-
-    let arr = [];
-
-    types.map((cat) => {
-      arr.push({ business_type: cat.trim() });
-    });
-
-    await business_types.bulkCreate(arr);
-    return {
-      status: true,
-      message: "Created!",
-    };
+  async add_business_types(data, user_id) {
+    try {
+      emitter.emit("before_building_types", data);
+  
+      const types = typeof data.business_type === "string" ? data.business_type.split(",") : [];
+      let arr = types.map((cat) => ({ business_type: cat.trim() }));
+  
+      console.log("Business types to insert:", arr);
+  
+      await business_types.bulkCreate(arr);
+  
+      const user = await this.users.findOne({ where: { id: user_id } });
+      if (user) {
+        let newAuthStep = user.authStep;
+        if (user.authStep === 8) {
+          newAuthStep += 1;
+        }
+  
+        const [updatedCount] = await this.users.update(
+          { authStep: newAuthStep },
+          { where: { id: user_id } }
+        );
+  
+        console.log("Updated authStep count:", updatedCount);
+      }
+  
+      return { status: true, message: "Created!" };
+    } catch (error) {
+      console.error("Error in add_business_types:", error);
+      throw new Error(error.message);
+    }
   }
 
   async edit_business_types(data) {
@@ -465,8 +557,8 @@ class Business {
       Revenues_invoices.findAll({
         where: {
           service_id: query.service_id
-         },
-         raw: true
+        },
+        raw: true
       })
     ]);
 
@@ -477,7 +569,7 @@ class Business {
 
   async findBusiness(query) {
     console.log(query);
-    
+
     const sql = `
         SELECT 
             b.building_number, 
@@ -534,37 +626,37 @@ class Business {
     `;
 
     try {
-        const [viewBuilding, viewBusiness] = await Promise.all([
-            this.db.query(sql, {
-                replacements: {
-                    service_id: query.service_id,
-                    building_number: query.building_id
-                },
-                type: QueryTypes.SELECT,
-            }),
-            this.db.query(sql1, {
-                replacements: {
-                    service_id: query.service_id,
-                    building_number: query.building_id,
-                    profile_ref: query.profile_id
-                },
-                type: QueryTypes.SELECT,
-            }),
-        ]);
+      const [viewBuilding, viewBusiness] = await Promise.all([
+        this.db.query(sql, {
+          replacements: {
+            service_id: query.service_id,
+            building_number: query.building_id
+          },
+          type: QueryTypes.SELECT,
+        }),
+        this.db.query(sql1, {
+          replacements: {
+            service_id: query.service_id,
+            building_number: query.building_id,
+            profile_ref: query.profile_id
+          },
+          type: QueryTypes.SELECT,
+        }),
+      ]);
 
-        return {
-            viewBuilding: viewBuilding[0] || null,
-            viewBusiness: viewBusiness[0] || null,
-            profile: query.profile_id
-        };
+      return {
+        viewBuilding: viewBuilding[0] || null,
+        viewBusiness: viewBusiness[0] || null,
+        profile: query.profile_id
+      };
     } catch (error) {
-        console.error("Error fetching business/building data:", error);
-        throw error;
+      console.error("Error fetching business/building data:", error);
+      throw error;
     }
-}
+  }
 
 
-  
+
 }
 
 module.exports = new Business();

@@ -50,5 +50,6 @@ Router.route("/business_operations")
 Router.route('/office')
    .get(setup.office)
    .post(setup.createOffices)
-
+   
+Router.route('/end_onboarding').post(setup.end_onboarding)
 module.exports = Router;

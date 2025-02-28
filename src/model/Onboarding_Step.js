@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../db/connection');
 
 const OnboardingStep = db.define(
-    "OnboardingStep",
+    "onboardingstep",
     {
         id: {
             type: Sequelize.INTEGER,

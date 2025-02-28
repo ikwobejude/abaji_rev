@@ -88,7 +88,7 @@ class AuthMiddleware {
       }
 
       const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-      console.log({decodedToken})
+      // console.log({decodedToken})
 
       if (!decodedToken.userId) {
         throw new Error("Your session has expired. Please login and continue.");

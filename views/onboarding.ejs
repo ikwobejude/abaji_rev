@@ -112,44 +112,53 @@
 });
 
 </script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      function removeBackdrops() {
+  document.addEventListener('DOMContentLoaded', function () {
+    function removeBackdrops() {
         setTimeout(() => {
-          document.querySelectorAll('.offcanvas-backdrop').forEach(backdrop => backdrop.remove());
-          document.body.classList.remove('offcanvas-open', 'modal-open'); 
-        }, 50); 
-      }
-  
-      document.addEventListener('click', function (event) {
+            document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop').forEach(backdrop => backdrop.remove());
+            document.body.classList.remove('modal-open', 'offcanvas-open');
+            document.body.style.overflow = ''; // Restore body scroll
+        }, 50);
+    }
+
+    document.getElementById('onboardingModal').addEventListener('hidden.bs.modal', removeBackdrops);
+
+    document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
+        button.addEventListener('click', function () {
+            removeBackdrops();
+        });
+    });
+
+    document.addEventListener('click', function (event) {
         const openOffcanvas = document.querySelector('.offcanvas.show');
         if (openOffcanvas && !event.target.closest('.offcanvas') && !event.target.closest('[data-bs-toggle="offcanvas"]')) {
-          const offcanvasInstance = bootstrap.Offcanvas.getInstance(openOffcanvas);
-          if (offcanvasInstance) {
-            offcanvasInstance.hide();
-          }
+            const offcanvasInstance = bootstrap.Offcanvas.getInstance(openOffcanvas);
+            if (offcanvasInstance) {
+                offcanvasInstance.hide();
+            }
         }
-      });
-  
-      document.addEventListener('hidden.bs.offcanvas', removeBackdrops);
-  
-      document.querySelectorAll('[data-bs-dismiss="offcanvas"]').forEach(button => {
-        button.addEventListener('click', function () {
-          removeBackdrops();
-        });
-      });
-  
-      document.addEventListener('show.bs.offcanvas', function () {
-        setTimeout(() => {
-          const backdrops = document.querySelectorAll('.offcanvas-backdrop');
-          if (backdrops.length > 1) {
-            backdrops.forEach((backdrop, index) => {
-              if (index !== backdrops.length - 1) backdrop.remove(); 
-            });
-          }
-        }, 50);
-      });
     });
-  </script>
+
+    document.addEventListener('hidden.bs.offcanvas', removeBackdrops);
+
+    document.querySelectorAll('[data-bs-dismiss="offcanvas"]').forEach(button => {
+        button.addEventListener('click', function () {
+            removeBackdrops();
+        });
+    });
+
+    document.addEventListener('show.bs.offcanvas', function () {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.offcanvas-backdrop');
+            if (backdrops.length > 1) {
+                backdrops.forEach((backdrop, index) => {
+                    if (index !== backdrops.length - 1) backdrop.remove();
+                });
+            }
+        }, 50);
+    });
+});
+
+</script>
   

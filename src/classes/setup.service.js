@@ -29,45 +29,45 @@ class Setup {
     if (error) throw Error(error.message);
     return value;
   }
- async endOnboarding (user_id) {
-  await this.users.update({
-    ended_onboarding:true
-  }, {where:{id:user_id}})
- }
+  async endOnboarding(user_id) {
+    await this.users.update({
+      ended_onboarding: true
+    }, { where: { id: user_id } })
+  }
   async addItem(data, service_id, user_id) {
     // console.log({ data });
     const value = this.validation(data);
     if (value) {
-        await this.revenue_item.create({
-            code: value.revenue_line == "Ticket" ? 11111111 : 232233322,
-            revenue_line: value.revenue_line,
-            item_code: value.item_code,
-            timeline: value.timeline,
-            revenue_item: value.name,
-            amount: value.Amount,
-            service_id: service_id,
-            // rate_year: value.rate_year
-        });
-        console.log(user_id)
-        const user = await this.user.findByPk(user_id);
+      await this.revenue_item.create({
+        code: value.revenue_line == "Ticket" ? 11111111 : 232233322,
+        revenue_line: value.revenue_line,
+        item_code: value.item_code,
+        timeline: value.timeline,
+        revenue_item: value.name,
+        amount: value.Amount,
+        service_id: service_id,
+        // rate_year: value.rate_year
+      });
+      console.log(user_id)
+      const user = await this.user.findByPk(user_id);
 
-        if (user) {
-            let newAuthStep = user.authStep;
-            
-            // If authStep is 1, increment it by 1
-            if (user.authStep === 1) {
-                newAuthStep += 1;
-            }
-            // Update authStep
-            await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
+      if (user) {
+        let newAuthStep = user.authStep;
+
+        // If authStep is 1, increment it by 1
+        if (user.authStep === 1) {
+          newAuthStep += 1;
         }
+        // Update authStep
+        await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
+      }
 
-        return {
-            status: true,
-            message: "Item added",
-        };
+      return {
+        status: true,
+        message: "Item added",
+      };
     }
-}
+  }
 
   async editItem(id, data) {
     const item = await this.revenue_item.findByPk(id);
@@ -113,150 +113,113 @@ class Setup {
 
   async lga(query) {
     const conditions = [];
-   console.log({query})
+    //  console.log({query})
 
     if (query.state_id) {
-        conditions.push({ state_id: query.state_id });
+      conditions.push({ state_id: query.state_id });
     }
 
-    if (query.lga && query.lga.trim() !== "") {  
-        conditions.push({ lga_id: query.lga.split(",")[0] });
+    if (query.lga && query.lga.trim() !== "") {
+      conditions.push({ lga_id: query.lga.split(",")[0] });
     }
 
     if (query.state && !query.lga) {
-        return await this.lgas.findAll({
-            where: { state_id: query.state },
-            raw: true,
-        });
+      return await this.lgas.findAll({
+        where: { state_id: query.state },
+        raw: true,
+      });
     }
 
     if (conditions.length === 0) {
-        throw new Error("State or LGA parameter is missing");
+      throw new Error("State or LGA parameter is missing");
     }
 
     return await this.lgas.findAll({
-        where: {
-            [Op.and]: conditions,
-        },
-        raw: true,
+      where: {
+        [Op.and]: conditions,
+      },
+      raw: true,
     });
-}
+  }
 
 
 
   async ward(user) {
-    // console.log(user);
-
-    // Fetch LGAs based on the user input
-    const result = await this.lga(user);
-    const lgaIds = result.map((item) => item.lga_id);
-    const lga_id = user.lga ? user.lga.split(",")[0] : null;
-
-    // Condition for "State" service type
-    if (user.service_type === "State") {
-      if (user.group_id === 111) {
-        // Fetch all wards and corresponding LGAs
-        const wards = await this.db.query(
-          `
-          SELECT 
-            areas.area_code,
-            areas.areaname,
-            _lga.lga
-          FROM areas
-          INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-          `,
-          {
-            type: QueryTypes.SELECT,
-          }
-        );
-
-        const localGovrts = await this.lgas.findAll({
-          where: { lga_id: lgaIds },
-          raw: true,
-        });
-
-        return {
-          wards,
-          localGovrt: localGovrts,
-        };
+    try {
+      // Fetch LGAs based on user input
+      const result = await this.lga(user);
+      const lgaIds = result.map((item) => item.lga_id);
+      const lga_id = user.lga ? user.lga.split(",")[0] : null;
+  
+      let wards = [];
+      let localGovrts = [];
+  
+      if (user.service_type === "State") {
+        if (user.group_id === 111111) {
+          wards = await this.db.query(
+            `
+            SELECT _cities.city_id, _cities.city, _lga.lga
+            FROM _cities
+            INNER JOIN _lga ON _lga.lga_id = _cities.lga_id
+            `,
+            { type: QueryTypes.SELECT }
+          );
+  
+          localGovrts = await this.lgas.findAll({
+            where: { lga_id: lgaIds },
+            raw: true,
+          });
+        } else {
+          wards = await this.db.query(
+            `
+            SELECT _cities.city_id, _cities.city, _lga.lga
+            FROM _cities
+            INNER JOIN _lga ON _lga.lga_id = _cities.lga_id
+            WHERE _cities.lga_id IN (${lgaIds.map(() => "?").join(",")})
+            `,
+            { type: QueryTypes.SELECT, replacements: lgaIds }
+          );
+  
+          localGovrts = await this.lgas.findAll({ raw: true });
+        }
       } else {
-        // Fetch wards filtered by LGA IDs
-        const wards = await this.db.query(
-          `
-          SELECT 
-            areas.area_code,
-            areas.areaname,
-            _lga.lga
-          FROM areas
-          INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-          WHERE areas.lga_id IN (${lgaIds.map(() => "?").join(",")})
-          `,
-          {
-            type: QueryTypes.SELECT,
-            replacements: lgaIds,
-          }
-        );
-
-        const localGovrts = await this.lgas.findAll({ raw: true });
-
-        return {
-          wards,
-          localGovrt: localGovrts,
-        };
+        if (user.group_id === 111111) {
+          wards = await this.db.query(
+            `
+            SELECT _cities.city_id, _cities.city, _lga.lga
+            FROM _cities
+            INNER JOIN _lga ON _lga.lga_id = _cities.lga_id
+            `,
+            { type: QueryTypes.SELECT }
+          );
+  
+          localGovrts = await this.lgas.findAll({ raw: true });
+        } else {
+          wards = await this.db.query(
+            `
+            SELECT _cities.city_id, _cities.city, _lga.lga
+            FROM _cities
+            INNER JOIN _lga ON _lga.lga_id = _cities.lga_id
+            WHERE _cities.lga_id IN (${lgaIds.map(() => "?").join(",")})
+            `,
+            { type: QueryTypes.SELECT, replacements: lgaIds }
+          );
+        }
       }
-    } else {
-      // Condition for non-"State" service type
-      if (user.group_id === 111) {
-        // Fetch all wards and corresponding LGAs
-        const wards = await this.db.query(
-          `
-          SELECT 
-            areas.area_code,
-            areas.areaname,
-            _lga.lga
-          FROM areas
-          INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-          `,
-          {
-            type: QueryTypes.SELECT,
-          }
-        );
+      const filteredLgas = localGovrts.filter((lga) => lga.lga_id == lga_id);
 
-        const localGovrts = await this.lgas.findAll({ raw: true });
-
-        const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
-        return {
-          wards,
-          localGovrt: selectedLga,
-        };
-      } else {
-        // Fetch wards filtered by a single LGA ID
-        const wards = await this.db.query(
-          `
-          SELECT 
-            areas.area_code,
-            areas.areaname,
-            _lga.lga
-          FROM areas
-          INNER JOIN _lga ON _lga.lga_id = areas.lga_id
-          WHERE areas.lga_id = :lga_id
-          `,
-          {
-            type: QueryTypes.SELECT,
-            replacements: { lga_id },
-          }
-        );
-
-        const localGovrts = await this.lgas.findAll({ raw: true });
-
-        const selectedLga = localGovrts.find((lga) => lga.lga_id === lga_id);
-        return {
-          wards,
-          localGovrt: selectedLga,
-        };
-      }
+      return {
+        wards,
+        lgas: filteredLgas,
+        selectedLga: localGovrts.find((lga) => lga.lga_id == lga_id) || null,
+      };
+    } catch (error) {
+      console.error("Error in ward function:", error);
+      throw error;
     }
   }
+  
+  
 
   async createWard(data, service_id) {
     await this.wards.create({
@@ -289,7 +252,7 @@ class Setup {
   }
 
   async deleteWard(id) {
-    const ward = await this.wards.findByPk(id);
+    const ward = await this.wards.findOne({city_id: id});
     if (!ward) throw new Error("Ward not found");
 
     await ward.destroy();
@@ -339,12 +302,12 @@ class Setup {
     });
     const user = await this.user.findOne({ where: { id: user_id } });
     if (user) {
-        let newAuthStep = user.authStep;
-        
-        if (user.authStep === 2) {
-            newAuthStep += 1;
-        }
-        await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
+      let newAuthStep = user.authStep;
+
+      if (user.authStep === 2) {
+        newAuthStep += 1;
+      }
+      await this.user.update({ authStep: newAuthStep }, { where: { id: user_id } });
     }
     return {
       status: true,
@@ -353,7 +316,7 @@ class Setup {
   }
   async fetchSteps() {
     return await this.onboarding.findAll({
-      raw:true
+      raw: true
     })
   }
 }

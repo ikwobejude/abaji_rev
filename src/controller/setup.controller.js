@@ -93,12 +93,13 @@ module.exports = {
   },
   getWard: async function (req, res) {
     const response = await setup.ward(req.user);
+
+    console.log(response)
     res.status(200).render("./setup/location/ward", { ...response });
   },
 
   postWard: async function (req, res) {
     try {
-      console.log(req.body);
       const response = await setup.createWard(req.body, req.user.service_id);
       res.status(201).json(response);
     } catch (error) {

@@ -34,7 +34,7 @@
     console.log("Onboarding script loaded");
 
     const userState = <%- JSON.stringify(user) %>;
-    console.log("User State:", userState);
+    // console.log("User State:", userState);
 
     if (userState.started_onboarding && !userState.finished_onboarding && !userState.ended_onboarding) {
         console.log("User is in onboarding process");

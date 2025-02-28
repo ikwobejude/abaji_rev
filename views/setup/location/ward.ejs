@@ -35,11 +35,11 @@
                     <div class="row">
                       <div class="col-6"></div>
                       <div class="col-6" style="text-align: end">
-                        <!-- <button class="create-new btn btn-primary waves-effect waves-light" data-bs-toggle="offcanvas"
+                        <button class="create-new btn btn-primary waves-effect waves-light" data-bs-toggle="offcanvas"
                           data-bs-target="#add-new-record">
                           <i class="ti ti-plus me-sm-1"></i>
-                          <span class="d-none d-sm-inline-block">Add New Record</span>
-                        </button> -->
+                          <span class="d-none d-sm-inline-block">Create Ward</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -50,12 +50,12 @@
                         <tr>
                           <th>LGA</th>
                           <th>City</th>
-                          <!-- <th style="width: 20%">Actions</th> -->
+                          <th style="width: 20%">Actions</th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        <% if (wards.length > 0) { %>
+                        <% if (wards.length> 0) { %>
                           <% let first=true; %>
                             <% for (let i=0; i < wards.length; i++) { %>
                               <tr>
@@ -67,9 +67,18 @@
                                   <% first=false; %>
                                     <% } %>
                                       <td style="text-align: left; font-weight: normal">
-                                        <%= wards[i].areaname %>
+                                        <%= wards[i].city %>
                                       </td>
-
+                                      <td>
+                                        <button class="btn btn-sm btn-icon edit-record-btn"
+                                          data-id="<%= wards[i].city_id %>" data-lga="<%= wards[i].lga %>"
+                                          data-ward="<%= wards[i].city %>">
+                                          <i class="ti ti-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger delete-record-btn" data-id="2">
+                                          <i class="ti ti-trash"></i>
+                                        </button>                                
+                                      </td>
                               </tr>
                               <% } %>
                                 <% } else { %>
@@ -99,9 +108,17 @@
                         <div class="input-group input-group-merge">
                           <span id="basicFullname2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
                           <select name="lga" id="lga" class="form-control dt-full-name" required>
-                            <option value="">Select LGa</option>
-
+                            <option value="">Select LGA</option>
+                            <% if (lgas.length) { %>
+                              <% lgas.forEach(lga=> { %>
+                                <option value="<%= lga.lga_id %>">
+                                  <%= lga.lga %>
+                                </option>
+                                <% }) %>
+                                  <% } %>
                           </select>
+
+
                         </div>
                       </div>
 
@@ -169,6 +186,52 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Edit Modal -->
+              <div class="offcanvas offcanvas-end" id="edit-record">
+                <div class="offcanvas-header border-bottom">
+                  <h5 class="offcanvas-title" id="exampleModalLabel">Edit Record</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body flex-grow-1">
+                  <form class="edit-record pt-0 row g-2" id="form-edit-record" onsubmit="return false">
+                    <input type="hidden" id="edit-id" name="id" />
+                    <div class="col-sm-12">
+                      <label class="form-label" for="edit-lga">LOCAL GOVERNMENT</label>
+                      <div class="input-group input-group-merge">
+                        <span id="edit-lga2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
+                        <select name="lga" id="edit-lga" class="form-control dt-full-name" required>
+                          <option value="">Select LGA</option>
+                          <% if (lgas.length) { %>
+                            <% lgas.forEach(lga=> { %>
+                              <option value="<%= lga.lga_id %>">
+                                <%= lga.lga %>
+                              </option>
+                              <% }) %>
+                                <% } %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                      <label class="form-label" for="edit-ward">Ward</label>
+                      <div class="input-group input-group-merge">
+                        <input type="text" id="edit-ward" name="ward" class="form-control dt-name" placeholder="Ward"
+                          required />
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                      <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">
+                        <span class="spinner-border" role="status" aria-hidden="true"></span>&nbsp; Submit
+                      </button>
+                      <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
               <!-- / Content -->
               <!-- Delete Confirmation -->
               <div class="modal fade" id="delete-confirmation-modal" tabindex="-1"
@@ -198,156 +261,163 @@
 
               <%- include('../../layout/footer') %>
 
-                <!-- Page JS -->
-                <script src="/assets/js/tables-datatables-basic.js"></script>
-                <script>
-                  $(document).ready(function () {
-                    $("#DataTables_Table_0").DataTable();
-                  });
-
-                  if (document.getElementById("form-add-new-record")) {
-                    $(".spinner-border").hide();
-                    const addForm = document.getElementById("form-add-new-record");
-                    addForm.addEventListener("submit", async function (e) {
-                      e.preventDefault();
-                      $(".spinner-border").show();
-                      const data = new FormData(addForm);
-                      const payload = {
-                        lga: data.get("lga"),
-                        ward: data.get("ward"),
-                      };
-
-                      try {
-                        const response = await fetch("/setup/ward", {
-                          method: "post",
-                          body: JSON.stringify(payload),
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                        });
-                        const result = await response.json();
-                        $(".spinner-border").hide();
-                        if (result.status) {
-                          toastr.success(result.message);
-                          setTimeout(() => {
-                            location.reload();
-                          }, 3000);
-                        } else {
-                          toastr.error(result.message);
-                        }
-                      } catch (error) {
-                        $(".spinner-border").hide();
-                        toastr.error(error.message);
-                      }
-                    });
-                  }
-
-                  // Handle edit button click
-                  document.addEventListener("click", function (e) {
-                    if (e.target.classList.contains("edit-btn")) {
-                      const id = e.target.getAttribute("data-id");
-                      const lga = e.target.getAttribute("data-lga");
-                      const city = e.target.getAttribute("data-city");
-
-                      document.getElementById("edit-id").value = id;
-                      document.getElementById("edit-lga").value = lga;
-                      document.getElementById("edit-ward").value = city;
-                    }
-
-                    if (e.target.classList.contains("delete-btn")) {
-                      const id = e.target.getAttribute("data-id");
-                      // Show delete confirmation modal
-                      $("#delete-confirmation-modal").modal("show");
-                      // Pass ID to the confirm delete button
-                      document
-                        .getElementById("confirm-delete-btn")
-                        .setAttribute("data-id", id);
-                    }
-                  });
-
-                  // Handle delete confirmation
-                  document
-                    .getElementById("confirm-delete-btn")
-                    .addEventListener("click", function () {
-                      const id = this.getAttribute("data-id");
-                      fetch(`/setup/ward/${id}`, {
-                        method: "DELETE",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                      })
-                        .then((response) => response.json())
-                        .then((result) => {
-                          if (result.status) {
-                            toastr.success(result.message);
-                            setTimeout(() => {
-                              location.reload();
-                            }, 3000);
-                          } else {
-                            toastr.error(result.message);
-                          }
-                        })
-                        .catch((error) => {
-                          toastr.error(error.message);
-                        });
-                      // Close the modal
-                      $("#delete-confirmation-modal").modal("hide");
-                    });
-
-                  if (document.getElementById("form-edit-record")) {
-                    $(".spinner-border").hide();
-                    const editForm = document.getElementById("form-edit-record");
-                    editForm.addEventListener("submit", async function (e) {
-                      e.preventDefault();
-                      $(".spinner-border").show();
-                      const data = new FormData(editForm);
-                      const payload = {
-                        id: data.get("id"),
-                        lga: data.get("lga"),
-                        ward: data.get("ward"),
-                      };
-
-                      try {
-                        const response = await fetch(`/setup/ward/${payload.id}`, {
-                          method: "put",
-                          body: JSON.stringify(payload),
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                        });
-                        const result = await response.json();
-                        $(".spinner-border").hide();
-                        if (result.status) {
-                          toastr.success(result.message);
-                          setTimeout(() => {
-                            location.reload();
-                          }, 3000);
-                        } else {
-                          toastr.error(result.message);
-                        }
-                      } catch (error) {
-                        $(".spinner-border").hide();
-                        toastr.error(error.message);
-                      }
-                    });
-                  }
-
-
-                  document.addEventListener('click', function (event) {
-                    if (!event.target.closest('.offcanvas') && document.querySelector('.offcanvas.show')) {
-                      const offcanvas = bootstrap.Offcanvas.getInstance(document.querySelector('.offcanvas.show'));
-                      offcanvas.hide();
-                    }
-                  });
-                  document.addEventListener('hidden.bs.offcanvas', function () {
-                    const backdrops = document.querySelectorAll('.offcanvas-backdrop');
-                    backdrops.forEach((backdrop) => backdrop.remove());
-                  });
-                </script>
             </div>
         </div>
     </div>
   </div>
+  <!-- Page JS -->
+  <script src="/assets/js/tables-datatables-basic.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#DataTables_Table_0").DataTable();
+    });
+
+    // Close offcanvas when clicking outside
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".offcanvas") && document.querySelector(".offcanvas.show")) {
+        const offcanvas = bootstrap.Offcanvas.getInstance(document.querySelector(".offcanvas.show"));
+        offcanvas.hide();
+      }
+    });
+
+    document.addEventListener("hidden.bs.offcanvas", function () {
+      document.querySelectorAll(".offcanvas-backdrop").forEach((backdrop) => backdrop.remove());
+    });
+
+    // Handle add new record
+    document.getElementById("form-add-new-record").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      $(".spinner-border").show();
+
+      const data = new FormData(this);
+      const payload = {
+        lga: data.get("lga"),
+        ward: data.get("ward"),
+      };
+
+      try {
+        const response = await fetch("/setup/ward", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const result = await response.json();
+        $(".spinner-border").hide();
+        result.status ? toastr.success(result.message) : toastr.error(result.message);
+        if (result.status) setTimeout(() => location.reload(), 2000);
+      } catch (error) {
+        $(".spinner-border").hide();
+        toastr.error(error.message);
+      }
+    });
+
+    // Handle edit modal opening
+    document.addEventListener("click", function (event) {
+      const editBtn = event.target.closest(".edit-record-btn");
+
+      if (editBtn) {
+        // Extract data from button attributes
+        const wardId = editBtn.getAttribute("data-id");
+        const lgaId = editBtn.getAttribute("data-lga");
+        const wardName = editBtn.getAttribute("data-ward");
+
+        // Populate the input field
+        document.getElementById("edit-id").value = wardId;
+        document.getElementById("edit-ward").value = wardName;
+
+        const lgaSelectDiv = document.getElementById("edit-lga").parentNode;
+        let optionsHtml = `<span id="edit-lga2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
+                        <select name="lga" id="edit-lga" class="form-control dt-full-name" required>`;
+
+        const lgaOptions = document.querySelectorAll("#lga option");
+
+        lgaOptions.forEach((option) => {
+          if (option.value) {
+            optionsHtml += `<option value="${option.value}" ${option.value === lgaId ? "selected" : ""}>${option.text}</option>`;
+          }
+        });
+
+        optionsHtml += `</select>`;
+
+        // Replace the inner HTML of the select div
+        lgaSelectDiv.innerHTML = optionsHtml;
+
+        // Show the modal
+        const editModal = new bootstrap.Offcanvas(document.getElementById("edit-record"));
+        editModal.show();
+      }
+    });
+
+    // Handle edit record submission
+    document.getElementById("form-edit-record").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      $(".spinner-border").show();
+
+      const data = new FormData(this);
+      const payload = {
+        id: data.get("id"),
+        lga: data.get("lga"),
+        ward: data.get("ward"),
+      };
+
+      try {
+        const response = await fetch(`/setup/ward/${payload.id}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const result = await response.json();
+        $(".spinner-border").hide();
+        result.status ? toastr.success(result.message) : toastr.error(result.message);
+        if (result.status) setTimeout(() => location.reload(), 2000);
+      } catch (error) {
+        $(".spinner-border").hide();
+        toastr.error(error.message);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+  let deleteRecordId = null; // Store the ID of the record to delete
+
+  // Open Delete Modal
+  document.addEventListener("click", function (event) {
+    const deleteBtn = event.target.closest(".delete-record-btn");
+    if (deleteBtn) {
+      deleteRecordId = deleteBtn.getAttribute("data-id"); // Get record ID
+      const deleteModal = new bootstrap.Modal(document.getElementById("delete-confirmation-modal"));
+      deleteModal.show();
+    }
+  });
+
+  document.getElementById("confirm-delete-btn").addEventListener("click", function () {
+    if (deleteRecordId) {
+      fetch(`/setup/ward/${deleteRecordId}`, {
+        method: "DELETE",
+      })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to delete");
+          return response.json();
+        })
+        .then(data => {
+          toastr.success("Deleted Successfully");
+
+          const deleteModal = bootstrap.Modal.getInstance(document.getElementById("delete-confirmation-modal"));
+          deleteModal.hide();
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          toastr.error("Failed to delete. Try again!");
+        });
+    }
+  });
+});
+  </script>
 </body>
 
 </html>

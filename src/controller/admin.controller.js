@@ -21,7 +21,7 @@ class DashboardController {
         ...req.user,
         ...steps
       };
-      console.log({datatoPass})
+      // console.log({datatoPass})  
       const data = await admin.adminDashboard(req.user.service_id);
       res
         .status(200)

@@ -220,20 +220,24 @@ class Setup {
   }
   
   
-
   async createWard(data, service_id) {
-    await this.wards.create({
-      city: data.ward,
+    const wardsArray = data.ward.split(",").map(ward => ward.trim()); 
+  
+    const wardRecords = wardsArray.map(ward => ({
+      city: ward,
       lga_id: data.lga,
       created_at: new Date(),
       service_id: service_id,
-    });
-
+    }));
+  
+    await this.wards.bulkCreate(wardRecords); 
+  
     return {
       status: true,
-      message: "Created",
+      message: `${wardsArray.length} Wards Created`,
     };
   }
+  
 
   async editWard(id, data) {
     const ward = await this.wards.findByPk(id);
